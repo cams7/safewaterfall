@@ -63,8 +63,8 @@ curl -X GET "http://localhost:8080/arduino/carregar_distancia" -H "accept: appli
 curl -X GET "http://localhost:8080/arduino/buscar_distancia" -H "accept: application/json;charset=UTF-8"
 
 -------------------------------------------- 21/03/20 --------------------------------------------
-mvn clean install -f "C:/Dev/My/Safewaterfall/common/arduino-common"
-mvn clean install -f "C:/Dev/My/Safewaterfall/common/app-common"
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swarduino"
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swcommon"
 mvn clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && java -jar "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"
 
 

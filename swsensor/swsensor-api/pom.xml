@@ -31,12 +31,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>br.com.cams7.safewaterfall</groupId>
-			<artifactId>arduino</artifactId>
+			<artifactId>swarduino</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>br.com.cams7.safewaterfall</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>swcommon</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	
