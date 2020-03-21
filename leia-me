@@ -1,0 +1,62 @@
+-------------------------------------------- 15/03/20 --------------------------------------------
+cd "C:\Dev\My\Sisbarc\sisbarc\maven-projects\java"
+mvn -Dmaven.compiler.fork=true -Dmaven.compiler.executable="C:\Program Files\Java\jdk1.8.0_241\bin\javac" -s settings.xml clean package
+
+#mvn -Dmaven.compiler.fork=true -Dmaven.compiler.executable="C:\Program Files\Java\jdk1.8.0_241\bin\javac" -s settings.xml wildfly:deploy -Dwildfly.hostname=192.168.100.12
+#mvn -Dmaven.compiler.fork=true -Dmaven.compiler.executable="C:\Program Files\Java\jdk1.8.0_241\bin\javac" -s settings.xml wildfly:undeploy -Dwildfly.hostname=192.168.100.12
+
+#Copie o arquivo rxtxSerial.dll para "C:\Program Files\Java\jre1.8.0_241\bin"
+#Copie o arquivo RXTXcomm.jar para "C:\Program Files\Java\jre1.8.0_241\lib\ext"
+
+java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=192.168.100.12 -jar jmx/acende_apaga_leds_monitor/target/acende_apaga_leds_monitor.jar
+
+cd "C:\Dev\Java\wildfly-10.1.0.Final\bin"
+#./add-user.bat	
+#	b) Application User
+#	Username: AcendeApagaLEDs
+#    Password: abc@12345
+#    Roles:
+	
+./standalone.bat -b 0.0.0.0 -bmanagement 0.0.0.0
+
+#http://192.168.100.12:8080/acende_apaga_leds/led_list.jsf?active=lista_leds
+
+export ANDROID_HOME=C:/Users/CAMs7/AppData/Local/Android/Sdk
+echo $ANDROID_HOME
+
+
+http://localhost:8080/h2
+http://localhost:8080/swagger-ui.html
+
+-------------------------------------------- 17/03/20 --------------------------------------------
+
+docker pull redis:alpine3.11
+docker run -d -p 6379:6379 -i -t redis:alpine3.11
+
+#Altera o ESTADO do LED para ACESO ou APAGADO
+curl -X POST "http://localhost:8080/arduino/alterar_estado_led/ACESO" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+curl -X POST "http://localhost:8080/arduino/alterar_estado_led/APAGADO" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+#Altera o EVENTO e o INTERVALO do LED
+curl -X POST "http://localhost:8080/arduino/alterar_evento_led/PISCA_PISCA/INTERVALO_1SEGUNDO" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+#Carrega o ESTADO do LED na memoria, que pode ser ACESO ou APAGADO
+curl -X POST "http://localhost:8080/arduino/carregar_estado_led" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+#Busca o ESTADO do LED, que pode ser ACESO ou APAGADO
+curl -X POST "http://localhost:8080/arduino/buscar_estado_led/MESSAGE" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+#Carrega o ESTADO do LED na memoria, que pode ser ACESO ou APAGADO
+curl -X POST "http://localhost:8080/arduino/carregar_estado_led" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+#Buscar o EVENTO, os dados sao recebidos pela SERIAL do ARDUINO
+curl -X POST "http://localhost:8080/arduino/buscar_estado_led/MESSAGE" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+
+#Carregar os Dados na EEPROM do ARDUINO
+curl -X POST "http://localhost:8080/arduino/carregar_dados" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+#Buscar os Dados na EEPROM do ARDUINO
+curl -X POST "http://localhost:8080/arduino/buscar_dados" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
+
+-------------------------------------------- 18/03/20 --------------------------------------------
+curl -X GET "http://localhost:8080/arduino/carregar_distancia" -H "accept: application/json;charset=UTF-8"
+curl -X GET "http://localhost:8080/arduino/buscar_distancia" -H "accept: application/json;charset=UTF-8"
