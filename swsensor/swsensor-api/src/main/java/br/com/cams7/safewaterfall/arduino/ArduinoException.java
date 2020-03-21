@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.arduino;
+package br.com.cams7.safewaterfall.arduino;
 
 /**
  * @author cesar

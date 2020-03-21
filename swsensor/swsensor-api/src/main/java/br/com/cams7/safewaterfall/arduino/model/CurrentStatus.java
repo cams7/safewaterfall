@@ -1,10 +1,10 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.arduino.model;
+package br.com.cams7.safewaterfall.arduino.model;
 
 import org.springframework.data.redis.core.RedisHash;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

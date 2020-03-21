@@ -3,9 +3,9 @@
  */
 package br.com.cams7.safewaterfall.swsensor.service;
 
+import br.com.cams7.safewaterfall.arduino.ArduinoService;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
 import br.com.cams7.safewaterfall.common.model.PinPK;
-import br.com.cams7.safewaterfall.swsensor.arduino.ArduinoService;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoEvent;
 
 /**
  * @author CAMs7

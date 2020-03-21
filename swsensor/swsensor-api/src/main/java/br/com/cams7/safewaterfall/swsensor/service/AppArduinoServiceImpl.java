@@ -1,15 +1,15 @@
 package br.com.cams7.safewaterfall.swsensor.service;
 
 import org.springframework.stereotype.Service;
+import br.com.cams7.safewaterfall.arduino.ArduinoException;
+import br.com.cams7.safewaterfall.arduino.ArduinoServiceImpl;
+import br.com.cams7.safewaterfall.arduino.model.CurrentStatus;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
 import br.com.cams7.safewaterfall.common.model.PinPK;
-import br.com.cams7.safewaterfall.swsensor.arduino.ArduinoException;
-import br.com.cams7.safewaterfall.swsensor.arduino.ArduinoServiceImpl;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.CurrentStatus;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoEvent;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoStatus;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoPin.ArduinoPinType;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoUSART;
 
 @Service
 public class AppArduinoServiceImpl extends ArduinoServiceImpl implements AppArduinoService {

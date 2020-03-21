@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.swsensor;
+package br.com.cams7.safewaterfall;
 
 import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
 import br.com.cams7.safewaterfall.common.model.PinPK;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoPin.ArduinoPinType;
 import br.com.cams7.safewaterfall.swsensor.service.AppArduinoService;
 
 /**

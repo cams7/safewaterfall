@@ -1,17 +1,17 @@
-package br.com.cams7.safewaterfall.swsensor.arduino;
+package br.com.cams7.safewaterfall.arduino;
 
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoEvent;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoStatus;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.Arduino.ArduinoTransmitter;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoEEPROM;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoEEPROMRead;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoEEPROMWrite;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoPin.ArduinoPinType;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoUSART;
-import br.com.cams7.safewaterfall.swsensor.arduino.model.vo.ArduinoUSARTMessage;
-import br.com.cams7.safewaterfall.swsensor.arduino.util.Binary;
-import br.com.cams7.safewaterfall.swsensor.arduino.util.Checksum;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSARTMessage;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus;
+import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
+import br.com.cams7.safewaterfall.arduino.util.Binary;
+import br.com.cams7.safewaterfall.arduino.util.Checksum;
 
 public final class SisbarcProtocol {
 

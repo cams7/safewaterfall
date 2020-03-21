@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.arduino.model.vo;
+package br.com.cams7.safewaterfall.arduino.model.vo;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
