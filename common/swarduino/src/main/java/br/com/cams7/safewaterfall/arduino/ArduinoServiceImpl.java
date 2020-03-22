@@ -4,21 +4,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.cams7.safewaterfall.arduino.model.CurrentStatus;
 import br.com.cams7.safewaterfall.arduino.model.repository.CurrentStatusRepository;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSARTMessage;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSARTMessage;
 import br.com.cams7.safewaterfall.arduino.util.Binary;
 import br.com.cams7.safewaterfall.arduino.util.Bytes;
 import gnu.io.CommPortIdentifier;
@@ -29,11 +27,11 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, SerialPortEventListener {
-
-  private Logger log;
 
   private OutputStream output;
   private InputStream input;
@@ -63,8 +61,6 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
 
     serialData = new Byte[SisbarcProtocol.TOTAL_BYTES_PROTOCOL];
     serialDataIndex = 0x00;
-
-    log = Logger.getLogger(this.getClass().getName());
 
     init();
   }
@@ -173,7 +169,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
           while (input.available() > 0)
             receiveDataBySerial((byte) input.read());
         } catch (IOException e) {
-          getLog().log(Level.SEVERE, e.getMessage());
+          log.error(e.getMessage());
         }
         break;
     }
@@ -188,7 +184,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     try {
       Thread.sleep(serialThreadTime);
     } catch (InterruptedException e) {
-      getLog().log(Level.SEVERE, e.getMessage());
+      log.error(e.getMessage());
     }
   }
 
@@ -210,13 +206,13 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
           addCurrentStatus(arduino);
           receiveDataBySerial(arduino);
         } catch (ArduinoException e) {
-          getLog().log(Level.SEVERE, e.getMessage());
+          log.error(e.getMessage());
         }
         serialDataIndex = 0x00;
       }
 
     } else {
-      getLog().log(Level.WARNING, "O dado '" + Integer.toBinaryString(data) + "' foi corrompido");
+      log.warn("O dado {} foi corrompido", Integer.toBinaryString(data));
     }
   }
 
@@ -246,7 +242,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
 
   private void receiveDataBySerial(Arduino arduino) {
     if (ArduinoTransmitter.ARDUINO != arduino.getTransmitter()) {
-      getLog().log(Level.WARNING, "O dado não vem do Arduino");
+      log.warn("O dado não vem do Arduino");
       return;
     }
 
@@ -305,7 +301,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
                   break;
               }
             } catch (ArduinoException e) {
-              getLog().log(Level.WARNING, e.getMessage());
+              log.warn(e.getMessage());
             }
 
             break;

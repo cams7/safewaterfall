@@ -1,0 +1,8 @@
+  ____   __        __    ____                                      
+ / ___|  \ \      / /   / ___|    ___   _ __    ___    ___    _ __ 
+ \___ \   \ \ /\ / /    \___ \   / _ \ | '_ \  / __|  / _ \  | '__|
+  ___) |   \ V  V /      ___) | |  __/ | | | | \__ \ | (_) | | |   
+ |____/     \_/\_/      |____/   \___| |_| |_| |___/  \___/  |_|   
+
+
+${AnsiColor.BRIGHT_BLUE}:: SW Sensor :: Running Spring Boot ${spring-boot.version} :: Port #${server.port} :: ${AnsiColor.DEFAULT}

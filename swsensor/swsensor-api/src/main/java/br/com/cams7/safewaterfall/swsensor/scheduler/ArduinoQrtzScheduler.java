@@ -3,12 +3,12 @@
  */
 package br.com.cams7.safewaterfall.swsensor.scheduler;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import org.apache.commons.lang3.ArrayUtils;
 import org.quartz.JobDetail;
-import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,11 +17,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
+import br.com.cams7.safewaterfall.common.scheduler.QuartzUtil;
 
 /**
  * @author CAMs7
@@ -31,11 +32,12 @@ import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
 @EnableAutoConfiguration
 public class ArduinoQrtzScheduler {
 
+  private static final String ARDUINO_JOB = "arduinoJob";
+  private static final String ARDUINO_TRIGGER = "arduinoTrigger";
+  private static final String CRON_EVERY_30SECONDS = "0/30 * * ? * * *";
+
   @Autowired
   private ApplicationContext applicationContext;
-
-  @PostConstruct
-  public void init() {}
 
   @Bean
   public SpringBeanJobFactory springBeanJobFactory() {
@@ -45,39 +47,32 @@ public class ArduinoQrtzScheduler {
   }
 
   @Bean
-  public SchedulerFactoryBean scheduler(Trigger trigger, JobDetail job, DataSource quartzDataSource) {
+  public SchedulerFactoryBean scheduler(DataSource quartzDataSource, Trigger... triggers) {
     SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
     schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
 
-    schedulerFactory.setJobFactory(springBeanJobFactory());
-    schedulerFactory.setJobDetails(job);
-    schedulerFactory.setTriggers(trigger);
-
-    // Comment the following line to use the default Quartz job store.
+    schedulerFactory.setOverwriteExistingJobs(true);
+    schedulerFactory.setAutoStartup(true);
     schedulerFactory.setDataSource(quartzDataSource);
+    schedulerFactory.setJobFactory(springBeanJobFactory());
+    schedulerFactory.setWaitForJobsToCompleteOnShutdown(true);
+
+    if (ArrayUtils.isNotEmpty(triggers))
+      schedulerFactory.setTriggers(triggers);
 
     return schedulerFactory;
   }
 
-  @Bean
+  @Bean(name = ARDUINO_JOB)
   public JobDetailFactoryBean arduinoJobDetail() {
-    JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-    jobDetailFactory.setJobClass(ArduinoJob.class);
-    jobDetailFactory.setName("Qrtz_ArduinoJob_Detail");
-    jobDetailFactory.setDescription("Invoke ArduinoJob service...");
-    jobDetailFactory.setDurability(true);
+    JobDetailFactoryBean jobDetailFactory = QuartzUtil.createJobDetail(ArduinoJob.class, "Qrtz_ArduinoJob_Detail");
     return jobDetailFactory;
   }
 
-  @Bean
-  public SimpleTriggerFactoryBean trigger(JobDetail job) {
-    SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
-    trigger.setJobDetail(job);
-
-    int frequencyInSec = 10;
-    trigger.setRepeatInterval(frequencyInSec * 1000);
-    trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-    trigger.setName("Qrtz_ArduinoTrigger");
+  @Bean(name = ARDUINO_TRIGGER)
+  public CronTriggerFactoryBean trigger(@Qualifier(ARDUINO_JOB) JobDetail job) {
+    CronTriggerFactoryBean trigger = QuartzUtil.createCronTrigger(job, CRON_EVERY_30SECONDS,
+        "Qrtz_ArduinoTrigger");
     return trigger;
   }
 

@@ -7,12 +7,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 @SpringBootApplication
 @EnableScheduling
 public class App {
+
+  @Bean
+  public RestOperations restTemplate() {
+    return new RestTemplate();
+  }
 
   @Bean
   public Module module() {
