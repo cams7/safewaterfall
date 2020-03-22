@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.scheduler;
+package br.com.cams7.safewaterfall.swmanager.scheduler;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -29,7 +29,7 @@ import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
  */
 @Configuration
 @EnableAutoConfiguration
-public class ArduinoQrtzScheduler {
+public class SirenQrtzScheduler {
 
   @Autowired
   private ApplicationContext applicationContext;
@@ -60,11 +60,11 @@ public class ArduinoQrtzScheduler {
   }
 
   @Bean
-  public JobDetailFactoryBean arduinoJobDetail() {
+  public JobDetailFactoryBean sirenJobDetail() {
     JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-    jobDetailFactory.setJobClass(ArduinoJob.class);
-    jobDetailFactory.setName("Qrtz_ArduinoJob_Detail");
-    jobDetailFactory.setDescription("Invoke ArduinoJob service...");
+    jobDetailFactory.setJobClass(SirenJob.class);
+    jobDetailFactory.setName("Qrtz_SirenJob_Detail");
+    jobDetailFactory.setDescription("Invoke SirenJob service...");
     jobDetailFactory.setDurability(true);
     return jobDetailFactory;
   }
@@ -77,7 +77,7 @@ public class ArduinoQrtzScheduler {
     int frequencyInSec = 10;
     trigger.setRepeatInterval(frequencyInSec * 1000);
     trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-    trigger.setName("Qrtz_ArduinoTrigger");
+    trigger.setName("Qrtz_SirenTrigger");
     return trigger;
   }
 

@@ -1,11 +1,10 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.model;
+package br.com.cams7.safewaterfall.common.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import br.com.cams7.safewaterfall.common.model.Pin;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

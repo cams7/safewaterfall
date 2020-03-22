@@ -27,11 +27,12 @@ public class ArduinoJob implements Job {
   private AppArduinoService arduinoService;
 
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    LOGGER.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
+    LOGGER.info("ArduinoJob ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context
+        .getFireTime());
 
     PinPK pino = new PinPK(ArduinoPinType.DIGITAL, (short) 8);
     arduinoService.carregarDistancia(pino);
 
-    LOGGER.info("Next job scheduled @ {}", context.getNextFireTime());
+    LOGGER.info("Next ArduinoJob scheduled @ {}", context.getNextFireTime());
   }
 }
