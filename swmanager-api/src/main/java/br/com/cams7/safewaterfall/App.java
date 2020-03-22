@@ -23,8 +23,8 @@ public class App {
   @Bean
   public JedisConnectionFactory jedisConnectionFactory() {
     JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
-    jedisConFactory.setHostName("localhost");
-    jedisConFactory.setPort(6379);
+    jedisConFactory.setHostName("172.42.42.210");
+    jedisConFactory.setPort(6479);
     return jedisConFactory;
   }
 
