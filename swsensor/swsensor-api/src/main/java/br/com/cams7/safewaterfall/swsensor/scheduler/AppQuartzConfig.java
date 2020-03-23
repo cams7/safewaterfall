@@ -3,8 +3,8 @@
  */
 package br.com.cams7.safewaterfall.swsensor.scheduler;
 
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import javax.sql.DataSource;
-import org.apache.commons.lang3.ArrayUtils;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class AppQuartzConfig {
     schedulerFactory.setJobFactory(springBeanJobFactory());
     schedulerFactory.setWaitForJobsToCompleteOnShutdown(true);
 
-    if (ArrayUtils.isNotEmpty(triggers))
+    if (isNotEmpty(triggers))
       schedulerFactory.setTriggers(triggers);
 
     return schedulerFactory;
@@ -84,7 +84,8 @@ public class AppQuartzConfig {
 
   @Bean(name = STATUS_ARDUINO_JOB)
   public JobDetailFactoryBean arduinoJobDetail() {
-    JobDetailFactoryBean jobDetailFactory = AppQuartzUtil.createJobDetail(StatusArduinoJob.class, STATUS_ARDUINO_JOB);
+    JobDetailFactoryBean jobDetailFactory = AppQuartzUtil.createJobDetail(StatusArduinoJob.class,
+        STATUS_ARDUINO_JOB);
     return jobDetailFactory;
   }
 

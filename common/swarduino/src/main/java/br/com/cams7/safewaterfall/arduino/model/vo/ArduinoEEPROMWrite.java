@@ -3,6 +3,7 @@
  */
 package br.com.cams7.safewaterfall.arduino.model.vo;
 
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.WRITE;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,7 +23,7 @@ public class ArduinoEEPROMWrite extends ArduinoEEPROM {
    */
   public ArduinoEEPROMWrite() {
     super();
-    setEvent(ArduinoEvent.WRITE);
+    setEvent(WRITE);
   }
 
   /**
@@ -35,7 +36,7 @@ public class ArduinoEEPROMWrite extends ArduinoEEPROM {
    */
   public ArduinoEEPROMWrite(ArduinoStatus status, ArduinoPinType pinType, byte pin, byte threadTime,
       byte actionEvent) {
-    super(status, ArduinoEvent.WRITE, pinType, pin, threadTime, actionEvent);
+    super(status, WRITE, pinType, pin, threadTime, actionEvent);
   }
 
 }

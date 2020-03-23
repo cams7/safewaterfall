@@ -3,6 +3,7 @@
  */
 package br.com.cams7.safewaterfall.arduino.model.vo;
 
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter.OTHER_DEVICE;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,20 +19,21 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"transmitter", "status", "event"}, callSuper = true)
 public abstract class Arduino extends ArduinoPin {
 
+  public final static short PIN_VALUE_MIN = 0x0000;
+
   private ArduinoTransmitter transmitter;
   private ArduinoStatus status;
   private ArduinoEvent event;
 
   public Arduino() {
     super();
-
-    setTransmitter(ArduinoTransmitter.OTHER_DEVICE);
+    setTransmitter(OTHER_DEVICE);
   }
 
   public Arduino(ArduinoStatus status, ArduinoEvent event, ArduinoPinType pinType, byte pin) {
     super(pinType, pin);
 
-    setTransmitter(ArduinoTransmitter.OTHER_DEVICE);
+    setTransmitter(OTHER_DEVICE);
     setStatus(status);
     setEvent(event);
 

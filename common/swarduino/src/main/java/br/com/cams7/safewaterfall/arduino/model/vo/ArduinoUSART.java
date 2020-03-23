@@ -3,6 +3,7 @@
  */
 package br.com.cams7.safewaterfall.arduino.model.vo;
 
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.EXECUTE;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +29,8 @@ public class ArduinoUSART extends Arduino {
   public ArduinoUSART() {
     super();
 
-    setEvent(ArduinoEvent.EXECUTE);
-    setPinValue((short) 0x0000);
+    setEvent(EXECUTE);
+    setPinValue(PIN_VALUE_MIN);
   }
 
   protected ArduinoUSART(ArduinoStatus status, ArduinoEvent event, ArduinoPinType pinType, byte pin,
@@ -40,7 +41,7 @@ public class ArduinoUSART extends Arduino {
   }
 
   public ArduinoUSART(ArduinoStatus status, ArduinoPinType pinType, byte pin, short pinValue) {
-    this(status, ArduinoEvent.EXECUTE, pinType, pin, pinValue);
+    this(status, EXECUTE, pinType, pin, pinValue);
   }
 
   public void changeCurrentValues(ArduinoUSART arduino) {

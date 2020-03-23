@@ -1,5 +1,29 @@
 package br.com.cams7.safewaterfall.arduino;
 
+import static br.com.cams7.safewaterfall.arduino.SisbarcProtocol.TOTAL_BYTES_PROTOCOL;
+import static br.com.cams7.safewaterfall.arduino.SisbarcProtocol.decode;
+import static br.com.cams7.safewaterfall.arduino.SisbarcProtocol.getProtocolEEPROM;
+import static br.com.cams7.safewaterfall.arduino.SisbarcProtocol.getProtocolUSART;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus.RESPONSE_RESPONSE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter.ARDUINO;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.ANALOG;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.DIGITAL;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.ANALOG_PIN_VALUE_MAX;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
+import static gnu.io.SerialPort.DATABITS_8;
+import static gnu.io.SerialPort.PARITY_NONE;
+import static gnu.io.SerialPort.STOPBITS_1;
+import static gnu.io.SerialPortEvent.BI;
+import static gnu.io.SerialPortEvent.CD;
+import static gnu.io.SerialPortEvent.CTS;
+import static gnu.io.SerialPortEvent.DATA_AVAILABLE;
+import static gnu.io.SerialPortEvent.DSR;
+import static gnu.io.SerialPortEvent.FE;
+import static gnu.io.SerialPortEvent.OE;
+import static gnu.io.SerialPortEvent.OUTPUT_BUFFER_EMPTY;
+import static gnu.io.SerialPortEvent.PE;
+import static gnu.io.SerialPortEvent.RI;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,7 +35,6 @@ import br.com.cams7.safewaterfall.arduino.model.repository.CurrentStatusReposito
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus;
-import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
@@ -48,8 +71,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   protected CurrentStatusRepository statusRepository;
 
   /**
-   * Construtor da classe Arduino
-   * 
+   *
    * @param serialPort - Porta COM que sera utilizada para enviar os dados para o Arduino
    * @param bauldRate - Taxa de transferencia da porta serial geralmente e 9600
    */
@@ -60,14 +82,14 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     this.serialBaudRate = serialBaudRate;
     this.serialThreadTime = serialThreadTime;
 
-    serialData = new Byte[SisbarcProtocol.TOTAL_BYTES_PROTOCOL];
+    serialData = new Byte[TOTAL_BYTES_PROTOCOL];
     serialDataIndex = 0x00;
 
     init();
   }
 
   /**
-   * Metodo que verifica se a comunicacao com a porta serial esta OK
+   * Metodo que verifica se a comunicação com a porta serial esta OK
    */
   private void init() {
     // close();
@@ -80,12 +102,12 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
       portId = CommPortIdentifier.getPortIdentifier(serialPort);
     } catch (NoSuchPortException e) {
       // Caso a porta COM nao exista sera exibido um erro
-      throw new ArduinoException("Porta '" + serialPort + "' nao encontrada", e.getCause());
+      throw new ArduinoException(String.format("Porta %s não encontrada", serialPort), e.getCause());
     }
 
     try {
       // Abre a porta COM
-      SerialPort port = (SerialPort) portId.open("Comunicacao serial", serialBaudRate);
+      SerialPort port = (SerialPort) portId.open("Comunicação serial", serialBaudRate);
 
       output = port.getOutputStream();
       input = port.getInputStream();
@@ -96,14 +118,14 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
 
       port.setSerialPortParams(serialBaudRate, // taxa de transferencia da
           // porta serial
-          SerialPort.DATABITS_8, // taxa de 10 bits 8 (envio)
-          SerialPort.STOPBITS_1, // taxa de 10 bits 1 (recebimento)
-          SerialPort.PARITY_NONE); // receber e enviar dados
+          DATABITS_8, // taxa de 10 bits 8 (envio)
+          STOPBITS_1, // taxa de 10 bits 1 (recebimento)
+          PARITY_NONE); // receber e enviar dados
 
       Thread readThread = new Thread(this);
       readThread.start();
     } catch (PortInUseException | IOException | TooManyListenersException | UnsupportedCommOperationException e) {
-      throw new ArduinoException("Erro na comunicacao serial", e.getCause());
+      throw new ArduinoException("Erro na comunicação serial", e.getCause());
     } finally {
       close();
     }
@@ -111,10 +133,11 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   }
 
   /**
-   * M�todo que fecha a comunica��o com a porta serial
+   * Método que fecha a comunicação com a porta serial
    */
   private void close() {
-    ArduinoException exception = new ArduinoException("Nao foi possivel fechar a porta '" + serialPort + "'");
+    ArduinoException exception = new ArduinoException(String.format("Não foi possivel fechar a porta %s",
+        serialPort));
     try {
       if (input != null)
         input.close();
@@ -144,7 +167,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
       // escreve o valor na porta serial para ser enviado
       output.write(data);
     } catch (IOException e) {
-      throw new ArduinoException("Nao foi possivel enviar o dado", e.getCause());
+      throw new ArduinoException("Não foi possivel enviar o dado", e.getCause());
     }
   }
 
@@ -155,17 +178,17 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
    */
   public void serialEvent(SerialPortEvent event) {
     switch (event.getEventType()) {
-      case SerialPortEvent.BI:
-      case SerialPortEvent.OE:
-      case SerialPortEvent.FE:
-      case SerialPortEvent.PE:
-      case SerialPortEvent.CD:
-      case SerialPortEvent.CTS:
-      case SerialPortEvent.DSR:
-      case SerialPortEvent.RI:
-      case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+      case BI:
+      case OE:
+      case FE:
+      case PE:
+      case CD:
+      case CTS:
+      case DSR:
+      case RI:
+      case OUTPUT_BUFFER_EMPTY:
         break;
-      case SerialPortEvent.DATA_AVAILABLE:
+      case DATA_AVAILABLE:
         try {
           while (input.available() > 0)
             receiveDataBySerial((byte) input.read());
@@ -190,7 +213,6 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   }
 
   private void receiveDataBySerial(byte data) {
-
     byte lastBit = Binary.getLastBitByte(data);
 
     if (0x01 == lastBit) {
@@ -200,7 +222,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
       serialData[serialDataIndex] = data;
       serialDataIndex++;
 
-      if (serialDataIndex == SisbarcProtocol.TOTAL_BYTES_PROTOCOL) {
+      if (serialDataIndex == TOTAL_BYTES_PROTOCOL) {
         byte[] datas = Bytes.toPrimitiveArray(serialData);
         try {
           Arduino arduino = receive(datas);
@@ -241,7 +263,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   }
 
   private void receiveDataBySerial(Arduino arduino) {
-    if (ArduinoTransmitter.ARDUINO != arduino.getTransmitter()) {
+    if (ARDUINO != arduino.getTransmitter()) {
       log.warn("O dado não vem do Arduino");
       return;
     }
@@ -288,13 +310,13 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
                     }
 
                   if (isPinPWD)
-                    sendPinPWMUSART(ArduinoStatus.RESPONSE_RESPONSE, arduino.getPin(), pinValue);
+                    sendPinPWMUSART(RESPONSE_RESPONSE, arduino.getPin(), pinValue);
                   else
-                    sendPinDigitalUSART(ArduinoStatus.RESPONSE_RESPONSE, arduino.getPin(), pinValue == 0x0001);
+                    sendPinDigitalUSART(RESPONSE_RESPONSE, arduino.getPin(), pinValue == 0x0001);
                   break;
                 }
                 case ANALOG: {
-                  sendPinAnalogUSART(ArduinoStatus.RESPONSE_RESPONSE, arduino.getPin(), pinValue);
+                  sendPinAnalogUSART(RESPONSE_RESPONSE, arduino.getPin(), pinValue);
                   break;
                 }
                 default:
@@ -332,7 +354,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   protected abstract short sendResponse(ArduinoPinType pinType, byte pin, short pinValue);
 
   private static Arduino receive(byte[] values) {
-    return SisbarcProtocol.decode(values);
+    return decode(values);
   }
 
   private void sendPinDigital(ArduinoUSART arduino) {
@@ -353,21 +375,20 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     if (!pinOk)
       throw new ArduinoException("O PINO Digital nao e valido");
 
-    arduino.setPinType(ArduinoPinType.DIGITAL);
+    arduino.setPinType(DIGITAL);
 
-    serialWrite(SisbarcProtocol.getProtocolUSART(arduino));
+    serialWrite(getProtocolUSART(arduino));
 
     addCurrentStatus(arduino);
   }
 
   protected void sendPinDigitalUSART(ArduinoStatus status, byte digitalPin, boolean pinValue) {
-    ArduinoUSART arduino = new ArduinoUSART(status, ArduinoPinType.DIGITAL, digitalPin, (short) (pinValue ? 0x0001
-        : 0x0000));
+    ArduinoUSART arduino = new ArduinoUSART(status, DIGITAL, digitalPin, (short) (pinValue ? 0x0001 : 0x0000));
     sendPinDigital(arduino);
   }
 
   protected void sendPinDigitalUSARTMessage(ArduinoStatus status, byte digitalPin) {
-    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, ArduinoPinType.DIGITAL, digitalPin);
+    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, DIGITAL, digitalPin);
     sendPinDigital(arduino);
   }
 
@@ -382,29 +403,28 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     if (!pinOk)
       throw new ArduinoException("O PINO PWM nao e valido");
 
-    if (((ArduinoUSART) arduino).getPinValue() < 0x0000)
-      throw new ArduinoException("O valor do PINO PWM e maior ou igual a '0'");
+    if (((ArduinoUSART) arduino).getPinValue() < PIN_VALUE_MIN)
+      throw new ArduinoException(String.format("O valor do PINO PWM e maior ou igual a %d", PIN_VALUE_MIN));
 
-    if (((ArduinoUSART) arduino).getPinValue() > ArduinoUSART.DIGITAL_PIN_VALUE_MAX)
-      throw new ArduinoException("O valor do PINO PWM e menor ou igual a '255'");
+    if (((ArduinoUSART) arduino).getPinValue() > DIGITAL_PIN_VALUE_MAX)
+      throw new ArduinoException(String.format("O valor do PINO PWM e menor ou igual a %d",
+          DIGITAL_PIN_VALUE_MAX));
 
-    arduino.setPinType(ArduinoPinType.DIGITAL);
+    arduino.setPinType(DIGITAL);
 
-    serialWrite(SisbarcProtocol.getProtocolUSART(arduino));
+    serialWrite(getProtocolUSART(arduino));
 
     addCurrentStatus(arduino);
   }
 
   protected void sendPinPWMUSART(ArduinoStatus status, byte digitalPin, short pinValue) {
-    ArduinoUSART arduino = new ArduinoUSART(status, ArduinoPinType.DIGITAL, digitalPin, pinValue);
+    ArduinoUSART arduino = new ArduinoUSART(status, DIGITAL, digitalPin, pinValue);
     sendPinPWM(arduino);
-
   }
 
   protected void sendPinPWMUSARTMessage(ArduinoStatus status, byte digitalPin) {
-    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, ArduinoPinType.DIGITAL, digitalPin);
+    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, DIGITAL, digitalPin);
     sendPinPWM(arduino);
-
   }
 
   private void sendPinAnalog(ArduinoUSART arduino) {
@@ -418,42 +438,41 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     if (!pinOk)
       throw new ArduinoException("O PINO Analogico nao e valido");
 
-    if (((ArduinoUSART) arduino).getPinValue() < 0x0000)
-      throw new ArduinoException("O valor do PINO Analogico e maior ou igual a '0'");
+    if (((ArduinoUSART) arduino).getPinValue() < PIN_VALUE_MIN)
+      throw new ArduinoException(String.format("O valor do PINO Analogico e maior ou igual a %d", PIN_VALUE_MIN));
 
-    if (((ArduinoUSART) arduino).getPinValue() > ArduinoUSART.ANALOG_PIN_VALUE_MAX)
-      throw new ArduinoException("O valor do PINO Analogico e menor ou igual a '1023'");
+    if (((ArduinoUSART) arduino).getPinValue() > ANALOG_PIN_VALUE_MAX)
+      throw new ArduinoException(String.format("O valor do PINO Analogico e menor ou igual a %d",
+          ANALOG_PIN_VALUE_MAX));
 
-    arduino.setPinType(ArduinoPinType.ANALOG);
+    arduino.setPinType(ANALOG);
 
-    serialWrite(SisbarcProtocol.getProtocolUSART(arduino));
+    serialWrite(getProtocolUSART(arduino));
 
     addCurrentStatus(arduino);
   }
 
   protected void sendPinAnalogUSART(ArduinoStatus status, byte analogPin, short pinValue) {
-    ArduinoUSART arduino = new ArduinoUSART(status, ArduinoPinType.ANALOG, analogPin, pinValue);
+    ArduinoUSART arduino = new ArduinoUSART(status, ANALOG, analogPin, pinValue);
     sendPinAnalog(arduino);
   }
 
   protected void sendPinAnalogUSARTMessage(ArduinoStatus status, byte analogPin) {
-    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, ArduinoPinType.ANALOG, analogPin);
+    ArduinoUSARTMessage arduino = new ArduinoUSARTMessage(status, ANALOG, analogPin);
     sendPinAnalog(arduino);
   }
 
   protected void sendEEPROMWrite(ArduinoStatus status, ArduinoPinType pinType, byte pin, byte threadTime,
       byte actionEvent) {
-
     ArduinoEEPROMWrite arduino = new ArduinoEEPROMWrite(status, pinType, pin, threadTime, actionEvent);
-    serialWrite(SisbarcProtocol.getProtocolEEPROM(arduino));
+    serialWrite(getProtocolEEPROM(arduino));
 
     addCurrentStatus(arduino);
   }
 
   protected void sendEEPROMRead(ArduinoStatus status, ArduinoPinType pinType, byte pin) {
-
     ArduinoEEPROMRead arduino = new ArduinoEEPROMRead(status, pinType, pin);
-    serialWrite(SisbarcProtocol.getProtocolEEPROM(arduino));
+    serialWrite(getProtocolEEPROM(arduino));
 
     addCurrentStatus(arduino);
   }

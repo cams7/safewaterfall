@@ -58,16 +58,21 @@ public class SensorEntity extends BaseEntity<Long> {
   private String sendStatusMessageCron;
 
   @ApiModelProperty(
-      notes = "Expressão Cron para envio de alertas quando quando uma determinada distancia minima foi alcançada",
+      notes = "Expressão Cron para envio de alertas quando quando uma distancia minima foi alcançada",
       example = "0/30 * * ? * * *", required = true, position = 4)
   @NotBlank
   @Size(min = 13, max = 30)
   @Column(name = "ENV_ALERTA_CRON", nullable = false)
   private String sendAlertMessageCron;
 
-  @ApiModelProperty(notes = "Distancia minima", example = "100", required = true, position = 5)
+  @ApiModelProperty(notes = "Distancia minima permitida", example = "100", required = true, position = 5)
   @NotNull
-  @Column(name = "DISTANCIA_MINIMA")
-  private Short minimumDistance;
+  @Column(name = "DISTANCIA_MIN")
+  private Short minimumAllowedDistance;
+
+  @ApiModelProperty(notes = "Distancia maxima medida", example = "255", required = true, position = 5)
+  @NotNull
+  @Column(name = "DISTANCIA_MAX")
+  private Short maximumMeasuredDistance;
 
 }

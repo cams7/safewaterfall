@@ -1,16 +1,33 @@
 package br.com.cams7.safewaterfall.arduino;
 
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.EXECUTE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.MESSAGE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.READ;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.WRITE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus.RESPONSE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus.RESPONSE_RESPONSE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus.SEND;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus.SEND_RESPONSE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter.ARDUINO;
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter.OTHER_DEVICE;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ANALOG_PIN_MAX;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.DIGITAL_PIN_MAX;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.ANALOG;
+import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.DIGITAL;
+import static br.com.cams7.safewaterfall.arduino.model.vo.EEPROMData.ANALOG_ACTION_EVENT_MAX;
+import static br.com.cams7.safewaterfall.arduino.model.vo.EEPROMData.DIGITAL_ACTION_EVENT_MAX;
+import static br.com.cams7.safewaterfall.arduino.model.vo.EEPROMData.THREAD_INTERVAL_MAX;
 import br.com.cams7.safewaterfall.arduino.error.ArduinoException;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
-import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSARTMessage;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoStatus;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoTransmitter;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMWrite;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
+import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSARTMessage;
 import br.com.cams7.safewaterfall.arduino.util.Binary;
 import br.com.cams7.safewaterfall.arduino.util.Checksum;
 
@@ -115,35 +132,35 @@ public final class SisbarcProtocol {
       return EMPTY_BITS;
 
     // Os pinos estao entre 0-63
-    if (arduino.getPinType() == ArduinoPinType.DIGITAL && arduino.getPin() > Arduino.DIGITAL_PIN_MAX)
+    if (DIGITAL.equals(arduino.getPinType()) && arduino.getPin() > DIGITAL_PIN_MAX)
       return EMPTY_BITS;
     // Os pinos estao entre 0-15
-    else if (arduino.getPinType() == ArduinoPinType.ANALOG && arduino.getPin() > Arduino.ANALOG_PIN_MAX)
+    else if (ANALOG.equals(arduino.getPinType()) && arduino.getPin() > ANALOG_PIN_MAX)
       return EMPTY_BITS;
 
-    if (arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE) {
+    if (EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())) {
 
       // Os valores do pino estao entre 0-255
-      if (((ArduinoUSART) arduino).getPinType() == ArduinoPinType.DIGITAL && ((ArduinoUSART) arduino)
+      if (DIGITAL.equals(((ArduinoUSART) arduino).getPinType()) && ((ArduinoUSART) arduino)
           .getPinValue() > ArduinoUSART.DIGITAL_PIN_VALUE_MAX)
         return EMPTY_BITS;
       // Os valores do pino estao entre 0-1023
-      else if (((ArduinoUSART) arduino).getPinType() == ArduinoPinType.ANALOG && ((ArduinoUSART) arduino)
+      else if (ANALOG.equals(((ArduinoUSART) arduino).getPinType()) && ((ArduinoUSART) arduino)
           .getPinValue() > ArduinoUSART.ANALOG_PIN_VALUE_MAX)
         return EMPTY_BITS;
-    } else if (arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ) {
+    } else if (WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())) {
 
       // Os valores da 'thread time' estao entre 0-7
-      if (((ArduinoEEPROM) arduino).getThreadInterval() > ArduinoEEPROM.THREAD_INTERVAL_MAX)
+      if (((ArduinoEEPROM) arduino).getThreadInterval() > THREAD_INTERVAL_MAX)
         return EMPTY_BITS;
 
       // Os valores do 'action event' estao entre 0-31
-      if (((ArduinoEEPROM) arduino).getPinType() == ArduinoPinType.DIGITAL && ((ArduinoEEPROM) arduino)
-          .getActionEvent() > ArduinoEEPROM.DIGITAL_ACTION_EVENT_MAX)
+      if (DIGITAL.equals(((ArduinoEEPROM) arduino).getPinType()) && ((ArduinoEEPROM) arduino)
+          .getActionEvent() > DIGITAL_ACTION_EVENT_MAX)
         return EMPTY_BITS;
       // Os valores do 'action event' estao entre 0-127
-      else if (((ArduinoEEPROM) arduino).getPinType() == ArduinoPinType.ANALOG && ((ArduinoEEPROM) arduino)
-          .getActionEvent() > ArduinoEEPROM.ANALOG_ACTION_EVENT_MAX)
+      else if (ANALOG.equals(((ArduinoEEPROM) arduino).getPinType()) && ((ArduinoEEPROM) arduino)
+          .getActionEvent() > ANALOG_ACTION_EVENT_MAX)
         return EMPTY_BITS;
     }
 
@@ -173,19 +190,19 @@ public final class SisbarcProtocol {
     pinType <<= (TOTAL_BITS_DATA - 6);
     protocol |= (pinType & mask);
 
-    if (arduino.getPinType() == ArduinoPinType.DIGITAL) {
+    if (DIGITAL.equals(arduino.getPinType())) {
       // 00000000 00000000 00111111 00000000
       mask = 0x00003F00;
       int pin = arduino.getPin();
       pin <<= TOTAL_BITS_DIGITAL_PIN_VALUE;
       protocol |= (pin & mask);
 
-      if (arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE) {
+      if (EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())) {
         // 00000000 00000000 00000000 11111111
         mask = 0x000000FF;
         int pinValue = ((ArduinoUSART) arduino).getPinValue();
         protocol |= (pinValue & mask);
-      } else if (arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ) {
+      } else if (WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())) {
         // 00000000 00000000 00000000 11100000
         mask = 0x000000E0;
         int threadTime = ((ArduinoEEPROM) arduino).getThreadInterval();
@@ -197,19 +214,19 @@ public final class SisbarcProtocol {
         int actionEvent = ((ArduinoEEPROM) arduino).getActionEvent();
         protocol |= (actionEvent & mask);
       }
-    } else if (arduino.getPinType() == ArduinoPinType.ANALOG) {
+    } else if (ANALOG.equals(arduino.getPinType())) {
       // 00000000 00000000 00111100 00000000
       mask = 0x00003C00;
       int pin = arduino.getPin();
       pin <<= TOTAL_BITS_ANALOG_PIN_VALUE;
       protocol |= (pin & mask);
 
-      if (arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE) {
+      if (EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())) {
         // 00000000 00000000 00000011 11111111
         mask = 0x000003FF;
         int pinValue = ((ArduinoUSART) arduino).getPinValue();
         protocol |= (pinValue & mask);
-      } else if (arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ) {
+      } else if (WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())) {
         // 00000000 00000000 00000011 10000000
         mask = 0x00000380;
         int threadTime = ((ArduinoEEPROM) arduino).getThreadInterval();
@@ -259,14 +276,14 @@ public final class SisbarcProtocol {
   }
 
   public static byte[] getProtocolUSART(Arduino arduino) {
-    if (!(arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE))
+    if (!(EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())))
       return null;
 
     return getProtocol(arduino);
   }
 
   public static byte[] getProtocolEEPROM(Arduino arduino) {
-    if (!(arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ))
+    if (!(WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())))
       return null;
 
     return getProtocol(arduino);
@@ -298,7 +315,7 @@ public final class SisbarcProtocol {
     byte checksum = Checksum.getCrc3Bytes(message);
 
     if (checksumProtocol != checksum)
-      throw new ArduinoException("CRC invalido");
+      throw new ArduinoException("CRC inválido");
 
     // 0/1 _ ARDUINO/PC 1bit
     // 00001000 00000000 00000000 00000000
@@ -331,14 +348,22 @@ public final class SisbarcProtocol {
 
     Arduino arduino = null;
 
-    if (event == ArduinoEvent.EXECUTE)
-      arduino = new ArduinoUSART();
-    else if (event == ArduinoEvent.WRITE)
-      arduino = new ArduinoEEPROMWrite();
-    else if (event == ArduinoEvent.READ)
-      arduino = new ArduinoEEPROMRead();
-    else if (event == ArduinoEvent.MESSAGE)
-      arduino = new ArduinoUSARTMessage();
+    switch (event) {
+      case EXECUTE:
+        arduino = new ArduinoUSART();
+        break;
+      case WRITE:
+        arduino = new ArduinoEEPROMWrite();
+        break;
+      case READ:
+        arduino = new ArduinoEEPROMRead();
+        break;
+      case MESSAGE:
+        arduino = new ArduinoUSARTMessage();
+        break;
+      default:
+        break;
+    }
 
     if (arduino == null)
       throw new ArduinoException("Evento invalido");
@@ -347,7 +372,7 @@ public final class SisbarcProtocol {
     arduino.setStatus(status);
     arduino.setPinType(pinType);
 
-    if (arduino.getPinType() == ArduinoPinType.DIGITAL) {
+    if (DIGITAL.equals(arduino.getPinType())) {
       // 0-63 _ PIN 6bits
       // 00000000 00111111 00000000 00000000
       mask = 0x003F0000;
@@ -355,14 +380,14 @@ public final class SisbarcProtocol {
       pin >>= (TOTAL_BITS_PROTOCOL - TOTAL_BITS_INDEX - 6 - TOTAL_BITS_DIGITAL_PIN);
       arduino.setPin((byte) pin);
 
-      if (arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE) {
+      if (EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())) {
         // 0-255 _ VALOR PIN 8bits
         // 00000000 00000000 11111111 00000000
         mask = 0x0000FF00;
         int pinValue = protocol & mask;
         pinValue >>= TOTAL_BITS_CHECKSUM;
         ((ArduinoUSART) arduino).setPinValue((short) pinValue);
-      } else if (arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ) {
+      } else if (WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())) {
         // 0-7 _ VALOR PIN 3bits
         // 00000000 00000000 11100000 00000000
         mask = 0x0000E000;
@@ -377,7 +402,7 @@ public final class SisbarcProtocol {
         actionEvent >>= TOTAL_BITS_CHECKSUM;
         ((ArduinoEEPROM) arduino).setActionEvent((byte) actionEvent);
       }
-    } else if (arduino.getPinType() == ArduinoPinType.ANALOG) {
+    } else if (ANALOG.equals(arduino.getPinType())) {
       // 0-15 _ PIN 6bits
       // 00000000 00111100 00000000 00000000
       mask = 0x003C0000;
@@ -385,14 +410,14 @@ public final class SisbarcProtocol {
       pin >>= (TOTAL_BITS_PROTOCOL - TOTAL_BITS_INDEX - 4 - TOTAL_BITS_DIGITAL_PIN);
       arduino.setPin((byte) pin);
 
-      if (arduino.getEvent() == ArduinoEvent.EXECUTE || arduino.getEvent() == ArduinoEvent.MESSAGE) {
+      if (EXECUTE.equals(arduino.getEvent()) || MESSAGE.equals(arduino.getEvent())) {
         // 0-1023 _ VALOR PIN 10bits
         // 00000000 00000011 11111111 00000000
         mask = 0x0003FF00;
         int pinValue = protocol & mask;
         pinValue >>= TOTAL_BITS_CHECKSUM;
         ((ArduinoUSART) arduino).setPinValue((short) pinValue);
-      } else if (arduino.getEvent() == ArduinoEvent.WRITE || arduino.getEvent() == ArduinoEvent.READ) {
+      } else if (WRITE.equals(arduino.getEvent()) || READ.equals(arduino.getEvent())) {
         // 0-7 _ VALOR PIN 3bits
         // 00000000 00000011 10000000 00000000
         mask = 0x00038000;
@@ -416,10 +441,10 @@ public final class SisbarcProtocol {
     ArduinoTransmitter transmitter = null;
     switch (transmitterValue) {
       case 0:
-        transmitter = ArduinoTransmitter.ARDUINO;
+        transmitter = ARDUINO;
         break;
       case 1:
-        transmitter = ArduinoTransmitter.OTHER_DEVICE;
+        transmitter = OTHER_DEVICE;
         break;
       default:
         break;
@@ -431,16 +456,16 @@ public final class SisbarcProtocol {
     ArduinoStatus status = null;
     switch (statusValue) {
       case 0:
-        status = ArduinoStatus.SEND;
+        status = SEND;
         break;
       case 1:
-        status = ArduinoStatus.SEND_RESPONSE;
+        status = SEND_RESPONSE;
         break;
       case 2:
-        status = ArduinoStatus.RESPONSE;
+        status = RESPONSE;
         break;
       case 3:
-        status = ArduinoStatus.RESPONSE_RESPONSE;
+        status = RESPONSE_RESPONSE;
         break;
       default:
         break;
@@ -452,16 +477,16 @@ public final class SisbarcProtocol {
     ArduinoEvent event = null;
     switch (eventValue) {
       case 0:
-        event = ArduinoEvent.EXECUTE;
+        event = EXECUTE;
         break;
       case 1:
-        event = ArduinoEvent.WRITE;
+        event = WRITE;
         break;
       case 2:
-        event = ArduinoEvent.READ;
+        event = READ;
         break;
       case 3:
-        event = ArduinoEvent.MESSAGE;
+        event = MESSAGE;
         break;
       default:
         break;
@@ -473,10 +498,10 @@ public final class SisbarcProtocol {
     ArduinoPinType pinType = null;
     switch (pinTypeValue) {
       case 0:
-        pinType = ArduinoPinType.DIGITAL;
+        pinType = DIGITAL;
         break;
       case 1:
-        pinType = ArduinoPinType.ANALOG;
+        pinType = ANALOG;
         break;
       default:
         break;

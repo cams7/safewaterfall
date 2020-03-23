@@ -63,8 +63,8 @@ public class AppSchedulerServiceImpl implements AppSchedulerService {
     if (reschedule) {
       AppSchedulerVO scheduler = new AppSchedulerVO(triggerName);
       scheduler.setCronExpression(cronExpression);
-      schedulerRepository.save(scheduler);
       rescheduleCronJob(triggerName, cronExpression);
+      schedulerRepository.save(scheduler);
     }
   }
 

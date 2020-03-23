@@ -22,7 +22,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @RedisHash("current_status")
 public class CurrentStatus {
-
   private String id;
   private Arduino arduino;
 
@@ -30,5 +29,4 @@ public class CurrentStatus {
     this();
     this.id = id;
   }
-
 }

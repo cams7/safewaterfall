@@ -3,6 +3,7 @@
  */
 package br.com.cams7.safewaterfall.arduino.model.vo;
 
+import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.MESSAGE;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +22,7 @@ public class ArduinoUSARTMessage extends ArduinoUSART {
    */
   public ArduinoUSARTMessage() {
     super();
-    setEvent(ArduinoEvent.MESSAGE);
+    setEvent(MESSAGE);
   }
 
   /**
@@ -31,7 +32,7 @@ public class ArduinoUSARTMessage extends ArduinoUSART {
    * @param pinValue
    */
   private ArduinoUSARTMessage(ArduinoStatus status, ArduinoPinType pinType, byte pin, short pinValue) {
-    super(status, ArduinoEvent.MESSAGE, pinType, pin, pinValue);
+    super(status, MESSAGE, pinType, pin, pinValue);
   }
 
   public ArduinoUSARTMessage(ArduinoStatus status, ArduinoPinType pinType, byte pin) {

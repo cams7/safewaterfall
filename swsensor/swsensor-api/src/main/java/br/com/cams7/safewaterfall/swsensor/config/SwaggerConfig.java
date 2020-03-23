@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import com.google.common.base.Predicate;
-import br.com.cams7.safewaterfall.swsensor.endpoint.ArduinoEndpoint;
+import br.com.cams7.safewaterfall.swsensor.endpoint.StatusArduinoEndpoint;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -30,7 +30,7 @@ public class SwaggerConfig {
   private static final Predicate<RequestHandler> ENDPOINT_PACKAGE;
 
   static {
-    ENDPOINT_PACKAGE = basePackage(ArduinoEndpoint.class.getPackage().getName());
+    ENDPOINT_PACKAGE = basePackage(StatusArduinoEndpoint.class.getPackage().getName());
   }
 
   @Bean
