@@ -16,7 +16,7 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
  * @author CAMs7
  *
  */
-public class QuartzUtil {
+public class AppQuartzUtil {
 
   public static SimpleTriggerFactoryBean createTrigger(JobDetail jobDetail, long pollFrequencyMs,
       String triggerName) {

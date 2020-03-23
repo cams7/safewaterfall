@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +19,12 @@ public class App {
 
   @Bean
   public RestOperations restTemplate() {
-    return new RestTemplate();
+    HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+    // Connect timeout
+    clientHttpRequestFactory.setConnectTimeout(5_000);// 5 secounds
+    // Read timeout
+    clientHttpRequestFactory.setReadTimeout(5_000);// 5 secounds
+    return new RestTemplate(clientHttpRequestFactory);
   }
 
   @Bean

@@ -23,7 +23,7 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
-import br.com.cams7.safewaterfall.common.scheduler.QuartzUtil;
+import br.com.cams7.safewaterfall.common.scheduler.AppQuartzUtil;
 
 /**
  * @author CAMs7
@@ -35,7 +35,7 @@ public class SirenQrtzScheduler {
 
   private static final String SIREN_JOB = "sirenJob";
   private static final String SIREN_TRIGGER = "sirenTrigger";
-  private static final String CRON_EVERY_1MINUTE = "0 0/1 * ? * * *";
+  private static final String CRON_EVERY_1MINUTE = "0 0/10 * ? * * *";
 
   @Autowired
   private ApplicationContext applicationContext;
@@ -69,13 +69,13 @@ public class SirenQrtzScheduler {
 
   @Bean(name = SIREN_JOB)
   public JobDetailFactoryBean sirenJobDetail() {
-    JobDetailFactoryBean jobDetailFactory = QuartzUtil.createJobDetail(SirenJob.class, "Qrtz_SirenJob_Detail");
+    JobDetailFactoryBean jobDetailFactory = AppQuartzUtil.createJobDetail(SirenJob.class, "Qrtz_SirenJob_Detail");
     return jobDetailFactory;
   }
 
   @Bean(name = SIREN_TRIGGER)
   public CronTriggerFactoryBean trigger(@Qualifier(SIREN_JOB) JobDetail job) {
-    CronTriggerFactoryBean trigger = QuartzUtil.createCronTrigger(job, CRON_EVERY_1MINUTE, "Qrtz_SirenTrigger");
+    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, CRON_EVERY_1MINUTE, "Qrtz_SirenTrigger");
     return trigger;
   }
 

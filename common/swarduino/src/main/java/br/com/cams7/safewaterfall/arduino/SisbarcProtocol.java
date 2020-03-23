@@ -1,5 +1,6 @@
 package br.com.cams7.safewaterfall.arduino;
 
+import br.com.cams7.safewaterfall.arduino.error.ArduinoException;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROM;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoEEPROMRead;

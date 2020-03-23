@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 import org.springframework.beans.factory.annotation.Autowired;
+import br.com.cams7.safewaterfall.arduino.error.ArduinoException;
 import br.com.cams7.safewaterfall.arduino.model.CurrentStatus;
 import br.com.cams7.safewaterfall.arduino.model.repository.CurrentStatusRepository;
 import br.com.cams7.safewaterfall.arduino.model.vo.Arduino;
@@ -44,7 +45,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
   private byte serialDataIndex;
 
   @Autowired
-  protected CurrentStatusRepository repository;
+  protected CurrentStatusRepository statusRepository;
 
   /**
    * Construtor da classe Arduino
@@ -220,23 +221,22 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     String id = getKeyCurrentStatus(arduino.getEvent(), arduino.getPinType(), arduino.getPin());
 
     CurrentStatus currentStatus;
-    if (!repository.existsById(id)) {
+    if (!statusRepository.existsById(id)) {
       currentStatus = new CurrentStatus(id);
       currentStatus.setArduino(arduino);
     } else {
-      currentStatus = repository.findById(id).orElseThrow(() -> new ArduinoException(String.format(
+      currentStatus = statusRepository.findById(id).orElseThrow(() -> new ArduinoException(String.format(
           "Não foi encontrado nenhum estado do arduino pelo id %s", id)));
       if (arduino instanceof ArduinoUSART)
         ((ArduinoUSART) currentStatus.getArduino()).changeCurrentValues((ArduinoUSART) arduino);
       else if (arduino instanceof ArduinoEEPROM)
         ((ArduinoEEPROM) currentStatus.getArduino()).changeCurrentValues((ArduinoEEPROM) arduino);
     }
-    repository.save(currentStatus);
+    statusRepository.save(currentStatus);
   }
 
-  protected String getKeyCurrentStatus(ArduinoEvent event, ArduinoPinType pinType, byte pin) {
+  public static String getKeyCurrentStatus(ArduinoEvent event, ArduinoPinType pinType, byte pin) {
     String key = event.getAbbreviation() + "_" + pinType.getAbbreviation() + pin;
-
     return key;
   }
 

@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -16,9 +17,19 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 @EnableScheduling
 public class App {
 
+  private final static int TIMEOUT = 5_000;// 5 secounds
+
+  private final static String REDIS_HOSTNAME = "172.42.42.210";
+  private final static int REDIS_PORT = 6379;
+
   @Bean
   public RestOperations restTemplate() {
-    return new RestTemplate();
+    HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+    // Connect timeout
+    clientHttpRequestFactory.setConnectTimeout(TIMEOUT);
+    // Read timeout
+    clientHttpRequestFactory.setReadTimeout(TIMEOUT);
+    return new RestTemplate(clientHttpRequestFactory);
   }
 
   @Bean
@@ -30,8 +41,8 @@ public class App {
   @Bean
   public JedisConnectionFactory jedisConnectionFactory() {
     JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
-    jedisConFactory.setHostName("172.42.42.210");
-    jedisConFactory.setPort(6379);
+    jedisConFactory.setHostName(REDIS_HOSTNAME);
+    jedisConFactory.setPort(REDIS_PORT);
     return jedisConFactory;
   }
 

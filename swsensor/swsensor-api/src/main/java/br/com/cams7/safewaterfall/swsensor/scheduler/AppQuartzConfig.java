@@ -22,7 +22,7 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
-import br.com.cams7.safewaterfall.common.scheduler.QuartzUtil;
+import br.com.cams7.safewaterfall.common.scheduler.AppQuartzUtil;
 
 /**
  * @author CAMs7
@@ -30,11 +30,17 @@ import br.com.cams7.safewaterfall.common.scheduler.QuartzUtil;
  */
 @Configuration
 @EnableAutoConfiguration
-public class ArduinoQrtzScheduler {
+public class AppQuartzConfig {
 
-  private static final String ARDUINO_JOB = "arduinoJob";
-  private static final String ARDUINO_TRIGGER = "arduinoTrigger";
-  private static final String CRON_EVERY_30SECONDS = "0/30 * * ? * * *";
+  public static final String STATUS_ARDUINO_JOB = "STATUS_ARDUINO_JOB";
+  public static final String STATUS_ARDUINO_TRIGGER = "STATUS_ARDUINO_TRIGGER";
+
+  public static final String SEND_MESSAGE_JOB = "SEND_MESSAGE_JOB";
+  public static final String SEND_MESSAGE_TRIGGER = "SEND_MESSAGE_TRIGGER";
+
+  public static final String STATUS_ARDUINO_CRON = "0/3 * * ? * * *";// Every 3 secounds
+  public static final String SEND_ALERT_MESSAGE_CRON = "0/10 * * ? * * *";// Every 10 secounds
+  public static final String SEND_STATUS_MESSAGE_CRON = "0 0/1 * ? * * *";// Every 1 minute
 
   @Autowired
   private ApplicationContext applicationContext;
@@ -63,16 +69,29 @@ public class ArduinoQrtzScheduler {
     return schedulerFactory;
   }
 
-  @Bean(name = ARDUINO_JOB)
-  public JobDetailFactoryBean arduinoJobDetail() {
-    JobDetailFactoryBean jobDetailFactory = QuartzUtil.createJobDetail(ArduinoJob.class, "Qrtz_ArduinoJob_Detail");
+  @Bean(name = SEND_MESSAGE_JOB)
+  public JobDetailFactoryBean sendMessageJobDetail() {
+    JobDetailFactoryBean jobDetailFactory = AppQuartzUtil.createJobDetail(SendMessageJob.class, SEND_MESSAGE_JOB);
     return jobDetailFactory;
   }
 
-  @Bean(name = ARDUINO_TRIGGER)
-  public CronTriggerFactoryBean trigger(@Qualifier(ARDUINO_JOB) JobDetail job) {
-    CronTriggerFactoryBean trigger = QuartzUtil.createCronTrigger(job, CRON_EVERY_30SECONDS,
-        "Qrtz_ArduinoTrigger");
+  @Bean(name = SEND_MESSAGE_TRIGGER)
+  public CronTriggerFactoryBean sendMessageTrigger(@Qualifier(SEND_MESSAGE_JOB) JobDetail job) {
+    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, SEND_STATUS_MESSAGE_CRON,
+        SEND_MESSAGE_TRIGGER);
+    return trigger;
+  }
+
+  @Bean(name = STATUS_ARDUINO_JOB)
+  public JobDetailFactoryBean arduinoJobDetail() {
+    JobDetailFactoryBean jobDetailFactory = AppQuartzUtil.createJobDetail(StatusArduinoJob.class, STATUS_ARDUINO_JOB);
+    return jobDetailFactory;
+  }
+
+  @Bean(name = STATUS_ARDUINO_TRIGGER)
+  public CronTriggerFactoryBean trigger(@Qualifier(STATUS_ARDUINO_JOB) JobDetail job) {
+    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, STATUS_ARDUINO_CRON,
+        STATUS_ARDUINO_TRIGGER);
     return trigger;
   }
 

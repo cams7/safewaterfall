@@ -2,8 +2,8 @@ package br.com.cams7.safewaterfall.swmanager.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import br.com.cams7.safewaterfall.common.model.repository.SensorRepository;
-import br.com.cams7.safewaterfall.common.model.vo.SensorVO;
+import br.com.cams7.safewaterfall.common.model.repository.AppSensorRepository;
+import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -11,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SensorServiceImpl implements SensorService {
 
   @Autowired
-  protected SensorRepository repository;
+  protected AppSensorRepository repository;
 
   /**
    *
    */
   @Override
-  public void atualizarSensor(SensorVO sensor) {
+  public void atualizarSensor(AppSensorVO sensor) {
     repository.save(sensor);
     log.info("atualizarSensor -> {}", sensor);
   }
