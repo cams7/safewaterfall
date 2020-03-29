@@ -1,0 +1,8 @@
+  ____   __        __    ____    _                       
+ / ___|  \ \      / /   / ___|  (_)  _ __    ___   _ __  
+ \___ \   \ \ /\ / /    \___ \  | | | '__|  / _ \ | '_ \ 
+  ___) |   \ V  V /      ___) | | | | |    |  __/ | | | |
+ |____/     \_/\_/      |____/  |_| |_|     \___| |_| |_|   
+
+
+${AnsiColor.BRIGHT_BLUE}:: SW Siren :: Running Spring Boot ${spring-boot.version} :: Port #${server.port} :: ${AnsiColor.DEFAULT}

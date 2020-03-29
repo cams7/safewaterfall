@@ -34,6 +34,7 @@ http://localhost:8080/h2
 docker pull redis:alpine3.11
 docker rm redis_swsensor -f && docker run -d --name redis_swsensor -p 6379:6379 -i -t redis:alpine3.11
 docker rm redis_swmanager -f && docker run -d --name redis_swmanager -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren -f && docker run -d --name redis_swsiren -p 6579:6379 -i -t redis:alpine3.11
 
 #Altera o ESTADO do LED para ACESO ou APAGADO
 curl -X POST "http://localhost:8080/arduino/alterar_estado_led/ACESO" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
