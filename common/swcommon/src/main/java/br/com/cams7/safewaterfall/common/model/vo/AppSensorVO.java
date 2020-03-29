@@ -24,10 +24,15 @@ import lombok.ToString;
 @RedisHash("sensor")
 public class AppSensorVO {
 
-  private String id;
-  private Short distancia;
+  private Long id;
+  private Short distance;
+  private String statusArduinoCron;
+  private String sendStatusMessageCron;
+  private String sendAlertMessageCron;
+  private Short minimumAllowedDistance;
+  private Short maximumMeasuredDistance;
 
-  public AppSensorVO(String id) {
+  public AppSensorVO(Long id) {
     this();
     this.id = id;
   }

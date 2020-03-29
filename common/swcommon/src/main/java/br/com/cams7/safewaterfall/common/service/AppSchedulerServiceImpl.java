@@ -28,7 +28,7 @@ public class AppSchedulerServiceImpl implements AppSchedulerService {
   private SchedulerFactoryBean schedulerFactory;
 
   @Autowired
-  private AppSchedulerRepository schedulerRepository;
+  private AppSchedulerRepository repository;
 
   /**
    * @param triggerName Nome do trigger
@@ -53,9 +53,9 @@ public class AppSchedulerServiceImpl implements AppSchedulerService {
    * @param cronExpression Expressão Cron
    */
   public void reschedule(String triggerName, String cronExpression) {
-    boolean reschedule = !schedulerRepository.existsById(triggerName);
+    boolean reschedule = !repository.existsById(triggerName);
     if (!reschedule) {
-      AppSchedulerVO scheduler = schedulerRepository.findById(triggerName).orElseThrow(() -> new AppException(
+      AppSchedulerVO scheduler = repository.findById(triggerName).orElseThrow(() -> new AppException(
           String.format("O trigger %s não foi encontrado", triggerName)));
       reschedule = !cronExpression.equals(scheduler.getCronExpression());
     }
@@ -64,7 +64,7 @@ public class AppSchedulerServiceImpl implements AppSchedulerService {
       AppSchedulerVO scheduler = new AppSchedulerVO(triggerName);
       scheduler.setCronExpression(cronExpression);
       rescheduleCronJob(triggerName, cronExpression);
-      schedulerRepository.save(scheduler);
+      repository.save(scheduler);
     }
   }
 

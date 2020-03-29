@@ -4,6 +4,10 @@
 package br.com.cams7.safewaterfall.swsensor.scheduler;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -21,8 +25,12 @@ import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
+import br.com.cams7.safewaterfall.common.error.AppException;
+import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
+import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
 import br.com.cams7.safewaterfall.common.scheduler.AppJobFactory;
 import br.com.cams7.safewaterfall.common.scheduler.AppQuartzUtil;
+import br.com.cams7.safewaterfall.common.service.AppSensorService;
 
 /**
  * @author CAMs7
@@ -40,15 +48,11 @@ public class AppQuartzConfig {
 
   public static final long SENSOR_ID = 1;
 
-  public static final String STATUS_ARDUINO_CRON = "0/3 * * ? * * *";// Every 3 secounds
-  public static final String SEND_ALERT_MESSAGE_CRON = "0/10 * * ? * * *";// Every 10 secounds
-  public static final String SEND_STATUS_MESSAGE_CRON = "0 0/1 * ? * * *";// Every 1 minute
-
   @Autowired
   private ApplicationContext applicationContext;
 
-  // @Autowired
-  // private SensorService sensorService;
+  @Autowired
+  private AppSensorService appSensorService;
 
   @Bean
   public SpringBeanJobFactory springBeanJobFactory() {
@@ -59,6 +63,35 @@ public class AppQuartzConfig {
 
   @Bean
   public SchedulerFactoryBean scheduler(DataSource quartzDataSource, Trigger... triggers) {
+
+    try {
+      Connection conn = quartzDataSource.getConnection();
+      try (PreparedStatement pstmt = conn.prepareStatement(
+          "select ARDUINO_STATUS_CRON, ENV_STATUS_CRON, ENV_ALERTA_CRON, DISTANCIA_MIN, DISTANCIA_MAX from TB_SENSOR where ID_SENSOR = ?")) {
+        pstmt.setLong(1, SENSOR_ID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+          if (rs.next()) {
+            String statusArduinoCron = rs.getString("ARDUINO_STATUS_CRON");
+            String sendStatusMessageCron = rs.getString("ENV_STATUS_CRON");
+            String sendAlertMessageCron = rs.getString("ENV_ALERTA_CRON");
+            Short minimumAllowedDistance = (short) rs.getInt("DISTANCIA_MIN");
+            Short maximumMeasuredDistance = (short) rs.getInt("DISTANCIA_MAX");
+
+            AppSensorVO sensor = new AppSensorVO(SENSOR_ID);
+            sensor.setStatusArduinoCron(statusArduinoCron);
+            sensor.setSendStatusMessageCron(sendStatusMessageCron);
+            sensor.setSendAlertMessageCron(sendAlertMessageCron);
+            sensor.setMinimumAllowedDistance(minimumAllowedDistance);
+            sensor.setMaximumMeasuredDistance(maximumMeasuredDistance);
+
+            appSensorService.save(sensor);
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new AppException(e);
+    }
+
     SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
     schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
 
@@ -81,12 +114,16 @@ public class AppQuartzConfig {
   }
 
   @Bean(name = SEND_MESSAGE_TRIGGER)
-  public CronTriggerFactoryBean sendMessageTrigger(@Qualifier(SEND_MESSAGE_JOB) JobDetail job) {
-    String sendStatusMessageCron =
-        /* sensorService.findSendStatusMessageCronById(SENSOR_ID) */SEND_STATUS_MESSAGE_CRON;
-    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, sendStatusMessageCron,
-        SEND_MESSAGE_TRIGGER);
-    return trigger;
+  public CronTriggerFactoryBean sendMessageTrigger(DataSource quartzDataSource,
+      @Qualifier(SEND_MESSAGE_JOB) JobDetail job) {
+    try {
+      String sendStatusMessageCron = getCronExpression(quartzDataSource.getConnection(), "ENV_STATUS_CRON");
+      CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, sendStatusMessageCron,
+          SEND_MESSAGE_TRIGGER);
+      return trigger;
+    } catch (SQLException e) {
+      throw new AppException(e);
+    }
   }
 
   @Bean(name = STATUS_ARDUINO_JOB)
@@ -97,11 +134,16 @@ public class AppQuartzConfig {
   }
 
   @Bean(name = STATUS_ARDUINO_TRIGGER)
-  public CronTriggerFactoryBean trigger(@Qualifier(STATUS_ARDUINO_JOB) JobDetail job) {
-    String statusArduinoCron = /* sensorService.findStatusArduinoCronById(SENSOR_ID) */STATUS_ARDUINO_CRON;
-    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, statusArduinoCron,
-        STATUS_ARDUINO_TRIGGER);
-    return trigger;
+  public CronTriggerFactoryBean trigger(DataSource quartzDataSource,
+      @Qualifier(STATUS_ARDUINO_JOB) JobDetail job) {
+    try {
+      String statusArduinoCron = getCronExpression(quartzDataSource.getConnection(), "ARDUINO_STATUS_CRON");
+      CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, statusArduinoCron,
+          STATUS_ARDUINO_TRIGGER);
+      return trigger;
+    } catch (SQLException e) {
+      throw new AppException(e);
+    }
   }
 
   @Bean
@@ -109,6 +151,25 @@ public class AppQuartzConfig {
   @ConfigurationProperties(prefix = "spring.datasource")
   public DataSource quartzDataSource() {
     return DataSourceBuilder.create().build();
+  }
+
+  /**
+   * @param conn
+   * @param fieldName
+   * @return
+   * @throws SQLException
+   */
+  private static final String getCronExpression(Connection conn, String fieldName) throws SQLException {
+    try (PreparedStatement pstmt = conn.prepareStatement(String.format(
+        "select %s from TB_SENSOR where ID_SENSOR = ?", fieldName))) {
+      pstmt.setLong(1, SENSOR_ID);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next())
+          return rs.getString(fieldName);
+
+        throw new AppResourceNotFoundException("A expressão cron não foi encontrada");
+      }
+    }
   }
 
 }

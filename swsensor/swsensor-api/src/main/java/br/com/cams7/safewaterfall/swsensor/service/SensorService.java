@@ -16,7 +16,7 @@ public interface SensorService {
    * 
    * @param sensor Sensor
    */
-  void save(SensorEntity sensor);
+  SensorEntity save(SensorEntity sensor);
 
   /**
    * Buscar o sensor pelo ID

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
-import br.com.cams7.safewaterfall.swmanager.service.SensorService;
+import br.com.cams7.safewaterfall.common.service.AppSensorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,13 +30,13 @@ public class SensorEndpoint {
   public static final String SENSOR_PATH = "/sensor";
 
   @Autowired
-  private SensorService service;
+  private AppSensorService appSensorService;
 
   @ApiOperation("Atualiza a ultima leitura do sensor")
   @PostMapping(path = "atualizar")
   @ResponseStatus(value = OK)
   public void atualizarSensor(@ApiParam("Sensor") @RequestBody AppSensorVO sensor) {
-    service.atualizarSensor(sensor);
+    appSensorService.save(sensor);
   }
 
 }

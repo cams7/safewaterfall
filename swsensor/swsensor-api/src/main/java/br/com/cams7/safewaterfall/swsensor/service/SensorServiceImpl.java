@@ -22,8 +22,8 @@ public class SensorServiceImpl implements SensorService {
   private SensorRepository repository;
 
   @Override
-  public void save(SensorEntity sensor) {
-    repository.save(sensor);
+  public SensorEntity save(SensorEntity sensor) {
+    return repository.save(sensor);
   }
 
   @Transactional(readOnly = true)
