@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <avr/eeprom.h>
+
 #include "Sisbarc.h"
 #include "SisbarcProtocol.h"
 #include "SisbarcEEPROM.h"
@@ -7,11 +9,15 @@
 #include "vo/ArduinoUSART.h"
 #include "vo/ArduinoEEPROM.h"
 
+#define D13_LED    13   //Pino 13 Digital
+
 #define D09_TRIGGER 9 //Pino 09 PWM
 #define D08_ECHO 8 //Pino 08 Digital
 
 #define INTERVALO_10MICROSEGUNDOS  10    // 10 microsegundos
 #define INTERVALO_100MILISEGUNDOS 100  // 100 milisegundos
+
+#define EEPROM_LENGTH 255
 
 //Declared weak in Arduino.h to allow user redefinitions.
 int atexit(void (*func)()) {
@@ -26,6 +32,7 @@ void initVariant() {
 
 using namespace SISBARC;
 
+void clearEEPROM(void);
 bool callGetDistance(ArduinoStatus* const);
 
 float pulse;
@@ -49,8 +56,11 @@ int main(void) {
 }
 
 void setup(void) {
+	pinMode(D13_LED, OUTPUT);
 	pinMode(D09_TRIGGER, OUTPUT);
 	pinMode(D08_ECHO, INPUT);
+
+	clearEEPROM();
 
 	digitalWrite(D09_TRIGGER, LOW);
 
@@ -65,6 +75,15 @@ void setup(void) {
 
 void loop(void) {
 	Sisbarc.run();
+}
+
+void clearEEPROM(void) {
+	digitalWrite(D13_LED, HIGH);
+
+	for (byte i = 0 ; i < EEPROM_LENGTH; i++)
+		eeprom_write_byte((unsigned char *) i, 0x00);
+
+	digitalWrite(D13_LED, LOW);
 }
 
 //Foi chamado através da serial
@@ -108,6 +127,9 @@ void getDistance(ArduinoStatus* const arduino) {
 
 	pulse = pulseIn(arduinoUSART->getPin(), HIGH);
 	distance = (uint16_t)(pulse / 5.8823); //distancia em milimetros
+
+	if(distance > ArduinoUSART::DIGITAL_PIN_VALUE_MAX)
+		distance=0x00;
 
 	arduinoUSART->setPinValue(distance);
 

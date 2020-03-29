@@ -32,6 +32,9 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
   @Autowired
   private AppSchedulerService schedulerService;
 
+  // @Autowired
+  // private SensorService sensorService;
+
   public StatusArduinoServiceImpl() {
     super(SERIAL_PORT, SERIAL_BAUD_RATE, SERIAL_THREAD_TIME);
   }
@@ -44,9 +47,13 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
   protected void receiveMessage(ArduinoPinType pinType, byte pin, short pinValue) {
     log.info("receiveMessage -> pinType: {}, pin: {}, pinValue: {}", pinType, pin, pinValue);
     if (pinValue < 100) {
-      schedulerService.reschedule(SEND_MESSAGE_TRIGGER, SEND_ALERT_MESSAGE_CRON);
+      String sendAlertMessageCron =
+          /* sensorService.findSendAlertMessageCronById(SENSOR_ID) */SEND_ALERT_MESSAGE_CRON;
+      schedulerService.reschedule(SEND_MESSAGE_TRIGGER, sendAlertMessageCron);
     } else {
-      schedulerService.reschedule(SEND_MESSAGE_TRIGGER, SEND_STATUS_MESSAGE_CRON);
+      String sendStatusMessageCron =
+          /* sensorService.findSendStatusMessageCronById(SENSOR_ID) */SEND_STATUS_MESSAGE_CRON;
+      schedulerService.reschedule(SEND_MESSAGE_TRIGGER, sendStatusMessageCron);
     }
   }
 

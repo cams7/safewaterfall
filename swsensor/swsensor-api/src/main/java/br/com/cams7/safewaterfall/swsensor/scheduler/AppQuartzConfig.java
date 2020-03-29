@@ -38,12 +38,17 @@ public class AppQuartzConfig {
   public static final String SEND_MESSAGE_JOB = "SEND_MESSAGE_JOB";
   public static final String SEND_MESSAGE_TRIGGER = "SEND_MESSAGE_TRIGGER";
 
+  public static final long SENSOR_ID = 1;
+
   public static final String STATUS_ARDUINO_CRON = "0/3 * * ? * * *";// Every 3 secounds
   public static final String SEND_ALERT_MESSAGE_CRON = "0/10 * * ? * * *";// Every 10 secounds
   public static final String SEND_STATUS_MESSAGE_CRON = "0 0/1 * ? * * *";// Every 1 minute
 
   @Autowired
   private ApplicationContext applicationContext;
+
+  // @Autowired
+  // private SensorService sensorService;
 
   @Bean
   public SpringBeanJobFactory springBeanJobFactory() {
@@ -77,7 +82,9 @@ public class AppQuartzConfig {
 
   @Bean(name = SEND_MESSAGE_TRIGGER)
   public CronTriggerFactoryBean sendMessageTrigger(@Qualifier(SEND_MESSAGE_JOB) JobDetail job) {
-    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, SEND_STATUS_MESSAGE_CRON,
+    String sendStatusMessageCron =
+        /* sensorService.findSendStatusMessageCronById(SENSOR_ID) */SEND_STATUS_MESSAGE_CRON;
+    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, sendStatusMessageCron,
         SEND_MESSAGE_TRIGGER);
     return trigger;
   }
@@ -91,7 +98,8 @@ public class AppQuartzConfig {
 
   @Bean(name = STATUS_ARDUINO_TRIGGER)
   public CronTriggerFactoryBean trigger(@Qualifier(STATUS_ARDUINO_JOB) JobDetail job) {
-    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, STATUS_ARDUINO_CRON,
+    String statusArduinoCron = /* sensorService.findStatusArduinoCronById(SENSOR_ID) */STATUS_ARDUINO_CRON;
+    CronTriggerFactoryBean trigger = AppQuartzUtil.createCronTrigger(job, statusArduinoCron,
         STATUS_ARDUINO_TRIGGER);
     return trigger;
   }
