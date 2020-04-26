@@ -14,4 +14,6 @@ public interface AppSensorService {
   AppSensorVO save(AppSensorVO sensor);
 
   AppSensorVO findById(Long id);
+
+  boolean existsById(Long id);
 }

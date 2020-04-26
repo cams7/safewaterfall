@@ -76,4 +76,17 @@ mvn clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && java -jar "C:/De
 
 git clone https://gitlab.com/johnjvester/jpa-spec-with-quartz.git
 
+-------------------------------------------- 26/04/20 --------------------------------------------
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swarduino"
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swcommon"
+cd "C:/Dev/My/Safewaterfall/swsensor/swsensor-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+cd "C:/Dev/My/Safewaterfall/swsiren/swsiren-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 
+mvn clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && java -jar "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"
+mvn clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && java -jar "C:/Dev/My/Safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar"
+mvn clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && java -jar "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar"
+
+curl -X GET "http://localhost:8080/arduino/carregar_distancia" -H "accept: application/json;charset=UTF-8"
+curl -X GET "http://localhost:8080/arduino/buscar_distancia" -H "accept: application/json;charset=UTF-8"

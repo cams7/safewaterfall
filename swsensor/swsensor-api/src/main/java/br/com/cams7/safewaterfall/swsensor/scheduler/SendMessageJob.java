@@ -9,6 +9,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,7 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @DisallowConcurrentExecution
 public class SendMessageJob implements Job {
 
-  private final static String MANAGER_URL = "http://localhost:8180";
+  @Value("${MANAGER_URL}")
+  private String managerUrl;
 
   @Autowired
   private RestOperations restTemplate;
@@ -61,8 +63,8 @@ public class SendMessageJob implements Job {
     HttpEntity<AppSensorVO> requestEntity = new HttpEntity<>(sensor, requestHeaders);
 
     try {
-      ResponseEntity<Void> responseEntity = restTemplate.exchange(String.format("%s/sensor/atualizar",
-          MANAGER_URL), HttpMethod.POST, requestEntity, Void.class);
+      ResponseEntity<Void> responseEntity = restTemplate.exchange(String.format("%s/sensor/atualizar_estado",
+          managerUrl), HttpMethod.POST, requestEntity, Void.class);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
         log.info("Response retrieved");

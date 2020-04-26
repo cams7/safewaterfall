@@ -8,6 +8,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 import br.com.cams7.safewaterfall.swsiren.service.StatusArduinoService;
@@ -22,7 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @DisallowConcurrentExecution
 public class SendMessageJob implements Job {
 
-  private final static String MANAGER_URL = "http://localhost:8180";
+  @Value("${MANAGER_URL}")
+  private String managerUrl;
 
   @Autowired
   private RestOperations restTemplate;

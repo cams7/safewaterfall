@@ -34,4 +34,9 @@ public class AppSensorServiceImpl implements AppSensorService {
     return sensor;
   }
 
+  @Override
+  public boolean existsById(Long id) {
+    return repository.existsById(id);
+  }
+
 }

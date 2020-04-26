@@ -232,8 +232,11 @@
 				<spring.datasource.url>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor</spring.datasource.url>
 				<spring.datasource.username>sa</spring.datasource.username>
 				<spring.datasource.password></spring.datasource.password>
-				<spring.datasource.driver-class-name>org.h2.Driver
-				</spring.datasource.driver-class-name>
+				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
+				<MANAGER_URL>http://localhost:8180</MANAGER_URL>
+				<SERIAL_PORT>COM6</SERIAL_PORT>
+				<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
+				<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 			</properties>
 		</profile>
 	</profiles>

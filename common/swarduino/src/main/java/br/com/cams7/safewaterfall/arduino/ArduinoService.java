@@ -13,19 +13,19 @@ public interface ArduinoService {
    * 
    * @return
    */
-  public String getSerialPort();
+  String getSerialPort();
 
   /**
    * Baud rate
    * 
    * @return
    */
-  public int getSerialBaudRate();
+  int getSerialBaudRate();
 
   /**
    * Serial thread time
    * 
    * @return
    */
-  public long getSerialThreadTime();
+  long getSerialThreadTime();
 }

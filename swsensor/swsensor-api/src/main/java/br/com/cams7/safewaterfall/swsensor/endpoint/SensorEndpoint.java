@@ -23,6 +23,7 @@ import br.com.cams7.safewaterfall.common.service.AppSchedulerService;
 import br.com.cams7.safewaterfall.common.service.AppSensorService;
 import br.com.cams7.safewaterfall.swsensor.model.SensorEntity;
 import br.com.cams7.safewaterfall.swsensor.service.SensorService;
+import br.com.cams7.safewaterfall.swsensor.service.StatusArduinoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -39,6 +40,9 @@ public class SensorEndpoint {
   public static final String SENSOR_PATH = "/sensor";
 
   @Autowired
+  private StatusArduinoService arduinoService;
+
+  @Autowired
   private SensorService sensorService;
 
   @Autowired
@@ -46,6 +50,21 @@ public class SensorEndpoint {
 
   @Autowired
   private AppSchedulerService appSchedulerService;
+
+  @ApiOperation("Carrega a distancia medida (em milimetros) pelo sensor na memoria")
+  @GetMapping(path = "/carregar_distancia")
+  @ResponseStatus(value = OK)
+  public void loadDistance() {
+    arduinoService.loadDistance();
+  }
+
+  @ApiOperation("Busca a distancia (em milimetros) medida pelo sensor que foi carregada previamente")
+  @GetMapping(path = "/buscar_distancia")
+  @ResponseStatus(value = OK)
+  public short getDistance() {
+    short distancia = arduinoService.getDistance();
+    return distancia;
+  }
 
   @ApiOperation("Salva ou atualiza os dados do sensor")
   @ResponseStatus(value = CREATED)

@@ -17,17 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements StatusArduinoService {
 
-  private final static String SERIAL_PORT = "COM5";
-  private final static int SERIAL_BAUD_RATE = 9600;
-  private final static long SERIAL_THREAD_TIME = 500l; // Serial verification in MILLISECOUNDS
-
   public final static byte DIGITAL_PIN = 12;
 
   @Autowired
   private AppSchedulerService appSchedulerService;
 
   public StatusArduinoServiceImpl() {
-    super(SERIAL_PORT, SERIAL_BAUD_RATE, SERIAL_THREAD_TIME);
+    super();
   }
 
   protected void receiveExecute(ArduinoPinType pinType, byte pin, short pinValue) {

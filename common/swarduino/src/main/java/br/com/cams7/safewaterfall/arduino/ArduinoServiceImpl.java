@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import br.com.cams7.safewaterfall.arduino.error.ArduinoException;
 import br.com.cams7.safewaterfall.arduino.model.CurrentStatus;
 import br.com.cams7.safewaterfall.arduino.model.repository.CurrentStatusRepository;
@@ -50,48 +52,41 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Getter
 public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, SerialPortEventListener {
 
   private OutputStream output;
   private InputStream input;
 
-  private String serialPort;
-  private int serialBaudRate;
-  private long serialThreadTime;
-
   private Byte[] serialData;
   private byte serialDataIndex;
+
+  @Value("${SERIAL_PORT}")
+  private String serialPort;
+
+  @Value("${SERIAL_BAUD_RATE}")
+  private String serialBaudRate;
+
+  @Value("${SERIAL_THREAD_TIME}")
+  private String serialThreadTime; // Serial verification in MILLISECOUNDS
 
   @Autowired
   protected CurrentStatusRepository statusRepository;
 
-  /**
-   *
-   * @param serialPort - Porta COM que sera utilizada para enviar os dados para o Arduino
-   * @param bauldRate - Taxa de transferencia da porta serial geralmente e 9600
-   */
-  protected ArduinoServiceImpl(String serialPort, int serialBaudRate, long serialThreadTime) {
+  protected ArduinoServiceImpl() {
     super();
-
-    this.serialPort = serialPort;
-    this.serialBaudRate = serialBaudRate;
-    this.serialThreadTime = serialThreadTime;
-
-    serialData = new Byte[TOTAL_BYTES_PROTOCOL];
-    serialDataIndex = 0x00;
-
-    init();
   }
 
   /**
    * Metodo que verifica se a comunicação com a porta serial esta OK
    */
-  private void init() {
+  @PostConstruct
+  protected void init() {
+    serialData = new Byte[TOTAL_BYTES_PROTOCOL];
+    serialDataIndex = 0x00;
+
     // close();
 
     // Define uma variavel portId do tipo CommPortIdentifier para
@@ -99,15 +94,15 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     CommPortIdentifier portId = null;
     try {
       // Tenta verificar se a porta COM informada existe
-      portId = CommPortIdentifier.getPortIdentifier(serialPort);
+      portId = CommPortIdentifier.getPortIdentifier(getSerialPort());
     } catch (NoSuchPortException e) {
       // Caso a porta COM nao exista sera exibido um erro
-      throw new ArduinoException(String.format("Porta %s não encontrada", serialPort), e.getCause());
+      throw new ArduinoException(String.format("Porta %s não encontrada", getSerialPort()), e.getCause());
     }
 
     try {
       // Abre a porta COM
-      SerialPort port = (SerialPort) portId.open("Comunicação serial", serialBaudRate);
+      SerialPort port = (SerialPort) portId.open("Comunicação serial", getSerialBaudRate());
 
       output = port.getOutputStream();
       input = port.getInputStream();
@@ -116,7 +111,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
 
       port.notifyOnDataAvailable(true);
 
-      port.setSerialPortParams(serialBaudRate, // taxa de transferencia da
+      port.setSerialPortParams(getSerialBaudRate(), // taxa de transferencia da
           // porta serial
           DATABITS_8, // taxa de 10 bits 8 (envio)
           STOPBITS_1, // taxa de 10 bits 1 (recebimento)
@@ -137,7 +132,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
    */
   private void close() {
     ArduinoException exception = new ArduinoException(String.format("Não foi possivel fechar a porta %s",
-        serialPort));
+        getSerialPort()));
     try {
       if (input != null)
         input.close();
@@ -206,7 +201,7 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
    */
   public void run() {
     try {
-      Thread.sleep(serialThreadTime);
+      Thread.sleep(getSerialThreadTime());
     } catch (InterruptedException e) {
       log.error(e.getMessage());
     }
@@ -475,6 +470,21 @@ public abstract class ArduinoServiceImpl implements ArduinoService, Runnable, Se
     serialWrite(getProtocolEEPROM(arduino));
 
     addCurrentStatus(arduino);
+  }
+
+  @Override
+  public String getSerialPort() {
+    return serialPort;
+  }
+
+  @Override
+  public int getSerialBaudRate() {
+    return Integer.valueOf(serialBaudRate);
+  }
+
+  @Override
+  public long getSerialThreadTime() {
+    return Long.valueOf(serialThreadTime);
   }
 
 }
