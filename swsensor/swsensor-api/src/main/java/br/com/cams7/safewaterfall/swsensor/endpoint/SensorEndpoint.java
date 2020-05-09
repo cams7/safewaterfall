@@ -4,10 +4,9 @@
 package br.com.cams7.safewaterfall.swsensor.endpoint;
 
 import static br.com.cams7.safewaterfall.swsensor.endpoint.SensorEndpoint.SENSOR_PATH;
+import static br.com.cams7.safewaterfall.swsensor.model.SensorEntity.getSensor;
 import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.STATUS_ARDUINO_TRIGGER;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,9 @@ import io.swagger.annotations.ApiParam;
  * @author CAMs7
  *
  */
-@Api("Endpoint utilizado para realiazar o CRUD do Sensor.")
+@Api("Endpoint utilizado para realizar o CRUD do Sensor.")
 @RestController
-@RequestMapping(path = SENSOR_PATH, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SensorEndpoint {
 
   public static final String SENSOR_PATH = "/sensor";
@@ -62,35 +61,26 @@ public class SensorEndpoint {
   @GetMapping(path = "/distance")
   @ResponseStatus(value = OK)
   public short getDistance() {
-    short distancia = arduinoService.getDistance();
-    return distancia;
+    short distance = arduinoService.getDistance();
+    return distance;
   }
 
   @ApiOperation("Salva ou atualiza os dados do sensor")
-  @ResponseStatus(value = CREATED)
-  @PostMapping
-  public void save(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
-    sensor = sensorService.save(sensor);
-
+  @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+  @ResponseStatus(value = OK)
+  public void save(@ApiParam("Sensor") @Valid @RequestBody AppSensorVO appSensor) {
+    SensorEntity sensor = sensorService.save(getSensor(appSensor));
     appSchedulerService.reschedule(STATUS_ARDUINO_TRIGGER, sensor.getStatusArduinoCron());
-
-    AppSensorVO appSensor = appSensorService.findById(sensor.getId());
-
-    appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
-    appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
-    appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
-    appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
-    appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
-
     appSensorService.save(appSensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")
+  @GetMapping(path = "{id}")
   @ResponseStatus(value = OK)
-  @GetMapping(path = "{id}", consumes = {ALL_VALUE})
-  public SensorEntity findById(@ApiParam("ID do sensor") @PathVariable Long id) {
+  public AppSensorVO findById(@ApiParam("ID do sensor") @PathVariable Long id) {
     SensorEntity sensor = sensorService.findById(id);
-    return sensor;
+    AppSensorVO appSensor = getSensor(sensor);
+    return appSensor;
   }
 
 }

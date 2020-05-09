@@ -13,12 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestOperations;
+import br.com.cams7.safewaterfall.common.error.AppException;
 import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
 import br.com.cams7.safewaterfall.common.service.AppSensorService;
 import br.com.cams7.safewaterfall.swsensor.service.StatusArduinoService;
@@ -63,14 +62,10 @@ public class SendMessageJob implements Job {
     HttpEntity<AppSensorVO> requestEntity = new HttpEntity<>(sensor, requestHeaders);
 
     try {
-      ResponseEntity<Void> responseEntity = restTemplate.exchange(String.format("%s/siren/change_status",
-          managerUrl), HttpMethod.POST, requestEntity, Void.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        log.info("Response retrieved");
-      }
+      restTemplate.exchange(String.format("%s/siren/change_status", managerUrl), HttpMethod.POST, requestEntity,
+          Void.class);
     } catch (ResourceAccessException e) {
-      log.error(e.getMessage());
+      throw new AppException(e);
     }
 
     log.info("Next SendMessageJob scheduled @ {}", context.getNextFireTime());

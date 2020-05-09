@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
+import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -82,5 +83,41 @@ public class SensorEntity extends BaseEntity<Long> {
   @NotNull
   @Column(name = "DISTANCIA_MAX")
   private Short maximumMeasuredDistance;
+
+  /**
+   * @param id ID do sensor
+   */
+  public SensorEntity(Long id) {
+    this();
+    this.id = id;
+  }
+
+  /**
+   * @param appSensor VO do sensor
+   * @return
+   */
+  public static SensorEntity getSensor(AppSensorVO appSensor) {
+    SensorEntity sensor = new SensorEntity(appSensor.getId());
+    sensor.setStatusArduinoCron(appSensor.getStatusArduinoCron());
+    sensor.setSendStatusMessageCron(appSensor.getSendStatusMessageCron());
+    sensor.setSendAlertMessageCron(appSensor.getSendAlertMessageCron());
+    sensor.setMinimumAllowedDistance(appSensor.getMinimumAllowedDistance());
+    sensor.setMaximumMeasuredDistance(appSensor.getMaximumMeasuredDistance());
+    return sensor;
+  }
+
+  /**
+   * @param sensor Entidade sensor
+   * @return
+   */
+  public static AppSensorVO getSensor(SensorEntity sensor) {
+    AppSensorVO appSensor = new AppSensorVO(sensor.getId());
+    appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
+    appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
+    appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
+    appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
+    appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
+    return appSensor;
+  }
 
 }

@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
+import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -52,5 +53,28 @@ public class SirenEntity extends BaseEntity<Long> {
 
   @OneToMany(mappedBy = "siren")
   private List<SensorEntity> sensors;
+
+  public SirenEntity(Long id) {
+    this();
+    this.id = id;
+  }
+
+  /**
+   * @param appSiren VO da sirene
+   * @return
+   */
+  public static SirenEntity getSiren(AppSirenVO appSiren) {
+    SirenEntity siren = new SirenEntity(appSiren.getId());
+    return siren;
+  }
+
+  /**
+   * @param siren Entidade sirene
+   * @return
+   */
+  public static AppSirenVO getSiren(SirenEntity siren) {
+    AppSirenVO appSiren = new AppSirenVO(siren.getId());
+    return appSiren;
+  }
 
 }

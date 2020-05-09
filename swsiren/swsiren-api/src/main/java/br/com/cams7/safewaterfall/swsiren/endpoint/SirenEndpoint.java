@@ -6,6 +6,7 @@ package br.com.cams7.safewaterfall.swsiren.endpoint;
 import static br.com.cams7.safewaterfall.swsiren.endpoint.SirenEndpoint.SIREN_PATH;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ import io.swagger.annotations.ApiParam;
  * @author CAMs7
  *
  */
-@Api("Endpoint utilizado para executar as funcionalidades do Arduino.")
+@Api("Endpoint utilizado para executar as funcionalidades da sirene.")
 @RestController
 @RequestMapping(path = SIREN_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SirenEndpoint {
@@ -37,9 +38,9 @@ public class SirenEndpoint {
   private AppSirenService appSirenService;
 
   @ApiOperation("Alterar o estado da sirene")
-  @PostMapping(path = "change_status")
+  @PostMapping(path = "change_status", consumes = APPLICATION_JSON_UTF8_VALUE)
   @ResponseStatus(value = OK)
-  public void changeStatus(@ApiParam("Sirene") @RequestBody AppSirenVO siren) {
+  public void changeStatus(@ApiParam("Sirene") @Valid @RequestBody AppSirenVO siren) {
     arduinoService.changeSirenStatus(siren.isActive());
     appSirenService.save(siren);
   }
