@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,6 +43,12 @@ public class SirenEntity extends BaseEntity<Long> {
   @GeneratedValue(strategy = SEQUENCE, generator = "SQ_SIRENE")
   @Column(name = "ID_SIRENE", nullable = false, updatable = false)
   private Long id;
+
+  @ApiModelProperty(notes = "Endereço da sirene", example = "http://127.0.0.1:80", required = true, position = 2)
+  @NotBlank
+  @Size(min = 19, max = 100)
+  @Column(name = "ENDERECO_SIRENE", nullable = false)
+  private String sirenAddress;
 
   @OneToMany(mappedBy = "siren")
   private List<SensorEntity> sensors;

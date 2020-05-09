@@ -13,8 +13,8 @@ public interface StatusArduinoService extends ArduinoService {
   /**
    * Altera o ESTADO da sirene
    *
-   * @param isAtiva Esta ativa
+   * @param active Esta ativa
    */
-  void alteraEstadoSirene(boolean isAtiva);
+  void changeSirenStatus(boolean active);
 
 }

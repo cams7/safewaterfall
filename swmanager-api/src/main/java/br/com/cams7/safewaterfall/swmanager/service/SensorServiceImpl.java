@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
 import br.com.cams7.safewaterfall.swmanager.model.SensorEntity;
+import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
 import br.com.cams7.safewaterfall.swmanager.repository.SensorRepository;
 
 /**
@@ -36,8 +37,8 @@ public class SensorServiceImpl implements SensorService {
 
   @Transactional(readOnly = true)
   @Override
-  public Long findSirenIdById(Long id) {
-    return repository.findSirenIdById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
+  public SirenEntity findSirenById(Long id) {
+    return repository.findSirenById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
         "Não foi possivel encontrar o ID da sirene já que o sensor cujo ID é %d não foi encontrado", id)));
   }
 

@@ -92,4 +92,10 @@ public class SensorEntity extends BaseEntity<Long> {
   @JoinColumn(name = "ID_SIRENE", referencedColumnName = "ID_SIRENE")
   private SirenEntity siren;
 
+  @ApiModelProperty(notes = "Endereço do sensor", example = "http://127.0.0.1:80", required = true, position = 8)
+  @NotBlank
+  @Size(min = 19, max = 100)
+  @Column(name = "ENDERECO_SENSOR", nullable = false)
+  private String sensorAddress;
+
 }

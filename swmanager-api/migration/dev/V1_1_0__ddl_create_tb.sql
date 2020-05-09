@@ -9,6 +9,7 @@ drop table TB_SIRENE if exists;
 
 create table TB_SIRENE (
 	ID_SIRENE bigint not null,
+	ENDERECO_SIRENE varchar(100) not null,
 	primary key (ID_SIRENE)
 );
 create table TB_SENSOR (
@@ -19,5 +20,6 @@ create table TB_SENSOR (
 	DISTANCIA_MIN integer not null,
 	DISTANCIA_MAX integer not null,
 	ID_SIRENE bigint not null,
+	ENDERECO_SENSOR varchar(100) not null,
 	primary key (ID_SENSOR)
 );

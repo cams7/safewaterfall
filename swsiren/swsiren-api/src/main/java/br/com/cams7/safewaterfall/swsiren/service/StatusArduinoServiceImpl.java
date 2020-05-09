@@ -78,9 +78,12 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
     return arduino;
   }
 
+  /**
+   *
+   */
   @Override
-  public void alteraEstadoSirene(boolean isAtiva) {
-    sendPinDigitalUSART(ArduinoStatus.SEND_RESPONSE, DIGITAL_PIN, isAtiva);
+  public void changeSirenStatus(boolean active) {
+    sendPinDigitalUSART(ArduinoStatus.SEND_RESPONSE, DIGITAL_PIN, active);
   }
 
 }

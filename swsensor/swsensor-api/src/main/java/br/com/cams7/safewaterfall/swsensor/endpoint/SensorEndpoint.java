@@ -52,14 +52,14 @@ public class SensorEndpoint {
   private AppSchedulerService appSchedulerService;
 
   @ApiOperation("Carrega a distancia medida (em milimetros) pelo sensor na memoria")
-  @GetMapping(path = "/carregar_distancia")
+  @GetMapping(path = "/load_distance")
   @ResponseStatus(value = OK)
   public void loadDistance() {
     arduinoService.loadDistance();
   }
 
   @ApiOperation("Busca a distancia (em milimetros) medida pelo sensor que foi carregada previamente")
-  @GetMapping(path = "/buscar_distancia")
+  @GetMapping(path = "/distance")
   @ResponseStatus(value = OK)
   public short getDistance() {
     short distancia = arduinoService.getDistance();
@@ -74,15 +74,15 @@ public class SensorEndpoint {
 
     appSchedulerService.reschedule(STATUS_ARDUINO_TRIGGER, sensor.getStatusArduinoCron());
 
-    AppSensorVO vo = appSensorService.findById(sensor.getId());
+    AppSensorVO appSensor = appSensorService.findById(sensor.getId());
 
-    vo.setStatusArduinoCron(sensor.getStatusArduinoCron());
-    vo.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
-    vo.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
-    vo.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
-    vo.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
+    appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
+    appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
+    appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
+    appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
+    appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
 
-    appSensorService.save(vo);
+    appSensorService.save(appSensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")

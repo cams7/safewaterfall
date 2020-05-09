@@ -63,7 +63,7 @@ public class SendMessageJob implements Job {
     HttpEntity<AppSensorVO> requestEntity = new HttpEntity<>(sensor, requestHeaders);
 
     try {
-      ResponseEntity<Void> responseEntity = restTemplate.exchange(String.format("%s/sensor/atualizar_estado",
+      ResponseEntity<Void> responseEntity = restTemplate.exchange(String.format("%s/siren/change_status",
           managerUrl), HttpMethod.POST, requestEntity, Void.class);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
