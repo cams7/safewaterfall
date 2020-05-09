@@ -40,9 +40,9 @@ public class SirenEndpoint {
   @ApiOperation("Alterar o estado da sirene")
   @PostMapping(path = "change_status", consumes = APPLICATION_JSON_UTF8_VALUE)
   @ResponseStatus(value = OK)
-  public void changeStatus(@ApiParam("Sirene") @Valid @RequestBody AppSirenVO siren) {
-    arduinoService.changeSirenStatus(siren.isActive());
-    appSirenService.save(siren);
+  public void changeStatus(@ApiParam("Sirene") @Valid @RequestBody AppSirenVO appSiren) {
+    arduinoService.changeSirenStatus(appSiren.isActive());
+    appSirenService.save(appSiren);
   }
 
 }

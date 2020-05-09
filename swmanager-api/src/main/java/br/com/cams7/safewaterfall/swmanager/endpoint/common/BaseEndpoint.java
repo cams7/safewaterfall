@@ -3,12 +3,12 @@
  */
 package br.com.cams7.safewaterfall.swmanager.endpoint.common;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import java.lang.reflect.ParameterizedType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestOperations;
@@ -28,7 +28,7 @@ public abstract class BaseEndpoint<VO> {
   protected void changeValue(String url, VO body) {
     // setting up the request headers
     HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+    requestHeaders.setContentType(APPLICATION_JSON);
 
     // request entity is created with request body and headers
     HttpEntity<VO> requestEntity = new HttpEntity<>(body, requestHeaders);
