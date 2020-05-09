@@ -1,15 +1,18 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swsensor.model;
+package br.com.cams7.safewaterfall.swmanager.model;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -82,5 +85,11 @@ public class SensorEntity extends BaseEntity<Long> {
   @NotNull
   @Column(name = "DISTANCIA_MAX")
   private Short maximumMeasuredDistance;
+
+  @ApiModelProperty(notes = "Sirene", required = true, position = 7)
+  // @NotNull
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "ID_SIRENE", referencedColumnName = "ID_SIRENE")
+  private SirenEntity siren;
 
 }

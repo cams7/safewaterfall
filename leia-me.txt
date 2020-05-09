@@ -83,6 +83,8 @@ cd "C:/Dev/My/Safewaterfall/swsensor/swsensor-api"
 mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 cd "C:/Dev/My/Safewaterfall/swsiren/swsiren-api"
 mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+cd "C:/Dev/My/Safewaterfall/swmanager-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 
 mvn clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && java -jar "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"
 mvn clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && java -jar "C:/Dev/My/Safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar"

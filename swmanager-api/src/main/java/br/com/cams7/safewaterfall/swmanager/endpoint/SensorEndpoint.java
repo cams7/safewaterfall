@@ -25,6 +25,7 @@ import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
 import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
 import br.com.cams7.safewaterfall.common.service.AppSensorService;
 import br.com.cams7.safewaterfall.common.service.AppSirenService;
+import br.com.cams7.safewaterfall.swmanager.service.SensorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -40,8 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SensorEndpoint {
 
-  private static final long SIREN_ID = 1;
-
   public static final String SENSOR_PATH = "/sensor";
 
   @Value("${SIREN_URL}")
@@ -54,6 +53,9 @@ public class SensorEndpoint {
   private AppSirenService appSirenService;
 
   @Autowired
+  private SensorService sensorService;
+
+  @Autowired
   private RestOperations restTemplate;
 
   @ApiOperation("Atualiza a ultima leitura do sensor")
@@ -63,6 +65,8 @@ public class SensorEndpoint {
     short distance = sensor.getDistance();
     boolean active = distance < sensor.getMinimumAllowedDistance();
     boolean changeSirenStatus = false;
+
+    long SIREN_ID = sensorService.findSirenIdById(sensor.getId());
 
     AppSirenVO siren;
     if (appSirenService.existsById(SIREN_ID)) {
