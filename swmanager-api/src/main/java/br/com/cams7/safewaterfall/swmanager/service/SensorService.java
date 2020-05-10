@@ -28,11 +28,11 @@ public interface SensorService {
   SensorEntity findById(Long id);
 
   /**
-   * Buscar o ID da sirene pelo ID do sensor
+   * Buscar a sirene pelo ID do dispositivo
    * 
-   * @param id ID da sirene
-   * @return ID da sirene
+   * @param deviceId ID do dispositivo
+   * @return Sirene
    */
-  SirenEntity findSirenById(Long id);
+  SirenEntity findSirenByDeviceId(String deviceId);
 
 }

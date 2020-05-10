@@ -13,7 +13,7 @@ public interface AppSirenService {
 
   AppSirenVO save(AppSirenVO siren);
 
-  AppSirenVO findById(Long id);
+  AppSirenVO findById(String id);
 
-  boolean existsById(Long id);
+  boolean existsById(String id);
 }

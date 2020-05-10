@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiParam;
  * @author CAMs7
  *
  */
-@Api("Endpoint utilizado para realizar o CRUD do Sensor.")
+@Api("Endpoint utilizado para executar as funcionalidades do sensor.")
 @RestController
 @RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SensorEndpoint {

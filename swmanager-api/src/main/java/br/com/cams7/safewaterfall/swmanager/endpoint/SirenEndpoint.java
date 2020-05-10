@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiParam;
  * @author CAMs7
  *
  */
-@Api("Endpoint utilizado para executar as funcionalidades da Sirene.")
+@Api("Endpoint utilizado para executar as funcionalidades do sirene.")
 @RestController
 @RequestMapping(path = SIREN_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SirenEndpoint extends BaseEndpoint<AppSirenVO> {
@@ -64,20 +64,20 @@ public class SirenEndpoint extends BaseEndpoint<AppSirenVO> {
   @ApiOperation("Atualiza o estado da sirene")
   @PostMapping(path = "change_status", consumes = APPLICATION_JSON_UTF8_VALUE)
   @ResponseStatus(value = OK)
-  public void changeStatus(@ApiParam("Sensor") @Valid @RequestBody AppSensorVO sensor) {
-    short distance = sensor.getDistance();
-    boolean active = distance < sensor.getMinimumAllowedDistance();
+  public void changeStatus(@ApiParam("Sensor") @Valid @RequestBody AppSensorVO appSensor) {
+    short distance = appSensor.getDistance();
+    boolean active = distance < appSensor.getMinimumAllowedDistance();
     boolean changeSirenStatus = false;
 
-    SirenEntity siren = sensorService.findSirenById(sensor.getId());
-    final long SIREN_ID = siren.getId();
+    SirenEntity siren = sensorService.findSirenByDeviceId(appSensor.getId());
+    final String DEVICE_ID = siren.getDeviceId();
     final String SIREN_URL = siren.getSirenAddress();
 
     AppSirenVO appSiren;
-    if (appSirenService.existsById(SIREN_ID)) {
-      appSiren = appSirenService.findById(SIREN_ID);
+    if (appSirenService.existsById(DEVICE_ID)) {
+      appSiren = appSirenService.findById(DEVICE_ID);
     } else {
-      appSiren = new AppSirenVO(SIREN_ID);
+      appSiren = new AppSirenVO(DEVICE_ID);
       changeSirenStatus = true;
     }
 

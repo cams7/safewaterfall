@@ -37,9 +37,11 @@ public class SensorServiceImpl implements SensorService {
 
   @Transactional(readOnly = true)
   @Override
-  public SirenEntity findSirenById(Long id) {
-    return repository.findSirenById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
-        "Não foi possivel encontrar o ID da sirene já que o sensor cujo ID é %d não foi encontrado", id)));
+  public SirenEntity findSirenByDeviceId(String deviceId) {
+    return repository.findSirenByDeviceId(deviceId).orElseThrow(() -> new AppResourceNotFoundException(String
+        .format(
+            "Não foi possivel encontrar a sirene já que o sensor cujo ID do dispositivo é %s não foi encontrado",
+            deviceId)));
   }
 
 }

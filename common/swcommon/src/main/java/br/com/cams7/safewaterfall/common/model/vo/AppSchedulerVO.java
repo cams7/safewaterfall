@@ -25,8 +25,9 @@ import lombok.ToString;
 @RedisHash("scheduler")
 public class AppSchedulerVO {
 
-  @ApiModelProperty(notes = "Identificador único do escalonador", example = "1", required = true, position = 1)
-  private String id; // Trigger name
+  @ApiModelProperty(notes = "Identificador único do escalonador", example = "Trigger name", required = true,
+      position = 1)
+  private String id;
 
   @ApiModelProperty(notes = "Expressão Cron", example = "0/3 * * ? * * *", required = true, position = 2)
   private String cronExpression;

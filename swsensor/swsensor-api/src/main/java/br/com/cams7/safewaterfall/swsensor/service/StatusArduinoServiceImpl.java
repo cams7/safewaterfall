@@ -3,8 +3,8 @@ package br.com.cams7.safewaterfall.swsensor.service;
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.MESSAGE;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.DIGITAL;
 import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.SEND_MESSAGE_TRIGGER;
-import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.SENSOR_ID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.arduino.ArduinoServiceImpl;
 import br.com.cams7.safewaterfall.arduino.model.CurrentStatus;
@@ -26,6 +26,9 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
 
   public final static byte DIGITAL_PIN = 8;
 
+  @Value("${SENSOR_ID}")
+  private String sensorId;
+
   @Autowired
   private AppSchedulerService appSchedulerService;
 
@@ -43,7 +46,7 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
 
   protected void receiveMessage(ArduinoPinType pinType, byte pin, short pinValue) {
     log.info("receiveMessage -> pinType: {}, pin: {}, pinValue: {}", pinType, pin, pinValue);
-    AppSensorVO sensor = appSensorService.findById(SENSOR_ID);
+    AppSensorVO sensor = appSensorService.findById(sensorId);
     Short minimumAllowedDistance = sensor.getMinimumAllowedDistance();
     if (pinValue < minimumAllowedDistance) {
       String sendAlertMessageCron = sensor.getSendAlertMessageCron();

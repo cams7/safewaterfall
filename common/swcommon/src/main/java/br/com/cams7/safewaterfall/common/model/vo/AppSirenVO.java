@@ -25,13 +25,13 @@ import lombok.ToString;
 @RedisHash("siren")
 public class AppSirenVO {
 
-  @ApiModelProperty(notes = "Identificador único da sirene", example = "1", required = true, position = 1)
-  private Long id;
+  @ApiModelProperty(notes = "Identificador único da sirene", example = "UUID V4", required = true, position = 1)
+  private String id;
 
   @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 2)
   private boolean active;
 
-  public AppSirenVO(Long id) {
+  public AppSirenVO(String id) {
     this();
     this.id = id;
   }

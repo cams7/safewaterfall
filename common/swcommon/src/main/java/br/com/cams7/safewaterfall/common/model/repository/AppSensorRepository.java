@@ -12,6 +12,6 @@ import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
  *
  */
 @Repository
-public interface AppSensorRepository extends CrudRepository<AppSensorVO, Long> {
+public interface AppSensorRepository extends CrudRepository<AppSensorVO, String> {
 
 }

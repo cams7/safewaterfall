@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
 import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
@@ -45,7 +46,14 @@ public class SirenEntity extends BaseEntity<Long> {
   @Column(name = "ID_SIRENE", nullable = false, updatable = false)
   private Long id;
 
-  @ApiModelProperty(notes = "Endereço da sirene", example = "http://127.0.0.1:80", required = true, position = 2)
+  @ApiModelProperty(notes = "Identificador único do dispositivo relacionado", example = "UUID V4", required = true,
+      position = 2)
+  @NotBlank
+  @Pattern(regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+  @Column(name = "ID_DISPOSITIVO", nullable = false, updatable = false)
+  private String deviceId;
+
+  @ApiModelProperty(notes = "Endereço da sirene", example = "http://127.0.0.1:80", required = true, position = 3)
   @NotBlank
   @Size(min = 19, max = 100)
   @Column(name = "ENDERECO_SIRENE", nullable = false)
@@ -60,20 +68,38 @@ public class SirenEntity extends BaseEntity<Long> {
   }
 
   /**
+   * @param siren Entidade sirene
    * @param appSiren VO da sirene
-   * @return
+   */
+  public static void setSiren(SirenEntity siren, AppSirenVO appSiren) {
+    siren.setDeviceId(appSiren.getId());
+  }
+
+  /**
+   * @param appSiren VO da sirene
+   * @return Entidade sirene
    */
   public static SirenEntity getSiren(AppSirenVO appSiren) {
-    SirenEntity siren = new SirenEntity(appSiren.getId());
+    SirenEntity siren = new SirenEntity();
+    setSiren(siren, appSiren);
     return siren;
   }
 
   /**
+   * @param appSiren VO da sirene
    * @param siren Entidade sirene
-   * @return
+   */
+  public static void setSiren(AppSirenVO appSiren, SirenEntity siren) {
+    appSiren.setId(siren.getDeviceId());
+  }
+
+  /**
+   * @param siren Entidade sirene
+   * @return VO da sirene
    */
   public static AppSirenVO getSiren(SirenEntity siren) {
-    AppSirenVO appSiren = new AppSirenVO(siren.getId());
+    AppSirenVO appSiren = new AppSirenVO();
+    setSiren(appSiren, siren);
     return appSiren;
   }
 

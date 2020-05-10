@@ -13,7 +13,7 @@ public interface AppSensorService {
 
   AppSensorVO save(AppSensorVO sensor);
 
-  AppSensorVO findById(Long id);
+  AppSensorVO findById(String id);
 
-  boolean existsById(Long id);
+  boolean existsById(String id);
 }

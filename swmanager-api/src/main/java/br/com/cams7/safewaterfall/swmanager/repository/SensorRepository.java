@@ -17,6 +17,6 @@ import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
 @Repository
 public interface SensorRepository extends CrudRepository<SensorEntity, Long> {
 
-  @Query("SELECT s.siren FROM SensorEntity s WHERE s.id = ?1")
-  Optional<SirenEntity> findSirenById(Long id);
+  @Query("SELECT s.siren FROM SensorEntity s WHERE s.deviceId = ?1")
+  Optional<SirenEntity> findSirenByDeviceId(String deviceId);
 }

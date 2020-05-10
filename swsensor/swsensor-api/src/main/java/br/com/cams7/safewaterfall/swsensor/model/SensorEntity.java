@@ -5,12 +5,9 @@ package br.com.cams7.safewaterfall.swsensor.model;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
-import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -39,14 +36,12 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "TB_SENSOR")
-public class SensorEntity extends BaseEntity<Long> {
+public class SensorEntity extends BaseEntity<String> {
 
-  @ApiModelProperty(notes = "Identificador único do sensor", example = "1", required = true, position = 1)
+  @ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
   @Id
-  @SequenceGenerator(name = "SQ_SENSOR", sequenceName = "SQ_SENSOR", allocationSize = 1, initialValue = 1)
-  @GeneratedValue(strategy = SEQUENCE, generator = "SQ_SENSOR")
   @Column(name = "ID_SENSOR", nullable = false, updatable = false)
-  private Long id;
+  private String id;
 
   @ApiModelProperty(notes = "Expressão Cron para as consulta da distancia enviadas pelo arduino",
       example = "0/3 * * ? * * *", required = true, position = 2)
@@ -87,36 +82,54 @@ public class SensorEntity extends BaseEntity<Long> {
   /**
    * @param id ID do sensor
    */
-  public SensorEntity(Long id) {
+  public SensorEntity(String id) {
     this();
     this.id = id;
   }
 
   /**
+   * @param sensor Entidade sensor
    * @param appSensor VO do sensor
-   * @return
    */
-  public static SensorEntity getSensor(AppSensorVO appSensor) {
-    SensorEntity sensor = new SensorEntity(appSensor.getId());
+  public static void setSensor(SensorEntity sensor, AppSensorVO appSensor) {
+    sensor.setId(appSensor.getId());
     sensor.setStatusArduinoCron(appSensor.getStatusArduinoCron());
     sensor.setSendStatusMessageCron(appSensor.getSendStatusMessageCron());
     sensor.setSendAlertMessageCron(appSensor.getSendAlertMessageCron());
     sensor.setMinimumAllowedDistance(appSensor.getMinimumAllowedDistance());
     sensor.setMaximumMeasuredDistance(appSensor.getMaximumMeasuredDistance());
+  }
+
+  /**
+   * @param appSensor VO do sensor
+   * @return Entidade sensor
+   */
+  public static SensorEntity getSensor(AppSensorVO appSensor) {
+    SensorEntity sensor = new SensorEntity();
+    setSensor(sensor, appSensor);
     return sensor;
   }
 
   /**
+   * @param appSensor VO do sensor
    * @param sensor Entidade sensor
-   * @return
    */
-  public static AppSensorVO getSensor(SensorEntity sensor) {
-    AppSensorVO appSensor = new AppSensorVO(sensor.getId());
+  public static void setSensor(AppSensorVO appSensor, SensorEntity sensor) {
+    appSensor.setId(sensor.getId());
     appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
     appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
     appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
     appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
     appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
+  }
+
+  /**
+   * @param sensor Entidade sensor
+   * @return VO do sensor
+   */
+  public static AppSensorVO getSensor(SensorEntity sensor) {
+    AppSensorVO appSensor = new AppSensorVO();
+    setSensor(appSensor, sensor);
     return appSensor;
   }
 

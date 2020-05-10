@@ -3,7 +3,6 @@
  */
 package br.com.cams7.safewaterfall.swsensor.scheduler;
 
-import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.SENSOR_ID;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -35,6 +34,9 @@ public class SendMessageJob implements Job {
   @Value("${MANAGER_URL}")
   private String managerUrl;
 
+  @Value("${SENSOR_ID}")
+  private String sensorId;
+
   @Autowired
   private RestOperations restTemplate;
 
@@ -55,7 +57,7 @@ public class SendMessageJob implements Job {
     requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 
     // setting up the request body
-    AppSensorVO sensor = appSensorService.findById(SENSOR_ID);
+    AppSensorVO sensor = appSensorService.findById(sensorId);
     sensor.setDistance(distance);
 
     // request entity is created with request body and headers

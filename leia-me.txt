@@ -32,9 +32,9 @@ http://localhost:8080/h2
 -------------------------------------------- 17/03/20 --------------------------------------------
 
 docker pull redis:alpine3.11
-docker rm redis_swsensor -f && docker run -d --name redis_swsensor -p 6379:6379 -i -t redis:alpine3.11
-docker rm redis_swmanager -f && docker run -d --name redis_swmanager -p 6479:6379 -i -t redis:alpine3.11
-docker rm redis_swsiren -f && docker run -d --name redis_swsiren -p 6579:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor -f || true && docker run -d --name redis_swsensor -p 6379:6379 -i -t redis:alpine3.11
+docker rm redis_swmanager -f || true && docker run -d --name redis_swmanager -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren -f || true && docker run -d --name redis_swsiren -p 6579:6379 -i -t redis:alpine3.11
 
 #Altera o ESTADO do LED para ACESO ou APAGADO
 curl -X POST "http://localhost:8080/arduino/alterar_estado_led/ACESO" -H "accept: application/json;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" -d "{ \"pin\": 11, \"pinType\": \"DIGITAL\"}"
@@ -92,3 +92,35 @@ mvn clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && java -jar 
 
 curl -X GET "http://localhost:8080/arduino/carregar_distancia" -H "accept: application/json;charset=UTF-8"
 curl -X GET "http://localhost:8080/arduino/buscar_distancia" -H "accept: application/json;charset=UTF-8"
+
+
+-------------------------------------------- 09/05/20 --------------------------------------------
+
+docker rm redis_swmanager -f || true && docker run -d --name redis_swmanager -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor1 -f || true && docker run -d --name redis_swsensor1 -p 6381:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor2 -f || true && docker run -d --name redis_swsensor2 -p 6382:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor3 -f || true && docker run -d --name redis_swsensor3 -p 6383:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren1 -f || true && docker run -d --name redis_swsiren1 -p 6581:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren2 -f || true && docker run -d --name redis_swsiren2 -p 6582:6379 -i -t redis:alpine3.11
+
+uuidgen
+
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swarduino"
+mvn clean install -f "C:/Dev/My/Safewaterfall/common/swcommon"
+
+cd "C:/Dev/My/Safewaterfall/swmanager-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+cd "C:/Dev/My/Safewaterfall/swsensor/swsensor-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev1.flyway.properties
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev2.flyway.properties
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev3.flyway.properties
+
+mvn -Pdev "-Dserver.port=8180" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swmanager" "-DREDIS_ADDRESS=172.42.42.210:6479" clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && cp "C:/Dev/My/Safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swmanager.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swmanager.jar"
+
+mvn -Pdev "-Dserver.port=8081" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor1" "-DSERIAL_PORT=COM6" "-DREDIS_ADDRESS=172.42.42.210:6381" "-DSENSOR_ID=9e4399af-cd4e-445c-a7e0-40eb7caeea45" clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && cp "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsensor1.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsensor1.jar"
+mvn -Pdev "-Dserver.port=8082" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor2" "-DSERIAL_PORT=COM8" "-DREDIS_ADDRESS=172.42.42.210:6382" "-DSENSOR_ID=85dda960-fed4-4519-82f8-386316a44937" clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && cp "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsensor2.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsensor2.jar"
+mvn -Pdev "-Dserver.port=8083" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor3" "-DSERIAL_PORT=COM10" "-DREDIS_ADDRESS=172.42.42.210:6383" "-DSENSOR_ID=52480005-7804-4c02-a930-a0b20a3fdc6e" clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && cp "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsensor3.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsensor3.jar"
+
+mvn -Pdev "-Dserver.port=8281" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren1" "-DSERIAL_PORT=COM12" "-DREDIS_ADDRESS=172.42.42.210:6581" "-DSENSOR_ID=b10882c0-b2e6-4aca-a2c6-6012023d1e61" clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && cp "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsiren1.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsiren1.jar"
+mvn -Pdev "-Dserver.port=8282" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren2" "-DSERIAL_PORT=COM14" "-DREDIS_ADDRESS=172.42.42.210:6582" "-DSENSOR_ID=1d10c7ef-f759-4073-a9bc-8656949c6826" clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && cp "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsiren2.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsiren2.jar"
+

@@ -32,8 +32,8 @@ import lombok.ToString;
 @RedisHash("sensor")
 public class AppSensorVO {
 
-  @ApiModelProperty(notes = "Identificador único do sensor", example = "1", required = true, position = 1)
-  private Long id;
+  @ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
+  private String id;
 
   @ApiModelProperty(notes = "Expressão Cron para as consulta da distancia enviadas pelo arduino",
       example = "0/3 * * ? * * *", required = true, position = 2)
@@ -69,7 +69,7 @@ public class AppSensorVO {
   @ApiModelProperty(notes = "Distancia medida", example = "255", required = true, position = 7)
   private Short distance;
 
-  public AppSensorVO(Long id) {
+  public AppSensorVO(String id) {
     this();
     this.id = id;
   }

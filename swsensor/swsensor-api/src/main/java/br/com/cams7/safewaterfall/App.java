@@ -1,6 +1,7 @@
 package br.com.cams7.safewaterfall;
 
-import org.springframework.boot.Banner.Mode;
+import static org.springframework.boot.Banner.Mode.OFF;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +18,15 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 @EnableScheduling
 public class App {
 
-  private final static int TIMEOUT = 5_000;// 5 secounds
+  @Value("${HTTP_TIMEOUT}")
+  private String httpTimeout;
 
-  private final static String REDIS_HOSTNAME = "172.42.42.210";
-  private final static int REDIS_PORT = 6379;
+  @Value("${REDIS_ADDRESS}")
+  private String redisAddress;
 
   @Bean
   public RestOperations restTemplate() {
+    final int TIMEOUT = Integer.parseInt(httpTimeout);
     HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
     // Connect timeout
     clientHttpRequestFactory.setConnectTimeout(TIMEOUT);
@@ -40,6 +43,9 @@ public class App {
   @SuppressWarnings("deprecation")
   @Bean
   public JedisConnectionFactory jedisConnectionFactory() {
+    String[] address = redisAddress.split(":");
+    final String REDIS_HOSTNAME = address[0];
+    final int REDIS_PORT = Integer.parseInt(address[1]);
     JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
     jedisConFactory.setHostName(REDIS_HOSTNAME);
     jedisConFactory.setPort(REDIS_PORT);
@@ -54,7 +60,7 @@ public class App {
   }
 
   public static void main(String[] args) {
-    new SpringApplicationBuilder(App.class).bannerMode(Mode.OFF).run(args);
+    new SpringApplicationBuilder(App.class).bannerMode(OFF).run(args);
   }
 
 }

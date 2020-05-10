@@ -13,6 +13,7 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -46,7 +47,8 @@ public class AppQuartzConfig {
   public static final String SEND_MESSAGE_JOB = "SEND_MESSAGE_JOB";
   public static final String SEND_MESSAGE_TRIGGER = "SEND_MESSAGE_TRIGGER";
 
-  public static final long SENSOR_ID = 1;
+  @Value("${SENSOR_ID}")
+  private String sensorId;
 
   @Autowired
   private ApplicationContext applicationContext;
@@ -68,7 +70,7 @@ public class AppQuartzConfig {
       Connection conn = quartzDataSource.getConnection();
       try (PreparedStatement pstmt = conn.prepareStatement(
           "select ARDUINO_STATUS_CRON, ENV_STATUS_CRON, ENV_ALERTA_CRON, DISTANCIA_MIN, DISTANCIA_MAX from TB_SENSOR where ID_SENSOR = ?")) {
-        pstmt.setLong(1, SENSOR_ID);
+        pstmt.setString(1, sensorId);
         try (ResultSet rs = pstmt.executeQuery()) {
           if (rs.next()) {
             String statusArduinoCron = rs.getString("ARDUINO_STATUS_CRON");
@@ -77,7 +79,7 @@ public class AppQuartzConfig {
             Short minimumAllowedDistance = (short) rs.getInt("DISTANCIA_MIN");
             Short maximumMeasuredDistance = (short) rs.getInt("DISTANCIA_MAX");
 
-            AppSensorVO sensor = new AppSensorVO(SENSOR_ID);
+            AppSensorVO sensor = new AppSensorVO(sensorId);
             sensor.setStatusArduinoCron(statusArduinoCron);
             sensor.setSendStatusMessageCron(sendStatusMessageCron);
             sensor.setSendAlertMessageCron(sendAlertMessageCron);
@@ -159,10 +161,10 @@ public class AppQuartzConfig {
    * @return
    * @throws SQLException
    */
-  private static final String getCronExpression(Connection conn, String fieldName) throws SQLException {
+  private final String getCronExpression(Connection conn, String fieldName) throws SQLException {
     try (PreparedStatement pstmt = conn.prepareStatement(String.format(
         "select %s from TB_SENSOR where ID_SENSOR = ?", fieldName))) {
-      pstmt.setLong(1, SENSOR_ID);
+      pstmt.setString(1, sensorId);
       try (ResultSet rs = pstmt.executeQuery()) {
         if (rs.next())
           return rs.getString(fieldName);

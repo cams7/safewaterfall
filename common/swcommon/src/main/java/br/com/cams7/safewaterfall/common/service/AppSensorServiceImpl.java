@@ -28,14 +28,14 @@ public class AppSensorServiceImpl implements AppSensorService {
   }
 
   @Override
-  public AppSensorVO findById(Long id) {
+  public AppSensorVO findById(String id) {
     AppSensorVO sensor = repository.findById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
         "Não foi encontrado nenhum sensor pelo id %d", id)));
     return sensor;
   }
 
   @Override
-  public boolean existsById(Long id) {
+  public boolean existsById(String id) {
     return repository.existsById(id);
   }
 

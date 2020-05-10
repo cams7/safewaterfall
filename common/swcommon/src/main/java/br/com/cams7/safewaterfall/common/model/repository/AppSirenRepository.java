@@ -12,6 +12,6 @@ import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
  *
  */
 @Repository
-public interface AppSirenRepository extends CrudRepository<AppSirenVO, Long> {
+public interface AppSirenRepository extends CrudRepository<AppSirenVO, String> {
 
 }

@@ -1,6 +1,8 @@
 package br.com.cams7.safewaterfall.swmanager.endpoint;
 
 import static br.com.cams7.safewaterfall.swmanager.endpoint.SensorEndpoint.SENSOR_PATH;
+import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.getSensor;
+import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.setSensor;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import javax.validation.Valid;
@@ -24,7 +26,7 @@ import io.swagger.annotations.ApiParam;
  * @author CAMs7
  *
  */
-@Api("Endpoint utilizado para executar as funcionalidades do Sensor.")
+@Api("Endpoint utilizado para executar as funcionalidades do sensor.")
 @RestController
 @RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
 public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
@@ -56,12 +58,7 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
     SensorEntity sensor = sensorService.findById(id);
     final String SENSOR_URL = sensor.getSensorAddress();
 
-    AppSensorVO appSensor = new AppSensorVO(sensor.getId());
-    appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
-    appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
-    appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
-    appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
-    appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
+    AppSensorVO appSensor = getSensor(sensor);
 
     changeValue(String.format("%s/sensor", SENSOR_URL), appSensor);
   }
@@ -74,12 +71,7 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
     final String SENSOR_URL = sensor.getSensorAddress();
 
     AppSensorVO appSensor = getValue(String.format("%s/sensor/%d", SENSOR_URL, id));
-
-    sensor.setStatusArduinoCron(appSensor.getStatusArduinoCron());
-    sensor.setSendStatusMessageCron(appSensor.getSendStatusMessageCron());
-    sensor.setSendAlertMessageCron(appSensor.getSendAlertMessageCron());
-    sensor.setMinimumAllowedDistance(appSensor.getMinimumAllowedDistance());
-    sensor.setMaximumMeasuredDistance(appSensor.getMaximumMeasuredDistance());
+    setSensor(sensor, appSensor);
 
     sensorService.save(sensor);
   }
