@@ -1,0 +1,64 @@
+﻿# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure configures the configuration version (we support older styles for backwards compatibility). Please don't change it unless you know what you're doing.
+Vagrant.configure(2) do |config|
+	# Enable provisioning with a shell script. Additional provisioners such as Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the documentation for more information about their specific syntax and use.
+	config.vm.provision "shell", path: "bootstrap.sh"
+	
+	config.vm.define "safewaterfall" do |safewaterfall|
+		# The most common configuration options are documented and commented below.
+		# For a complete reference, please see the online documentation at https://docs.vagrantup.com.
+
+		# Every Vagrant development environment requires a box. You can search for boxes at https://vagrantcloud.com/search.
+		safewaterfall.vm.box = "ubuntu/bionic64"
+		safewaterfall.vm.hostname = "safewaterfall.cams7.com.br"
+
+		# Disable automatic box update checking. If you disable this, then boxes will only be checked for updates when the user runs `vagrant box outdated`. This is not recommended.
+		safewaterfall.vm.box_check_update = true
+
+		# Create a forwarded port mapping which allows access to a specific port within the machine from a port on the host machine. In the example below, accessing "localhost:8080" will access port 80 on the guest machine.
+		# NOTE: This will enable public access to the opened port
+		#config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+		# Create a forwarded port mapping which allows access to a specific port within the machine from a port on the host machine and only allow access via 127.0.0.1 to disable public access
+		# config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+		# Create a private network, which allows host-only access to the machine using a specific IP.
+		safewaterfall.vm.network "private_network", ip: "172.42.42.220"
+
+		# Create a public network, which generally matched to bridged network. Bridged networks make the machine appear as another physical device on your network.
+		# config.vm.network "public_network"
+
+		# Share an additional folder to the guest VM. The first argument is the path on the host to the actual folder. The second argument is the path on the guest to mount the folder. And the optional third argument is a set of non-required options.
+		safewaterfall.vm.synced_folder "C:/Dev/My/Safewaterfall/common", "/opt/safewaterfall/common"
+		safewaterfall.vm.synced_folder "C:/Dev/My/Safewaterfall/swmanager-api", "/opt/safewaterfall/swmanager-api"
+		safewaterfall.vm.synced_folder "C:/Dev/My/Safewaterfall/swsensor/swsensor-api", "/opt/safewaterfall/swsensor-api"
+		safewaterfall.vm.synced_folder "C:/Dev/My/Safewaterfall/swsiren/swsiren-api", "/opt/safewaterfall/swsiren-api"
+
+		# Provider-specific configuration so you can fine-tune various backing providers for Vagrant. These expose provider-specific options.
+		safewaterfall.vm.provider "virtualbox" do |vb|
+			# Display the VirtualBox GUI when booting the machine
+			vb.gui = false
+		
+			vb.name = "safewaterfall"  
+			#vb.memory = 8192
+			vb.memory = 3072
+			#vb.cpus = 4
+			# Prevent VirtualBox from interfering with host audio stack
+			vb.customize ["modifyvm", :id, "--audio", "none"]
+
+			#/dev/ttyS1
+			vb.customize [ "modifyvm", :id, "--uart2", "0x2F8", "3" ]
+			vb.customize [ "modifyvm", :id, "--uartmode2", "COM2" ]
+			
+			#/dev/ttyS2
+			vb.customize [ "modifyvm", :id, "--uart3", "0x3E8", "4" ]
+			vb.customize [ "modifyvm", :id, "--uartmode3", "COM6" ]
+		end
+		
+		#if Vagrant.has_plugin?("vagrant-vbguest")
+		#	safewaterfall.vbguest.auto_update = false
+		#end
+	end
+end

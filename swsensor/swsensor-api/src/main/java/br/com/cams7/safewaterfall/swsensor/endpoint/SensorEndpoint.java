@@ -4,14 +4,13 @@
 package br.com.cams7.safewaterfall.swsensor.endpoint;
 
 import static br.com.cams7.safewaterfall.swsensor.endpoint.SensorEndpoint.SENSOR_PATH;
-import static br.com.cams7.safewaterfall.swsensor.model.SensorEntity.getSensor;
 import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.STATUS_ARDUINO_TRIGGER;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +36,9 @@ import io.swagger.annotations.ApiParam;
 public class SensorEndpoint {
 
   public static final String SENSOR_PATH = "/sensor";
+
+  @Value("${SENSOR_ID}")
+  private String sensorId;
 
   @Autowired
   private StatusArduinoService arduinoService;
@@ -69,17 +71,17 @@ public class SensorEndpoint {
   @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
   @ResponseStatus(value = OK)
   public void save(@ApiParam("Sensor") @Valid @RequestBody AppSensorVO appSensor) {
-    SensorEntity sensor = sensorService.save(getSensor(appSensor));
+    SensorEntity sensor = sensorService.save(SensorEntity.getSensor(appSensor));
     appSchedulerService.reschedule(STATUS_ARDUINO_TRIGGER, sensor.getStatusArduinoCron());
     appSensorService.save(appSensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")
-  @GetMapping(path = "{id}")
+  @GetMapping
   @ResponseStatus(value = OK)
-  public AppSensorVO findById(@ApiParam("ID do sensor") @PathVariable Long id) {
-    SensorEntity sensor = sensorService.findById(id);
-    AppSensorVO appSensor = getSensor(sensor);
+  public AppSensorVO getSensor() {
+    SensorEntity sensor = sensorService.findById(sensorId);
+    AppSensorVO appSensor = SensorEntity.getSensor(sensor);
     return appSensor;
   }
 

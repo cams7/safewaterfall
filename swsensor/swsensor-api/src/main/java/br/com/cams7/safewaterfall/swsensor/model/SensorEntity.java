@@ -13,6 +13,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
 import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
@@ -39,6 +40,8 @@ import lombok.ToString;
 public class SensorEntity extends BaseEntity<String> {
 
   @ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
+  @NotBlank
+  @Pattern(regexp = UUID_V4_REGEX)
   @Id
   @Column(name = "ID_SENSOR", nullable = false, updatable = false)
   private String id;

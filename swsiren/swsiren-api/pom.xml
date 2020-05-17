@@ -235,12 +235,38 @@
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
 				<server.port>8280</server.port>
 				<MANAGER_URL>http://localhost:8180</MANAGER_URL>
-				<SERIAL_PORT>COM8</SERIAL_PORT>
+				<SERIAL_PORT>COM6</SERIAL_PORT>
 				<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 				<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>172.42.42.210:6579</REDIS_ADDRESS>
-				<SENSOR_ID>0134c0a8-d6ad-4107-94b4-fee84f7ced17</SENSOR_ID>
+				<REDIS_ADDRESS>172.42.42.220:6579</REDIS_ADDRESS>
+				<SIREN_ID>0134c0a8-d6ad-4107-94b4-fee84f7ced17</SIREN_ID>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>test</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>test</spring.profiles.active>
+				<spring.datasource.url>${SWSIREN_JDBC_DATABASE_URL}</spring.datasource.url>
+				<spring.datasource.username>${SWSIREN_JDBC_DATABASE_USERNAME}</spring.datasource.username>
+				<spring.datasource.password>${SWSIREN_JDBC_DATABASE_PASSWORD}</spring.datasource.password>
+				<spring.datasource.driver-class-name>${SWSIREN_JDBC_DATABASE_DRIVER}</spring.datasource.driver-class-name>
+				<server.port>${SWSIREN_SERVER_PORT}</server.port>
+				<MANAGER_URL>${MANAGER_URL}</MANAGER_URL>
+				<SERIAL_PORT>${SWSIREN_SERIAL_PORT}</SERIAL_PORT>
+				<SERIAL_BAUD_RATE>${SWSIREN_SERIAL_BAUD_RATE}</SERIAL_BAUD_RATE>
+				<SERIAL_THREAD_TIME>${SWSIREN_SERIAL_THREAD_TIME}</SERIAL_THREAD_TIME>
+				<HTTP_TIMEOUT>${SWSIREN_HTTP_TIMEOUT}</HTTP_TIMEOUT>
+				<REDIS_ADDRESS>${SWSIREN_REDIS_ADDRESS}</REDIS_ADDRESS>
+				<SIREN_ID>${SWSIREN_SIREN_ID}</SIREN_ID>
 			</properties>
 		</profile>
 	</profiles>

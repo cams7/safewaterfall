@@ -1,0 +1,1 @@
+alter table TB_SENSOR add constraint FK_TB_SEN_ID_SIR foreign key (ID_SIRENE) references TB_SIRENE;

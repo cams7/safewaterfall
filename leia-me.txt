@@ -79,16 +79,15 @@ git clone https://gitlab.com/johnjvester/jpa-spec-with-quartz.git
 -------------------------------------------- 26/04/20 --------------------------------------------
 mvn clean install -f "C:/Dev/My/Safewaterfall/common/swarduino"
 mvn clean install -f "C:/Dev/My/Safewaterfall/common/swcommon"
-cd "C:/Dev/My/Safewaterfall/swsensor/swsensor-api"
-mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
-cd "C:/Dev/My/Safewaterfall/swsiren/swsiren-api"
-mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+
 cd "C:/Dev/My/Safewaterfall/swmanager-api"
 mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+cd "C:/Dev/My/Safewaterfall/swsensor/swsensor-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 
-mvn clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && java -jar "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"
-mvn clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && java -jar "C:/Dev/My/Safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar"
-mvn clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && java -jar "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar"
+mvn -Pdev -DskipTests clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && java -jar "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar"
+mvn -Pdev -DskipTests clean package -f "C:/Dev/My/Safewaterfall/swmanager-api" && java -jar "C:/Dev/My/Safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar"
+mvn -Pdev -DskipTests clean package -f "C:/Dev/My/Safewaterfall/swsensor/swsensor-api" && java -jar "C:/Dev/My/Safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"
 
 curl -X GET "http://localhost:8080/arduino/carregar_distancia" -H "accept: application/json;charset=UTF-8"
 curl -X GET "http://localhost:8080/arduino/buscar_distancia" -H "accept: application/json;charset=UTF-8"
@@ -123,4 +122,120 @@ mvn -Pdev "-Dserver.port=8083" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/S
 
 mvn -Pdev "-Dserver.port=8281" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren1" "-DSERIAL_PORT=COM12" "-DREDIS_ADDRESS=172.42.42.210:6581" "-DSENSOR_ID=b10882c0-b2e6-4aca-a2c6-6012023d1e61" clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && cp "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsiren1.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsiren1.jar"
 mvn -Pdev "-Dserver.port=8282" "-Dspring.datasource.url=jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren2" "-DSERIAL_PORT=COM14" "-DREDIS_ADDRESS=172.42.42.210:6582" "-DSENSOR_ID=1d10c7ef-f759-4073-a9bc-8656949c6826" clean package -f "C:/Dev/My/Safewaterfall/swsiren/swsiren-api" && cp "C:/Dev/My/Safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/Dev/My/Safewaterfall/tests/swsiren2.jar" && java -jar "C:/Dev/My/Safewaterfall/tests/swsiren2.jar"
+
+-------------------------------------------- 16/05/20 --------------------------------------------
+
+cd "C:\Dev\My\Safewaterfall\box"
+vagrant up && vagrant ssh
+sudo apt update -y
+sudo apt upgrade -y
+
+sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update -y
+sudo apt install docker-ce docker-ce-cli containerd.io -y
+
+sudo usermod -aG docker vagrant
+sudo newgrp docker
+
+#docker ps
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+#docker-compose version
+
+docker pull redis:alpine3.11
+
+#sudo add-apt-repository ppa:linuxuprising/java -y
+#sudo apt update -y
+#sudo apt install oracle-java14-installer -y
+
+sudo apt update
+sudo apt install openjdk-8-jdk openjdk-8-jre
+
+#java --version
+#javac --version
+
+curl "http://ftp.unicamp.br/pub/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz" -o /home/vagrant/apache-maven-3.6.3-bin.tar.gz && tar -vzxf /home/vagrant/apache-maven-3.6.3-bin.tar.gz && sudo mv /home/vagrant/apache-maven-3.6.3 /opt
+
+echo 'export MVN_HOME=/opt/apache-maven-3.6.3' >> ~/.bashrc
+echo 'export PATH=$PATH:$MVN_HOME/bin' >> ~/.bashrc
+echo 'export SWMANAGER_JDBC_DATABASE_URL=jdbc:h2:file:/opt/safewaterfall/h2/swmanager' >> ~/.bashrc
+echo 'export SWMANAGER_JDBC_DATABASE_USERNAME=sa' >> ~/.bashrc
+echo 'export SWMANAGER_JDBC_DATABASE_PASSWORD=' >> ~/.bashrc
+echo 'export SWMANAGER_JDBC_DATABASE_DRIVER=org.h2.Driver' >> ~/.bashrc
+echo 'export SWMANAGER_SERVER_PORT=8180' >> ~/.bashrc
+echo 'export SWMANAGER_HTTP_TIMEOUT=5000' >> ~/.bashrc
+echo 'export SWMANAGER_REDIS_ADDRESS=172.42.42.220:6479' >> ~/.bashrc
+echo 'export SWSENSOR_JDBC_DATABASE_URL=jdbc:h2:file:/opt/safewaterfall/h2/swsensor' >> ~/.bashrc
+echo 'export SWSENSOR_JDBC_DATABASE_USERNAME=sa' >> ~/.bashrc
+echo 'export SWSENSOR_JDBC_DATABASE_PASSWORD=' >> ~/.bashrc
+echo 'export SWSENSOR_JDBC_DATABASE_DRIVER=org.h2.Driver' >> ~/.bashrc
+echo 'export SWSENSOR_SERVER_PORT=8080' >> ~/.bashrc
+echo 'export SWSENSOR_SERIAL_PORT=/dev/ttyS1' >> ~/.bashrc
+echo 'export SWSENSOR_SERIAL_BAUD_RATE=9600' >> ~/.bashrc
+echo 'export SWSENSOR_SERIAL_THREAD_TIME=500' >> ~/.bashrc
+echo 'export SWSENSOR_HTTP_TIMEOUT=5000' >> ~/.bashrc
+echo 'export SWSENSOR_REDIS_ADDRESS=172.42.42.220:6379' >> ~/.bashrc
+echo 'export SWSENSOR_SENSOR_ID=9659c296-bc10-434f-9e57-a4c3784e79e8' >> ~/.bashrc
+echo 'export SWSIREN_JDBC_DATABASE_URL=jdbc:h2:file:/opt/safewaterfall/h2/swsiren' >> ~/.bashrc
+echo 'export SWSIREN_JDBC_DATABASE_USERNAME=sa' >> ~/.bashrc
+echo 'export SWSIREN_JDBC_DATABASE_PASSWORD=' >> ~/.bashrc
+echo 'export SWSIREN_JDBC_DATABASE_DRIVER=org.h2.Driver' >> ~/.bashrc
+echo 'export SWSIREN_SERVER_PORT=8280' >> ~/.bashrc
+echo 'export SWSIREN_SERIAL_PORT=/dev/ttyS2' >> ~/.bashrc
+echo 'export SWSIREN_SERIAL_BAUD_RATE=9600' >> ~/.bashrc
+echo 'export SWSIREN_SERIAL_THREAD_TIME=500' >> ~/.bashrc
+echo 'export SWSIREN_HTTP_TIMEOUT=5000' >> ~/.bashrc
+echo 'export SWSIREN_REDIS_ADDRESS=172.42.42.220:6579' >> ~/.bashrc
+echo 'export SWSIREN_SIREN_ID=0134c0a8-d6ad-4107-94b4-fee84f7ced17' >> ~/.bashrc
+echo 'export MANAGER_URL=http://172.42.42.220:8180' >> ~/.bashrc
+
+exit
+cd "C:\Dev\My\Safewaterfall\box"
+vagrant reload && vagrant ssh
+#vagrant ssh-config
+#C:/Dev/My/Safewaterfall/box/.vagrant/machines/safewaterfall/virtualbox/private_key
+
+#mvn --version
+
+#http://jlog.org/rxtx-lin.html
+sudo curl "http://jlog.org/v4/linux/x86_64-unknown-linux-gnu/RXTXcomm.jar" -o /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/RXTXcomm.jar
+sudo curl "http://jlog.org/v4/linux/x86_64-unknown-linux-gnu/librxtxSerial.so" -o /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/librxtxSerial.so
+
+#https://cleitonbueno.com/virtualbox-compartilhar-porta-serial-do-windows-para-o-linux/
+dmesg | grep tty
+sudo setserial /dev/ttyS1
+sudo setserial /dev/ttyS2
+
+#uuidgen
+
+sudo mkdir /opt/safewaterfall/h2 && sudo chown vagrant:vagrant /opt/safewaterfall/h2
+sudo mkdir /opt/safewaterfall/tests && sudo chown vagrant:vagrant /opt/safewaterfall/tests
+
+mvn clean install -f /opt/safewaterfall/common/swarduino
+mvn clean install -f /opt/safewaterfall/common/swcommon
+
+cd /opt/safewaterfall/swsensor-api
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+cd /opt/safewaterfall/swmanager-api
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+
+docker rm redis_swsensor -f || true && docker run -d --name redis_swsensor -p 6379:6379 -i -t redis:alpine3.11
+docker rm redis_swmanager -f || true && docker run -d --name redis_swmanager -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren -f || true && docker run -d --name redis_swsiren -p 6579:6379 -i -t redis:alpine3.11
+
+mvn -Ptest -DskipTests clean package -f /opt/safewaterfall/swsiren-api && cp -f /opt/safewaterfall/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar /opt/safewaterfall/tests/swsiren1.jar && sudo java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8200 -jar /opt/safewaterfall/tests/swsiren1.jar
+mvn -Ptest -DskipTests clean package -f /opt/safewaterfall/swmanager-api && cp -f /opt/safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar /opt/safewaterfall/tests/swmanager.jar && java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8100 -jar /opt/safewaterfall/tests/swmanager.jar
+mvn -Ptest -DskipTests clean package -f /opt/safewaterfall/swsensor-api && cp -f /opt/safewaterfall/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar /opt/safewaterfall/tests/swsensor1.jar && sudo java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar /opt/safewaterfall/tests/swsensor1.jar
+
+#http://172.42.42.220:8180/h2
+#http://172.42.42.220:8180/swagger-ui.html
+#http://172.42.42.220:8080/h2
+#http://172.42.42.220:8080/swagger-ui.html
+#http://172.42.42.220:8280/h2
+#http://172.42.42.220:8280/swagger-ui.html
 

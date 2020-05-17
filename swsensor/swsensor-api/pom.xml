@@ -235,12 +235,38 @@
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
 				<server.port>8080</server.port>
 				<MANAGER_URL>http://localhost:8180</MANAGER_URL>
-				<SERIAL_PORT>COM6</SERIAL_PORT>
+				<SERIAL_PORT>COM3</SERIAL_PORT>
 				<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 				<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>172.42.42.210:6379</REDIS_ADDRESS>
+				<REDIS_ADDRESS>172.42.42.220:6379</REDIS_ADDRESS>
 				<SENSOR_ID>9659c296-bc10-434f-9e57-a4c3784e79e8</SENSOR_ID>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>test</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>test</spring.profiles.active>
+				<spring.datasource.url>${SWSENSOR_JDBC_DATABASE_URL}</spring.datasource.url>
+				<spring.datasource.username>${SWSENSOR_JDBC_DATABASE_USERNAME}</spring.datasource.username>
+				<spring.datasource.password>${SWSENSOR_JDBC_DATABASE_PASSWORD}</spring.datasource.password>
+				<spring.datasource.driver-class-name>${SWSENSOR_JDBC_DATABASE_DRIVER}</spring.datasource.driver-class-name>
+				<server.port>${SWSENSOR_SERVER_PORT}</server.port>
+				<MANAGER_URL>${MANAGER_URL}</MANAGER_URL>
+				<SERIAL_PORT>${SWSENSOR_SERIAL_PORT}</SERIAL_PORT>
+				<SERIAL_BAUD_RATE>${SWSENSOR_SERIAL_BAUD_RATE}</SERIAL_BAUD_RATE>
+				<SERIAL_THREAD_TIME>${SWSENSOR_SERIAL_THREAD_TIME}</SERIAL_THREAD_TIME>
+				<HTTP_TIMEOUT>${SWSENSOR_HTTP_TIMEOUT}</HTTP_TIMEOUT>
+				<REDIS_ADDRESS>${SWSENSOR_REDIS_ADDRESS}</REDIS_ADDRESS>
+				<SENSOR_ID>${SWSENSOR_SENSOR_ID}</SENSOR_ID>
 			</properties>
 		</profile>
 	</profiles>

@@ -235,7 +235,28 @@
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
 				<server.port>8180</server.port>
 				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>172.42.42.210:6479</REDIS_ADDRESS>
+				<REDIS_ADDRESS>172.42.42.220:6479</REDIS_ADDRESS>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>test</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>test</spring.profiles.active>
+				<spring.datasource.url>${SWMANAGER_JDBC_DATABASE_URL}</spring.datasource.url>
+				<spring.datasource.username>${SWMANAGER_JDBC_DATABASE_USERNAME}</spring.datasource.username>
+				<spring.datasource.password>${SWMANAGER_JDBC_DATABASE_PASSWORD}</spring.datasource.password>
+				<spring.datasource.driver-class-name>${SWMANAGER_JDBC_DATABASE_DRIVER}</spring.datasource.driver-class-name>
+				<server.port>${SWMANAGER_SERVER_PORT}</server.port>
+				<HTTP_TIMEOUT>${SWMANAGER_HTTP_TIMEOUT}</HTTP_TIMEOUT>
+				<REDIS_ADDRESS>${SWMANAGER_REDIS_ADDRESS}</REDIS_ADDRESS>
 			</properties>
 		</profile>
 	</profiles>

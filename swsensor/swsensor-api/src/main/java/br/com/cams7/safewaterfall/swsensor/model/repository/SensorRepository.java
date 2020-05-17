@@ -13,17 +13,17 @@ import br.com.cams7.safewaterfall.swsensor.model.SensorEntity;
  *
  */
 @Repository
-public interface SensorRepository extends CrudRepository<SensorEntity, Long> {
+public interface SensorRepository extends CrudRepository<SensorEntity, String> {
 
   @Query("SELECT s.statusArduinoCron FROM SensorEntity s WHERE s.id = ?1")
-  String findStatusArduinoCronById(Long id);
+  String findStatusArduinoCronById(String id);
 
   @Query("SELECT s.sendStatusMessageCron FROM SensorEntity s WHERE s.id = ?1")
-  String findSendStatusMessageCronById(Long id);
+  String findSendStatusMessageCronById(String id);
 
   @Query("SELECT s.sendAlertMessageCron FROM SensorEntity s WHERE s.id = ?1")
-  String findSendAlertMessageCronById(Long id);
+  String findSendAlertMessageCronById(String id);
 
   @Query("SELECT s.minimumAllowedDistance FROM SensorEntity s WHERE s.id = ?1")
-  Short findMinimumAllowedDistanceById(Long id);
+  Short findMinimumAllowedDistanceById(String id);
 }

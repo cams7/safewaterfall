@@ -70,7 +70,7 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
     SensorEntity sensor = sensorService.findById(id);
     final String SENSOR_URL = sensor.getSensorAddress();
 
-    AppSensorVO appSensor = getValue(String.format("%s/sensor/%d", SENSOR_URL, id));
+    AppSensorVO appSensor = getValue(String.format("%s/sensor", SENSOR_URL));
     setSensor(sensor, appSensor);
 
     sensorService.save(sensor);

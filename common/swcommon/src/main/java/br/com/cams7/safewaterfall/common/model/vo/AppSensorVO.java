@@ -5,10 +5,12 @@ package br.com.cams7.safewaterfall.common.model.vo;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
+import static br.com.cams7.safewaterfall.common.model.BaseEntity.UUID_V4_REGEX;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.springframework.data.redis.core.RedisHash;
 import io.swagger.annotations.ApiModel;
@@ -33,6 +35,8 @@ import lombok.ToString;
 public class AppSensorVO {
 
   @ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
+  @NotBlank
+  @Pattern(regexp = UUID_V4_REGEX)
   private String id;
 
   @ApiModelProperty(notes = "Expressão Cron para as consulta da distancia enviadas pelo arduino",

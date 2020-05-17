@@ -55,7 +55,7 @@ public class SensorEntity extends BaseEntity<Long> {
   @ApiModelProperty(notes = "Identificador único do dispositivo relacionado", example = "UUID V4", required = true,
       position = 2)
   @NotBlank
-  @Pattern(regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+  @Pattern(regexp = UUID_V4_REGEX)
   @Column(name = "ID_DISPOSITIVO", nullable = false, updatable = false)
   private String deviceId;
 

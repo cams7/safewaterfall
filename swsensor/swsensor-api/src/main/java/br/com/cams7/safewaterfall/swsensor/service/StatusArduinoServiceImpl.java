@@ -41,7 +41,6 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
 
   protected void receiveExecute(ArduinoPinType pinType, byte pin, short pinValue) {
     log.info("receiveExecute -> pinType: {}, pin: {}, pinValue: {}", pinType, pin, pinValue);
-
   }
 
   protected void receiveMessage(ArduinoPinType pinType, byte pin, short pinValue) {
