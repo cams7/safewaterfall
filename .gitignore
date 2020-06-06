@@ -1,2 +1,7 @@
 db/
 tests/
+box/.vagrant/
+box/*.log
+proteus-projects/*.pdsbak
+proteus-projects/*.pdsprj.DESKTOP*
+.settings/

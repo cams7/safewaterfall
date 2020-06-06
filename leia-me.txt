@@ -239,3 +239,97 @@ mvn -Ptest -DskipTests clean package -f /opt/safewaterfall/swsensor-api && cp -f
 #http://172.42.42.220:8280/h2
 #http://172.42.42.220:8280/swagger-ui.html
 
+-------------------------------------------- 06/06/20 --------------------------------------------
+
+#Copie o arquivo rxtxSerial.dll para "C:\Program Files\Java\jre1.8.0_241\bin"
+#Copie o arquivo RXTXcomm.jar para "C:\Program Files\Java\jre1.8.0_241\lib\ext"
+
+cd "C:\My\Desenv\My\safewaterfall\box"
+vagrant up && vagrant ssh
+sudo apt update -y
+sudo apt upgrade -y
+
+sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update -y
+sudo apt install docker-ce docker-ce-cli containerd.io -y
+
+sudo usermod -aG docker vagrant
+sudo newgrp docker
+
+#docker ps
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+#docker-compose version
+
+docker pull redis:alpine3.11
+
+docker rm redis_swmanager -f || true && docker run -d --name redis_swmanager -p 6379:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor11 -f || true && docker run -d --name redis_swsensor11 -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren11 -f || true && docker run -d --name redis_swsiren11 -p 6480:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor21 -f || true && docker run -d --name redis_swsensor21 -p 6579:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren21 -f || true && docker run -d --name redis_swsiren21 -p 6580:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor22 -f || true && docker run -d --name redis_swsensor22 -p 6581:6379 -i -t redis:alpine3.11
+
+docker pull postgres:13-alpine
+docker pull dpage/pgadmin4:4.22
+docker network create --driver bridge network200606
+docker run --name postgres200606 --network=network200606 -e "POSTGRES_PASSWORD=abc123" -p 5432:5432 -v /home/vagrant/postgresql_data:/var/lib/postgresql/data -d postgres:13-alpine
+docker run --name pgadmin200606 --network=network200606 -p 180:80 -e "PGADMIN_DEFAULT_EMAIL=ceanma83@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=abc123" -d dpage/pgadmin4:4.22
+
+#http://172.42.42.220:180
+#http://192.168.100.8:180
+
+docker pull alpine:3.11.2
+
+docker run -it --rm alpine:3.11.2 /bin/sh
+apk --update add postgresql-client && rm -rf /var/cache/apk/*
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP USER IF EXISTS safewaterfall"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE USER safewaterfall WITH ENCRYPTED PASSWORD 'abc123'"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swmanager TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swmanager" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor11 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor11" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsiren11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsiren11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsiren11 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsiren11" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor21 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor21" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsiren21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsiren21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsiren21 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsiren21" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor22"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor22"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor22 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor22" -c "SELECT CURRENT_DATABASE()"
+exit
+
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+cd "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && java -jar "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swmanager-api" && java -jar "C:/My/Desenv/My/safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && java -jar "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar"

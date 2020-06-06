@@ -1,0 +1,16 @@
+server:  port: ${server.port}
+
+# H2
+spring:  h2:    console:      path: /h2
+      enabled: true
+      web-allow-others: true# Datasource  datasource:    url: ${spring.datasource.url}    username: ${spring.datasource.username}    password: ${spring.datasource.password}    driver-class-name: ${spring.datasource.driver-class-name}    
+  jpa:    hibernate:      ddl-auto: ${spring.jpa.hibernate.ddl-auto}    show-sql: ${spring.jpa.properties.hibernate.show_sql}   quartz:    job-store-type: jdbc    jdbc:# Always create the Quartz database on startup      initialize-schema: always
+  main:    banner-mode: console    allow-bean-definition-overriding: true
+
+MANAGER_URL: ${MANAGER_URL}
+SERIAL_PORT: ${SERIAL_PORT}
+SERIAL_BAUD_RATE: ${SERIAL_BAUD_RATE}
+SERIAL_THREAD_TIME: ${SERIAL_THREAD_TIME}
+HTTP_TIMEOUT: ${HTTP_TIMEOUT}
+REDIS_ADDRESS: ${REDIS_ADDRESS}
+SIREN_ID: ${SIREN_ID}     

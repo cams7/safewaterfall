@@ -1,1 +1,0 @@
-insert into TB_SENSOR (ID_SENSOR, ARDUINO_STATUS_CRON, ENV_STATUS_CRON, ENV_ALERTA_CRON, DISTANCIA_MIN, DISTANCIA_MAX) values('52480005-7804-4c02-a930-a0b20a3fdc6e', '0/3 * * ? * * *', '0 0/1 * ? * * *', '0/10 * * ? * * *', 100, 255);

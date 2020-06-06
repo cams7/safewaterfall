@@ -229,7 +229,7 @@
 			</activation>
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active>
-				<spring.datasource.url>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren</spring.datasource.url>
+				<spring.datasource.url>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren;DB_CLOSE_ON_EXIT=FALSE</spring.datasource.url>
 				<spring.datasource.username>sa</spring.datasource.username>
 				<spring.datasource.password></spring.datasource.password>
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
@@ -241,9 +241,11 @@
 				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
 				<REDIS_ADDRESS>172.42.42.220:6579</REDIS_ADDRESS>
 				<SIREN_ID>0134c0a8-d6ad-4107-94b4-fee84f7ced17</SIREN_ID>
+				<QUARTZ_DRIVER_DELEGATE_CLASS>org.quartz.impl.jdbcjobstore.StdJDBCDelegate</QUARTZ_DRIVER_DELEGATE_CLASS>
+				<QUARTZ_DS_URL>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsiren;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql'</QUARTZ_DS_URL>
 			</properties>
 		</profile>
-		<profile>
+		<!--profile>
 			<id>test</id>
 			<activation>
 				<os>
@@ -268,6 +270,40 @@
 				<REDIS_ADDRESS>${SWSIREN_REDIS_ADDRESS}</REDIS_ADDRESS>
 				<SIREN_ID>${SWSIREN_SIREN_ID}</SIREN_ID>
 			</properties>
+		</profile-->
+		<profile>
+			<id>test</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>test</name>
+				</property>
+			</activation>
+			<properties>
+				<spring.profiles.active>test</spring.profiles.active>
+				<spring.datasource.url>jdbc:postgresql://192.168.100.8:5432/swsiren11</spring.datasource.url>
+				<spring.datasource.username>safewaterfall</spring.datasource.username>
+				<spring.datasource.password>abc123</spring.datasource.password>
+				<spring.datasource.driver-class-name>org.postgresql.Driver</spring.datasource.driver-class-name>
+				<server.port>8280</server.port>
+				<MANAGER_URL>http://192.168.100.8:8080</MANAGER_URL>
+				<SERIAL_PORT>COM6</SERIAL_PORT>
+				<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
+				<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
+				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
+				<REDIS_ADDRESS>192.168.100.8:6480</REDIS_ADDRESS>
+				<SIREN_ID>0134c0a8-d6ad-4107-94b4-fee84f7ced17</SIREN_ID>
+				<QUARTZ_DRIVER_DELEGATE_CLASS>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</QUARTZ_DRIVER_DELEGATE_CLASS>
+				<QUARTZ_DS_URL>jdbc:postgresql://192.168.100.8:5432/swsiren11;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'</QUARTZ_DS_URL>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 </project>
