@@ -345,5 +345,110 @@ mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor21.flyway
 mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar"
 mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
 
-mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsiren21" "-DSERIAL_PORT=COM5" "-DREDIS_ADDRESS=172.42.42.210:6580" "-DSIREN_ID=1254a9ba-3fe0-4399-abfc-dfc00cad516d" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsiren21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar"
-mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor21" "-DSERIAL_PORT=COM7" "-DREDIS_ADDRESS=172.42.42.210:6579" "-DSENSOR_ID=dd21c439-e3f9-44b9-902e-2eac40f53705" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsiren21" "-DSERIAL_PORT=COM5" "-DREDIS_ADDRESS=192.168.100.8:6580" "-DSIREN_ID=1254a9ba-3fe0-4399-abfc-dfc00cad516d" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsiren21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar"
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor21" "-DSERIAL_PORT=COM7" "-DREDIS_ADDRESS=192.168.100.8:6579" "-DSENSOR_ID=dd21c439-e3f9-44b9-902e-2eac40f53705" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+
+
+-------------------------------------------- 07/06/20 --------------------------------------------
+
+(swmanager) - Notebook Capgemini
+IP 192.168.100.23
+Redis 192.168.100.8:6379
+DS jdbc:postgresql://192.168.100.8:5432/swmanager
+URL http://192.168.100.23:8080
+
+(swsensor11, swsiren11) - PC
+IP 192.168.100.8
+swsensor11
+	Redis 192.168.100.8:6479
+	DS jdbc:postgresql://192.168.100.8:5432/swsensor11
+	URL http://192.168.100.8:8180
+	ID 9659c296-bc10-434f-9e57-a4c3784e79e8
+swsiren11 
+	Redis 192.168.100.8:6480
+	DS jdbc:postgresql://192.168.100.8:5432/swsiren11
+	URL http://192.168.100.8:8280
+	ID 0134c0a8-d6ad-4107-94b4-fee84f7ced17
+
+(swsensor21, swsiren21, swsensor22) Notebook VAIO
+IP 192.168.100.12
+swsensor21
+	Redis 192.168.100.8:6579
+	DS jdbc:postgresql://192.168.100.8:5432/swsensor21
+	URL http://192.168.100.12:8180
+	ID dd21c439-e3f9-44b9-902e-2eac40f53705
+swsiren21
+	Redis 192.168.100.8:6580
+	DS jdbc:postgresql://192.168.100.8:5432/swsiren21
+	URL http://192.168.100.12:8280
+	ID 1254a9ba-3fe0-4399-abfc-dfc00cad516d
+swsensor22
+	Redis 192.168.100.8:6581
+	DS jdbc:postgresql://192.168.100.8:5432/swsensor22
+	http://192.168.100.12:8380
+	ID 4764bc1a-c119-4b56-bc74-f1a538218cf9
+
+cd "C:\My\Desenv\My\safewaterfall\box"
+vagrant up && vagrant ssh
+
+uuidgen
+
+docker start postgres200606 && docker start pgadmin200606
+
+docker rm redis_swmanager -f || true && docker run -d --name redis_swmanager -p 6379:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor11 -f || true && docker run -d --name redis_swsensor11 -p 6479:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren11 -f || true && docker run -d --name redis_swsiren11 -p 6480:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor21 -f || true && docker run -d --name redis_swsensor21 -p 6579:6379 -i -t redis:alpine3.11
+docker rm redis_swsiren21 -f || true && docker run -d --name redis_swsiren21 -p 6580:6379 -i -t redis:alpine3.11
+docker rm redis_swsensor22 -f || true && docker run -d --name redis_swsensor22 -p 6581:6379 -i -t redis:alpine3.11
+
+docker run -it --rm alpine:3.11.2 /bin/sh
+apk --update add postgresql-client && rm -rf /var/cache/apk/*
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP USER IF EXISTS safewaterfall"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE USER safewaterfall WITH ENCRYPTED PASSWORD 'abc123'"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swmanager TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swmanager" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor11 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor11" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsiren11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsiren11"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsiren11 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsiren11" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor21 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor21" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsiren21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsiren21"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsiren21 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsiren21" -c "SELECT CURRENT_DATABASE()"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swsensor22"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swsensor22"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swsensor22 TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor22" -c "SELECT CURRENT_DATABASE()"
+exit
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+cd "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor11.flyway.properties
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor21.flyway.properties
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor22.flyway.properties
+
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsiren21" "-DSERIAL_PORT=COM5" "-DREDIS_ADDRESS=192.168.100.8:6580" "-DSIREN_ID=1254a9ba-3fe0-4399-abfc-dfc00cad516d" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsiren21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar"
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor21" "-DSERIAL_PORT=COM7" "-DREDIS_ADDRESS=192.168.100.8:6579" "-DSENSOR_ID=dd21c439-e3f9-44b9-902e-2eac40f53705" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+
+
