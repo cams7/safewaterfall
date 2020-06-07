@@ -355,19 +355,19 @@ mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsenso
 IP 192.168.100.23
 Redis 192.168.100.8:6379
 DS jdbc:postgresql://192.168.100.8:5432/swmanager
-URL http://192.168.100.23:8080
+URL http://192.168.100.23:8080/swagger-ui.html
 
 (swsensor11, swsiren11) - PC
 IP 192.168.100.8
 swsensor11
 	Redis 192.168.100.8:6479
 	DS jdbc:postgresql://192.168.100.8:5432/swsensor11
-	URL http://192.168.100.8:8180
+	URL http://192.168.100.8:8180/swagger-ui.html
 	ID 9659c296-bc10-434f-9e57-a4c3784e79e8
 swsiren11 
 	Redis 192.168.100.8:6480
 	DS jdbc:postgresql://192.168.100.8:5432/swsiren11
-	URL http://192.168.100.8:8280
+	URL http://192.168.100.8:8280/swagger-ui.html
 	ID 0134c0a8-d6ad-4107-94b4-fee84f7ced17
 
 (swsensor21, swsiren21, swsensor22) Notebook VAIO
@@ -375,17 +375,17 @@ IP 192.168.100.12
 swsensor21
 	Redis 192.168.100.8:6579
 	DS jdbc:postgresql://192.168.100.8:5432/swsensor21
-	URL http://192.168.100.12:8180
+	URL http://192.168.100.12:8180/swagger-ui.html
 	ID dd21c439-e3f9-44b9-902e-2eac40f53705
 swsiren21
 	Redis 192.168.100.8:6580
 	DS jdbc:postgresql://192.168.100.8:5432/swsiren21
-	URL http://192.168.100.12:8280
+	URL http://192.168.100.12:8280/swagger-ui.html
 	ID 1254a9ba-3fe0-4399-abfc-dfc00cad516d
 swsensor22
 	Redis 192.168.100.8:6581
 	DS jdbc:postgresql://192.168.100.8:5432/swsensor22
-	http://192.168.100.12:8380
+	URL http://192.168.100.12:8380/swagger-ui.html
 	ID 4764bc1a-c119-4b56-bc74-f1a538218cf9
 
 cd "C:\My\Desenv\My\safewaterfall\box"
@@ -445,10 +445,25 @@ mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor11.flyway
 mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor21.flyway.properties
 mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test-swsensor22.flyway.properties
 
-mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar"
-mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swmanager-api" && cp "C:/My/Desenv/My/safewaterfall/swmanager-api/target/swmanager-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swmanager.jar"
 
-mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsiren21" "-DSERIAL_PORT=COM5" "-DREDIS_ADDRESS=192.168.100.8:6580" "-DSIREN_ID=1254a9ba-3fe0-4399-abfc-dfc00cad516d" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsiren21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar"
-mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor21" "-DSERIAL_PORT=COM7" "-DREDIS_ADDRESS=192.168.100.8:6579" "-DSENSOR_ID=dd21c439-e3f9-44b9-902e-2eac40f53705" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar" && java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar"
+mvn -Ptest clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsiren21" "-DSERIAL_PORT=COM5" "-DREDIS_ADDRESS=192.168.100.8:6580" "-DSIREN_ID=1254a9ba-3fe0-4399-abfc-dfc00cad516d" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsiren21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren21.jar"
+mvn -Ptest "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor21" "-DSERIAL_PORT=COM7" "-DREDIS_ADDRESS=192.168.100.8:6579" "-DSENSOR_ID=dd21c439-e3f9-44b9-902e-2eac40f53705" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor21;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+mvn -Ptest "-Dserver.port=8380" "-Dspring.datasource.url=jdbc:postgresql://192.168.100.8:5432/swsensor22" "-DSERIAL_PORT=COM2" "-DREDIS_ADDRESS=192.168.100.8:6581" "-DSENSOR_ID=4764bc1a-c119-4b56-bc74-f1a538218cf9" "-DQUARTZ_DS_URL=jdbc:postgresql://192.168.100.8:5432/swsensor22;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.0.1-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor22.jar"
+
+#192.168.100.23
+java -jar "C:/Users/cmagalha/Documents/Dev/Safewaterfall/swmanager.jar"
+
+#192.168.100.8
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren11.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+
+#192.168.100.12
+java -jar "C:/Dev/My/safewaterfall/tests/swsiren21.jar"
+java -jar "C:/Dev/My/safewaterfall/tests/swsensor21.jar"
+java -jar "C:/Dev/My/safewaterfall/tests/swsensor22.jar"
 
 
