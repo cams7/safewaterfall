@@ -4,9 +4,12 @@
 package br.com.cams7.safewaterfall.common.model.vo;
 
 import static br.com.cams7.safewaterfall.common.model.BaseEntity.UUID_V4_REGEX;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
 import org.springframework.data.redis.core.RedisHash;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -28,16 +31,26 @@ import lombok.ToString;
 @RedisHash("siren")
 public class AppSirenVO {
 
-  @ApiModelProperty(notes = "Identificador único da sirene", example = "UUID V4", required = true, position = 1)
-  @NotBlank
-  @Pattern(regexp = UUID_V4_REGEX)
-  private String id;
+	@ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
+	@NotBlank
+	@Pattern(regexp = UUID_V4_REGEX)
+	private String id;
 
-  @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 2)
-  private boolean active;
+	@ApiModelProperty(notes = "Identificador único da sirene", example = "UUID V4", required = true, position = 2)
+	@NotBlank
+	@Pattern(regexp = UUID_V4_REGEX)
+	private String sirenId;
 
-  public AppSirenVO(String id) {
-    this();
-    this.id = id;
-  }
+	@ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 3)
+	private boolean active;
+
+	public AppSirenVO(String id) {
+		this();
+		this.id = id;
+	}
+
+	public AppSirenVO(String id, String sirenId) {
+		this(id);
+		this.sirenId = sirenId;
+	}
 }

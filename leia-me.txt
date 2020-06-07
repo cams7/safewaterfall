@@ -438,6 +438,10 @@ psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PR
 psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swsensor22" -c "SELECT CURRENT_DATABASE()"
 exit
 
+
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
+
 cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
 mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
 cd "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api"
@@ -465,5 +469,15 @@ java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
 java -jar "C:/Dev/My/safewaterfall/tests/swsiren21.jar"
 java -jar "C:/Dev/My/safewaterfall/tests/swsensor21.jar"
 java -jar "C:/Dev/My/safewaterfall/tests/swsensor22.jar"
+
+---------------------------------------------------------------------------------------------------
+
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+cd "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 
 

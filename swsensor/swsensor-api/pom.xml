@@ -229,20 +229,20 @@
 			</activation>
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active>
-				<spring.datasource.url>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor;DB_CLOSE_ON_EXIT=FALSE</spring.datasource.url>
+				<spring.datasource.url>jdbc:h2:file:C:/My/Desenv/My/safewaterfall/db/h2/swsensor;DB_CLOSE_ON_EXIT=FALSE</spring.datasource.url>
 				<spring.datasource.username>sa</spring.datasource.username>
 				<spring.datasource.password></spring.datasource.password>
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
-				<server.port>8080</server.port>
-				<MANAGER_URL>http://localhost:8180</MANAGER_URL>
-				<SERIAL_PORT>COM3</SERIAL_PORT>
+				<server.port>8180</server.port>
+				<MANAGER_URL>http://localhost:8080</MANAGER_URL>
+				<SERIAL_PORT>COM4</SERIAL_PORT>
 				<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 				<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>172.42.42.220:6379</REDIS_ADDRESS>
+				<REDIS_ADDRESS>192.168.100.8:6479</REDIS_ADDRESS>
 				<SENSOR_ID>9659c296-bc10-434f-9e57-a4c3784e79e8</SENSOR_ID>
 				<QUARTZ_DRIVER_DELEGATE_CLASS>org.quartz.impl.jdbcjobstore.StdJDBCDelegate</QUARTZ_DRIVER_DELEGATE_CLASS>
-				<QUARTZ_DS_URL>jdbc:h2:file:C:/Dev/My/Safewaterfall/db/h2/swsensor;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql'</QUARTZ_DS_URL>
+				<QUARTZ_DS_URL>jdbc:h2:file:C:/My/Desenv/My/safewaterfall/db/h2/swsensor;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql'</QUARTZ_DS_URL>
 			</properties>
 		</profile>
 		<!--profile>
