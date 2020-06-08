@@ -1,9 +1,9 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.common.service;
+package br.com.cams7.safewaterfall.swmanager.service;
 
-import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
+import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenVO;
 
 /**
  * @author CAMs7

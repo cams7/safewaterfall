@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import br.com.cams7.safewaterfall.swsiren.model.vo.SirenVO;
-import br.com.cams7.safewaterfall.swsiren.service.SirenService;
+import br.com.cams7.safewaterfall.swsiren.model.vo.AppSirenVO;
+import br.com.cams7.safewaterfall.swsiren.service.AppSirenService;
 import br.com.cams7.safewaterfall.swsiren.service.StatusArduinoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,16 +38,16 @@ public class SirenEndpoint {
   private StatusArduinoService arduinoService;
 
   @Autowired
-  private SirenService sirenService;
+  private AppSirenService appSirenService;
 
   @ApiOperation("Alterar o estado da sirene")
   @GetMapping(path = "change_status/{active}")
   @ResponseStatus(value = OK)
   public void changeStatus(@ApiParam("Sirene esta ativa") @PathVariable boolean active) {
-    SirenVO siren = new SirenVO(sirenId);
-    siren.setActive(active);
+    AppSirenVO appSiren = new AppSirenVO(sirenId);
+    appSiren.setActive(active);
     arduinoService.changeSirenStatus(active);
-    sirenService.save(siren);
+    appSirenService.save(appSiren);
   }
 
 }

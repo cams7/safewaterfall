@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.common.model.vo;
+package br.com.cams7.safewaterfall.swmanager.model.vo;
 
 import static br.com.cams7.safewaterfall.common.model.BaseEntity.UUID_V4_REGEX;
 import javax.validation.constraints.NotBlank;

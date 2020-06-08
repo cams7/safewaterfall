@@ -6,8 +6,8 @@ package br.com.cams7.safewaterfall.swsiren.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
-import br.com.cams7.safewaterfall.swsiren.model.repository.SirenRepository;
-import br.com.cams7.safewaterfall.swsiren.model.vo.SirenVO;
+import br.com.cams7.safewaterfall.swsiren.model.repository.AppSirenRepository;
+import br.com.cams7.safewaterfall.swsiren.model.vo.AppSirenVO;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,20 +16,20 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class SirenServiceImpl implements SirenService {
+public class AppSirenServiceImpl implements AppSirenService {
 
   @Autowired
-  private SirenRepository repository;
+  private AppSirenRepository repository;
 
   @Override
-  public SirenVO save(SirenVO siren) {
+  public AppSirenVO save(AppSirenVO siren) {
     log.info("save -> {}", siren);
     return repository.save(siren);
   }
 
   @Override
-  public SirenVO findById(String id) {
-    SirenVO siren = repository.findById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
+  public AppSirenVO findById(String id) {
+    AppSirenVO siren = repository.findById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
         "Não foi encontrado nenhuma sirene pelo id %d", id)));
     return siren;
   }

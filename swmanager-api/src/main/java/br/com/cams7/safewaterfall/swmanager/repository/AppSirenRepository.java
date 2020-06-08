@@ -1,11 +1,11 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.common.model.repository;
+package br.com.cams7.safewaterfall.swmanager.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
+import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenVO;
 
 /**
  * @author CAMs7
