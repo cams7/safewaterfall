@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.common.model.vo;
+package br.com.cams7.safewaterfall.swsiren.model.vo;
 
 import static br.com.cams7.safewaterfall.common.model.BaseEntity.UUID_V4_REGEX;
 import javax.validation.constraints.NotBlank;
@@ -26,29 +26,19 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "id", callSuper = false)
 @RedisHash("siren")
-public class AppSirenVO {
+public class SirenVO {
 
-  @ApiModelProperty(notes = "Identificador único do sensor", example = "UUID V4", required = true, position = 1)
+  @ApiModelProperty(notes = "Identificador único da sirene", example = "UUID V4", required = true, position = 1)
   @NotBlank
   @Pattern(regexp = UUID_V4_REGEX)
   private String id;
 
-  @ApiModelProperty(notes = "Identificador único da sirene", example = "UUID V4", required = true, position = 2)
-  @NotBlank
-  @Pattern(regexp = UUID_V4_REGEX)
-  private String sirenId;
-
-  @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 3)
+  @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 2)
   private boolean active;
 
-  public AppSirenVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {
+  public SirenVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {
     this();
     this.id = id;
   }
 
-  public AppSirenVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id, @NotBlank @Pattern(
-      regexp = UUID_V4_REGEX) String sirenId) {
-    this(id);
-    this.sirenId = sirenId;
-  }
 }

@@ -25,6 +25,20 @@ public abstract class BaseEndpoint<VO> {
   @Autowired
   private RestOperations restTemplate;
 
+  protected void changeValue(String url) {
+    // setting up the request headers
+    HttpHeaders requestHeaders = new HttpHeaders();
+
+    // request entity is created with request body and headers
+    HttpEntity<VO> requestEntity = new HttpEntity<>(requestHeaders);
+
+    try {
+      restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);
+    } catch (ResourceAccessException e) {
+      throw new AppException(e);
+    }
+  }
+
   protected void changeValue(String url, VO body) {
     // setting up the request headers
     HttpHeaders requestHeaders = new HttpHeaders();

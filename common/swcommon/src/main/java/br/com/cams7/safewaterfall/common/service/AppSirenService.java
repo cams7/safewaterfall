@@ -11,12 +11,14 @@ import br.com.cams7.safewaterfall.common.model.vo.AppSirenVO;
  */
 public interface AppSirenService {
 
-	AppSirenVO save(AppSirenVO siren);
+  AppSirenVO save(AppSirenVO siren);
 
-	AppSirenVO findById(String id);
+  AppSirenVO findById(String id);
 
-	boolean existsById(String id);
-	
-	Iterable<AppSirenVO> findAll();
+  boolean existsById(String id);
+
+  // Iterable<AppSirenVO> findBySirenId(String sirenId);
+
+  Iterable<AppSirenVO> findAll();
 
 }

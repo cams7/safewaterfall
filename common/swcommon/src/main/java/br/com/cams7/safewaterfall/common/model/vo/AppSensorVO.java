@@ -73,7 +73,7 @@ public class AppSensorVO {
   @ApiModelProperty(notes = "Distancia medida", example = "255", required = true, position = 7)
   private Short distance;
 
-  public AppSensorVO(String id) {
+  public AppSensorVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {
     this();
     this.id = id;
   }

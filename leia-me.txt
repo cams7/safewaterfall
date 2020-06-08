@@ -480,4 +480,10 @@ mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 cd "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api"
 mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 
+-------------------------------------------- 08/06/20 --------------------------------------------
+
+docker start redis_swmanager
+docker start redis_swsensor11
+docker start redis_swsiren11
+
 

@@ -60,7 +60,7 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
 
     AppSensorVO appSensor = getSensor(sensor);
 
-    changeValue(String.format("%s/sensor", SENSOR_URL), appSensor);
+    changeValue(String.format("%s%s", SENSOR_URL, SENSOR_PATH), appSensor);
   }
 
   @ApiOperation("Carregar os dados do sensor pelo ID")
