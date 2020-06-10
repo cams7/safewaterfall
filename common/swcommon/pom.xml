@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.cams7.safewaterfall</groupId>
 	<artifactId>swcommon</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>Safe Waterfall Common</name>
 	<description>Lib Safe Waterfall Common</description>
 
