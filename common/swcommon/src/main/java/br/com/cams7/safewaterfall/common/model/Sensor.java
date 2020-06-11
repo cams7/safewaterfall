@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.swsensor.model;
+package br.com.cams7.safewaterfall.common.model;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
@@ -10,7 +10,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import br.com.cams7.safewaterfall.common.model.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -65,7 +64,7 @@ public class Sensor extends BaseEntity<String> {
   @ApiModelProperty(notes = "Distancia medida", example = "255", required = true, position = 7)
   private Short distance;
 
-  @ApiModelProperty(notes = "Status atual da mensagem", example = "SEND_STATUS", required = true, position = 8)
+  @ApiModelProperty(notes = "Situação atual da mensagem", example = "SEND_STATUS", required = true, position = 8)
   @NotNull
   private MessageStatus messageStatus = MessageStatus.SEND_STATUS;
 

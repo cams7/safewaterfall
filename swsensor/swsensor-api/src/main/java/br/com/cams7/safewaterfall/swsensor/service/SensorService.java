@@ -3,7 +3,7 @@
  */
 package br.com.cams7.safewaterfall.swsensor.service;
 
-import br.com.cams7.safewaterfall.swsensor.model.Sensor;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 
 /**
  * @author CAMs7

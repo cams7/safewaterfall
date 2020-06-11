@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
-import br.com.cams7.safewaterfall.swsensor.model.Sensor;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 import br.com.cams7.safewaterfall.swsensor.model.repository.SensorRepository;
 
 /**

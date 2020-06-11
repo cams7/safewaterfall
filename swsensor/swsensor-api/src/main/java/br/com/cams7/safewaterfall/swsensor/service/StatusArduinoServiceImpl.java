@@ -2,8 +2,8 @@ package br.com.cams7.safewaterfall.swsensor.service;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.MESSAGE;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.DIGITAL;
-import static br.com.cams7.safewaterfall.swsensor.model.Sensor.MessageStatus.SEND_ALERT;
-import static br.com.cams7.safewaterfall.swsensor.model.Sensor.MessageStatus.SEND_STATUS;
+import static br.com.cams7.safewaterfall.common.model.Sensor.MessageStatus.SEND_ALERT;
+import static br.com.cams7.safewaterfall.common.model.Sensor.MessageStatus.SEND_STATUS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
 import br.com.cams7.safewaterfall.common.error.AppException;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 import br.com.cams7.safewaterfall.swsensor.cron.StatusMessageCron;
-import br.com.cams7.safewaterfall.swsensor.model.Sensor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

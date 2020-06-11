@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import br.com.cams7.safewaterfall.common.error.AppException;
-import br.com.cams7.safewaterfall.swsensor.model.Sensor;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
