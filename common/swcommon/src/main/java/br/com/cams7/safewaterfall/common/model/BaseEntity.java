@@ -11,8 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @param <PK>
  */
+@SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class BaseEntity<PK extends Serializable> {
+public abstract class BaseEntity<PK extends Serializable> implements Serializable {
 
   public static final String UUID_V4_REGEX =
       "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$";
