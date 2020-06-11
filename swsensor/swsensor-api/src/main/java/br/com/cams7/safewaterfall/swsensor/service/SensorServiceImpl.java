@@ -35,4 +35,9 @@ public class SensorServiceImpl implements SensorService {
     return sensor;
   }
 
+  @Override
+  public boolean existsById(String id) {
+    return repository.existsById(id);
+  }
+
 }

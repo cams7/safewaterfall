@@ -27,4 +27,12 @@ public interface SirenService {
    */
   Siren findById(String id);
 
+  /**
+   * Retorna verdadeiro caso a sirene tenha sido cadastrada
+   * 
+   * @param id ID da sirene
+   * @return Sirene foi cadastrada
+   */
+  boolean existsById(String id);
+
 }

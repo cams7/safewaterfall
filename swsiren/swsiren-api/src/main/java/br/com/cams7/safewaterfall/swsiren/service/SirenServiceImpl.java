@@ -35,4 +35,9 @@ public class SirenServiceImpl implements SirenService {
     return siren;
   }
 
+  @Override
+  public boolean existsById(String id) {
+    return repository.existsById(id);
+  }
+
 }

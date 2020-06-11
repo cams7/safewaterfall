@@ -74,17 +74,22 @@ public class SensorEndpoint {
     if (!sensorId.equals(id))
       throw new AppResourceNotFoundException(String.format("O ID %d não corresponde ao ID do sensor", id));
 
-    Sensor currentSensor = sensorService.findById(sensorId);
-    if (!currentSensor.getStatusArduinoCron().equals(sensor.getStatusArduinoCron()))
+    Sensor currentSensor = null;
+    if (sensorService.existsById(sensorId))
+      currentSensor = sensorService.findById(sensorId);
+
+    if (currentSensor == null || !currentSensor.getStatusArduinoCron().equals(sensor.getStatusArduinoCron()))
       statusArduinoCron.reschedule(sensor.getStatusArduinoCron());
 
     switch (sensor.getMessageStatus()) {
       case SEND_STATUS:
-        if (!currentSensor.getSendStatusMessageCron().equals(sensor.getSendStatusMessageCron()))
+        if (currentSensor == null || !currentSensor.getSendStatusMessageCron().equals(sensor
+            .getSendStatusMessageCron()))
           statusMessageCron.reschedule(sensor.getSendStatusMessageCron());
         break;
       case SEND_ALERT:
-        if (!currentSensor.getSendAlertMessageCron().equals(sensor.getSendAlertMessageCron()))
+        if (currentSensor == null || !currentSensor.getSendAlertMessageCron().equals(sensor
+            .getSendAlertMessageCron()))
           statusMessageCron.reschedule(sensor.getSendAlertMessageCron());
         break;
       default:

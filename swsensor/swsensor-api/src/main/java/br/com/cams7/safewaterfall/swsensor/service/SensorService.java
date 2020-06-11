@@ -26,4 +26,12 @@ public interface SensorService {
    */
   Sensor findById(String id);
 
+  /**
+   * Retorna verdadeiro caso o sensor tenha sido cadastrado
+   * 
+   * @param id ID do sensor
+   * @return Sensor foi cadastrado
+   */
+  boolean existsById(String id);
+
 }

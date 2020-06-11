@@ -1,6 +1,7 @@
 package br.com.cams7.safewaterfall.swsensor.cron;
 
 import static br.com.cams7.safewaterfall.AppConstants.JOB_GROUP_NAME;
+import static br.com.cams7.safewaterfall.AppConstants.STATUS_ARDUINO_CRON;
 import javax.annotation.PostConstruct;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -48,11 +49,17 @@ public class StatusArduinoCron extends AppCronImpl {
 
   @Bean
   public CronTriggerFactoryBean statusArduinoTriggerFactoryBean() {
-    Sensor sensor = sensorService.findById(sensorId);
+    final String statusArduinoCron;
+    if (sensorService.existsById(sensorId)) {
+      Sensor sensor = sensorService.findById(sensorId);
+      statusArduinoCron = sensor.getStatusArduinoCron();
+    } else
+      statusArduinoCron = STATUS_ARDUINO_CRON;
+
     CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
 
     cronTriggerFactoryBean.setJobDetail(statusArduinoJobDetailFactory().getObject());
-    cronTriggerFactoryBean.setCronExpression(sensor.getStatusArduinoCron());
+    cronTriggerFactoryBean.setCronExpression(statusArduinoCron);
     cronTriggerFactoryBean.setName(TRIGGER_NAME);
     cronTriggerFactoryBean.setGroup(JOB_GROUP_NAME);
     return cronTriggerFactoryBean;

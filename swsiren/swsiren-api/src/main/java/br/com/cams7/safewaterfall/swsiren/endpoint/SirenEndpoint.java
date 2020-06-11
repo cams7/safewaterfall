@@ -48,8 +48,8 @@ public class SirenEndpoint {
   @GetMapping(path = "change_status/{active}")
   @ResponseStatus(value = OK)
   public void changeStatus(@ApiParam("Sirene esta ativa") @PathVariable boolean active) {
-    arduinoService.changeSirenStatus(active);
     Siren siren = sirenService.findById(sirenId);
+    arduinoService.changeSirenStatus(active);
     if (active != siren.isActive()) {
       siren.setActive(active);
       sirenService.save(siren);
@@ -64,8 +64,11 @@ public class SirenEndpoint {
     if (!sirenId.equals(id))
       throw new AppResourceNotFoundException(String.format("O ID %d não corresponde ao ID da sirene", id));
 
-    Siren currentSiren = sirenService.findById(sirenId);
-    if (currentSiren.isActive() != siren.isActive())
+    Siren currentSiren = null;
+    if (sirenService.existsById(sirenId))
+      currentSiren = sirenService.findById(sirenId);
+
+    if (currentSiren == null || currentSiren.isActive() != siren.isActive())
       arduinoService.changeSirenStatus(siren.isActive());
 
     return sirenService.save(siren);

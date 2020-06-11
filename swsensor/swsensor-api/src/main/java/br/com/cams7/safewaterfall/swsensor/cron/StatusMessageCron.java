@@ -1,6 +1,7 @@
 package br.com.cams7.safewaterfall.swsensor.cron;
 
 import static br.com.cams7.safewaterfall.AppConstants.JOB_GROUP_NAME;
+import static br.com.cams7.safewaterfall.AppConstants.SEND_STATUS_MESSAGE_CRON;
 import javax.annotation.PostConstruct;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -46,11 +47,28 @@ public class StatusMessageCron extends AppCronImpl {
 
   @Bean
   public CronTriggerFactoryBean statusMessageTriggerFactoryBean() {
-    Sensor sensor = sensorService.findById(sensorId);
+    String sendMessageCron = null;
+    if (sensorService.existsById(sensorId)) {
+      Sensor sensor = sensorService.findById(sensorId);
+      switch (sensor.getMessageStatus()) {
+        case SEND_STATUS:
+          sendMessageCron = sensor.getSendStatusMessageCron();
+          break;
+        case SEND_ALERT:
+          sendMessageCron = sensor.getSendAlertMessageCron();
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (sendMessageCron == null)
+      sendMessageCron = SEND_STATUS_MESSAGE_CRON;
+
     CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
 
     cronTriggerFactoryBean.setJobDetail(statusMessageJobDetailFactory().getObject());
-    cronTriggerFactoryBean.setCronExpression(sensor.getSendStatusMessageCron());
+    cronTriggerFactoryBean.setCronExpression(sendMessageCron);
     cronTriggerFactoryBean.setName(TRIGGER_NAME);
     cronTriggerFactoryBean.setGroup(JOB_GROUP_NAME);
     return cronTriggerFactoryBean;
