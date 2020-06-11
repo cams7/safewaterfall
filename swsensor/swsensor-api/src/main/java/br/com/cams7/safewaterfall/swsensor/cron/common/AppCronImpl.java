@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.common.cron;
+package br.com.cams7.safewaterfall.swsensor.cron.common;
 
 import java.text.ParseException;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import br.com.cams7.safewaterfall.common.error.AppException;
-import br.com.cams7.safewaterfall.common.service.AppSchedulerService;
+import br.com.cams7.safewaterfall.swsensor.service.common.AppSchedulerService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

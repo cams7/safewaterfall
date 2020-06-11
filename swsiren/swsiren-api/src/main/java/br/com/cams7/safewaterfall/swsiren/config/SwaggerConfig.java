@@ -40,7 +40,7 @@ public class SwaggerConfig {
 
   private static ApiInfo metaData() {
     return new ApiInfoBuilder().title("Safe Waterfall Siren").description("Safe Waterfall Siren").version(
-        "0.0.1-SNAPSHOT").contact(new Contact("César A. Magalhães", "https://www.linkedin.com/in/cams7",
+        "0.1.0-SNAPSHOT").contact(new Contact("César A. Magalhães", "https://www.linkedin.com/in/cams7",
             "ceanma@gmail.com")).license("Apache License Version 2.0").licenseUrl(
                 "https://www.apache.org/licenses/LICENSE-2.0").build();
   }

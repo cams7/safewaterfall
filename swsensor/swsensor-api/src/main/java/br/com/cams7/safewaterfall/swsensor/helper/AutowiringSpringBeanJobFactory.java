@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.common.helper;
+package br.com.cams7.safewaterfall.swsensor.helper;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

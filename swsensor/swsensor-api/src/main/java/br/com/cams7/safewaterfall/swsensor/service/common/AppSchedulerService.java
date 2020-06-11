@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.common.service;
+package br.com.cams7.safewaterfall.swsensor.service.common;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;

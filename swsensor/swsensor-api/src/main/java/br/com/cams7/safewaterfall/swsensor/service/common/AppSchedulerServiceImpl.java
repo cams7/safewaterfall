@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.common.service;
+package br.com.cams7.safewaterfall.swsensor.service.common;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import br.com.cams7.safewaterfall.common.error.AppException;
-import br.com.cams7.safewaterfall.common.helper.AutowiringSpringBeanJobFactory;
+import br.com.cams7.safewaterfall.swsensor.helper.AutowiringSpringBeanJobFactory;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,7 +24,7 @@ public class AppSchedulerServiceImpl implements AppSchedulerService {
   private SchedulerFactoryBean scheduler;
 
   @Autowired
-  AutowiringSpringBeanJobFactory autowiringSpringBeanJobFactory;
+  private AutowiringSpringBeanJobFactory autowiringSpringBeanJobFactory;
 
   @PostConstruct
   void init() {

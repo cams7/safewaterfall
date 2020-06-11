@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
-import br.com.cams7.safewaterfall.common.cron.AppCronImpl;
 import br.com.cams7.safewaterfall.common.model.Sensor;
+import br.com.cams7.safewaterfall.swsensor.cron.common.AppCronImpl;
 import br.com.cams7.safewaterfall.swsensor.service.SensorService;
 import br.com.cams7.safewaterfall.swsensor.service.StatusArduinoService;
 

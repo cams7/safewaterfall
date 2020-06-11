@@ -1,4 +1,4 @@
-package br.com.cams7.safewaterfall.common.cron;
+package br.com.cams7.safewaterfall.swsensor.cron.common;
 
 public interface AppCron {
   void register();
