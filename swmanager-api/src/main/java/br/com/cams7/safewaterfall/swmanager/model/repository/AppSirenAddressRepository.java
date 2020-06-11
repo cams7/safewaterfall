@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swmanager.repository;
+package br.com.cams7.safewaterfall.swmanager.model.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

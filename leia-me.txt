@@ -546,6 +546,10 @@ docker network create --driver bridge safewaterfall
 docker rm mongodb_safewaterfall -f || true && docker run -d --name mongodb_safewaterfall -p 27017:27017 --network=safewaterfall -v /home/vagrant/safewaterfall/mongodb_data:/data/db -i -t mongo:4.2.7-bionic
 docker rm redis_safewaterfall -f || true && docker run -d --name redis_safewaterfall -p 6379:6379 --network=safewaterfall -i -t redis:alpine3.11
 
+http://192.168.100.8:8080/swagger-ui.html
+http://192.168.100.8:8180/swagger-ui.html
+http://192.168.100.8:8280/swagger-ui.html
+
 
 
 

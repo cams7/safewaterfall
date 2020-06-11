@@ -6,8 +6,8 @@ package br.com.cams7.safewaterfall.swmanager.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
+import br.com.cams7.safewaterfall.swmanager.model.repository.AppSirenRepository;
 import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenVO;
-import br.com.cams7.safewaterfall.swmanager.repository.AppSirenRepository;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,11 +38,6 @@ public class AppSirenServiceImpl implements AppSirenService {
   public boolean existsById(String id) {
     return repository.existsById(id);
   }
-
-  // @Override
-  // public Iterable<AppSirenVO> findBySirenId(String sirenId) {
-  // return repository.findBySirenId(sirenId);
-  // }
 
   @Override
   public Iterable<AppSirenVO> findAll() {

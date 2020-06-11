@@ -14,7 +14,7 @@ public interface SirenService {
   /**
    * Salva ou atualiza os dados da sirene
    * 
-   * @param siren Siren
+   * @param siren Sirene
    */
   SirenEntity save(SirenEntity siren);
 
@@ -22,7 +22,7 @@ public interface SirenService {
    * Buscar a sirene pelo ID
    * 
    * @param id ID da sirene
-   * @return Siren
+   * @return Sirene
    */
   SirenEntity findById(Long id);
 

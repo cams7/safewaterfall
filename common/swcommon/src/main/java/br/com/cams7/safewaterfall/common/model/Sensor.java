@@ -14,10 +14,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @ApiModel(description = "Entidade que representa o sensor")
 @SuppressWarnings("serial")
 @Document
+@NoArgsConstructor
 @Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Sensor extends BaseEntity<String> {
@@ -68,7 +70,13 @@ public class Sensor extends BaseEntity<String> {
   @NotNull
   private MessageStatus messageStatus = MessageStatus.SEND_STATUS;
 
+  public Sensor(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {
+    this();
+    this.id = id;
+  }
+
   public static enum MessageStatus {
     SEND_STATUS, SEND_ALERT
   }
+
 }

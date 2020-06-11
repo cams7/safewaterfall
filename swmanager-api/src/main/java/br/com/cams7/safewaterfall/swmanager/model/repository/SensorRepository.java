@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swmanager.repository;
+package br.com.cams7.safewaterfall.swmanager.model.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;

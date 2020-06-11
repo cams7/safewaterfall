@@ -1,66 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.13.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
+
 	<groupId>br.com.cams7.safewaterfall</groupId>
 	<artifactId>swmanager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
+
 	<name>Safe Waterfall Manager</name>
 	<description>Application Safe Waterfall Manager</description>
 
 	<properties>
 		<user.name>César A. Magalhães</user.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss
-		</maven.build.timestamp.format>
-
-		<java.version>1.8</java.version>		
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+		
+		<java.version>1.8</java.version>
 		<swagger2.version>2.9.2</swagger2.version>
+		
 		<spring.jpa.hibernate.ddl-auto>none</spring.jpa.hibernate.ddl-auto>
 		<spring.jpa.properties.hibernate.show_sql>true</spring.jpa.properties.hibernate.show_sql>
 		<spring.jpa.properties.hibernate.format_sql>true</spring.jpa.properties.hibernate.format_sql>
+		
+		<server.port>8080</server.port>		
+		<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
+		<REDIS_HOST>192.168.100.8</REDIS_HOST>
+		<REDIS_PORT>6379</REDIS_PORT>
+		<REDIS_DATABASE>0</REDIS_DATABASE>	
 	</properties>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<!--version>2.3.0.RELEASE</version-->
+		<!--version>2.2.7.RELEASE</version-->
+		<version>2.1.13.RELEASE</version>
+		<relativePath/>
+	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>br.com.cams7.safewaterfall</groupId>
 			<artifactId>swarduino</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>br.com.cams7.safewaterfall</groupId>
 			<artifactId>swcommon</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-hibernate5</artifactId>
-		</dependency>
+		</dependency>				
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate5</artifactId>
+		</dependency>		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -68,39 +86,6 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5.5</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,18 +93,19 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-
+				
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -135,7 +121,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
@@ -156,13 +141,8 @@
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>${swagger2.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<resources>
 			<resource>
@@ -179,10 +159,6 @@
 					<target>${java.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -209,12 +185,16 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -233,34 +213,8 @@
 				<spring.datasource.username>sa</spring.datasource.username>
 				<spring.datasource.password></spring.datasource.password>
 				<spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
-				<server.port>8080</server.port>
-				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>192.168.100.8:6379</REDIS_ADDRESS>
-				<QUARTZ_DRIVER_DELEGATE_CLASS>org.quartz.impl.jdbcjobstore.StdJDBCDelegate</QUARTZ_DRIVER_DELEGATE_CLASS>
-				<QUARTZ_DS_URL>jdbc:h2:file:C:/My/Desenv/My/safewaterfall/db/h2/swmanager;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql'</QUARTZ_DS_URL>
 			</properties>
 		</profile>
-		<!--profile>
-			<id>test</id>
-			<activation>
-				<os>
-					<family>Linux</family>
-				</os>
-				<property>
-					<name>test</name>
-				</property>
-			</activation>
-			<properties>
-				<spring.profiles.active>test</spring.profiles.active>
-				<spring.datasource.url>${SWMANAGER_JDBC_DATABASE_URL}</spring.datasource.url>
-				<spring.datasource.username>${SWMANAGER_JDBC_DATABASE_USERNAME}</spring.datasource.username>
-				<spring.datasource.password>${SWMANAGER_JDBC_DATABASE_PASSWORD}</spring.datasource.password>
-				<spring.datasource.driver-class-name>${SWMANAGER_JDBC_DATABASE_DRIVER}</spring.datasource.driver-class-name>
-				<server.port>${SWMANAGER_SERVER_PORT}</server.port>
-				<HTTP_TIMEOUT>${SWMANAGER_HTTP_TIMEOUT}</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>${SWMANAGER_REDIS_ADDRESS}</REDIS_ADDRESS>
-			</properties>
-		</profile-->
 		<profile>
 			<id>test</id>
 			<activation>
@@ -277,16 +231,12 @@
 				<spring.datasource.username>safewaterfall</spring.datasource.username>
 				<spring.datasource.password>abc123</spring.datasource.password>
 				<spring.datasource.driver-class-name>org.postgresql.Driver</spring.datasource.driver-class-name>
-				<server.port>8080</server.port>
-				<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
-				<REDIS_ADDRESS>192.168.100.8:6379</REDIS_ADDRESS>
-				<QUARTZ_DRIVER_DELEGATE_CLASS>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</QUARTZ_DRIVER_DELEGATE_CLASS>
-				<QUARTZ_DS_URL>jdbc:postgresql://192.168.100.8:5432/swmanager;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_postgres.sql'</QUARTZ_DS_URL>
 			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
 				</dependency>
 			</dependencies>
 		</profile>

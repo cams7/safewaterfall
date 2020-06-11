@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.safewaterfall.swmanager.repository;
+package br.com.cams7.safewaterfall.swmanager.model.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +13,4 @@ import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenVO;
  */
 @Repository
 public interface AppSirenRepository extends CrudRepository<AppSirenVO, String> {
-  // Iterable<AppSirenVO> findBySirenId(String sirenId);
 }

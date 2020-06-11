@@ -7,8 +7,8 @@
 	<artifactId>swsiren</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
-	<name>Safe Waterfall Sensor</name>
-	<description>Application Safe Waterfall Sensor</description>
+	<name>Safe Waterfall Siren</name>
+	<description>Application Safe Waterfall Siren</description>
 
 	<properties>
 		<user.name>César A. Magalhães</user.name>

@@ -9,21 +9,17 @@ import javax.validation.constraints.Pattern;
 import org.springframework.data.redis.core.RedisHash;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author CAMs7
  *
  */
 @ApiModel(description = "VO que representa a sirene.")
-@Getter
-@Setter
 @NoArgsConstructor
-@ToString
+@Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 @RedisHash("siren")
 public class AppSirenVO {

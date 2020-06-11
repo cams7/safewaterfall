@@ -22,28 +22,27 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import br.com.cams7.safewaterfall.common.model.BaseEntity;
-import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author CAMs7
  *
  */
+@SuppressWarnings("serial")
 @ApiModel(description = "Entidade que representa o sensor")
-@Getter
-@Setter
 @NoArgsConstructor
-@ToString
+@Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "TB_SENSOR")
 public class SensorEntity extends BaseEntity<Long> {
+
+  public static final String CACHE_NAME = "sensor";
 
   @ApiModelProperty(notes = "Identificador único do sensor", example = "1", required = true, position = 1)
   @Id
@@ -96,7 +95,7 @@ public class SensorEntity extends BaseEntity<Long> {
   private Short maximumMeasuredDistance;
 
   @ApiModelProperty(notes = "Sirene", required = true, position = 8)
-  // @NotNull
+  @NotNull
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "ID_SIRENE", referencedColumnName = "ID_SIRENE")
   private SirenEntity siren;
@@ -116,49 +115,49 @@ public class SensorEntity extends BaseEntity<Long> {
   }
 
   /**
-   * @param sensor Entidade sensor
-   * @param appSensor VO do sensor
+   * @param sensorEntity Entidade sensor
+   * @param sensor VO do sensor
    */
-  public static void setSensor(SensorEntity sensor, AppSensorVO appSensor) {
-    sensor.setDeviceId(appSensor.getId());
-    sensor.setStatusArduinoCron(appSensor.getStatusArduinoCron());
-    sensor.setSendStatusMessageCron(appSensor.getSendStatusMessageCron());
-    sensor.setSendAlertMessageCron(appSensor.getSendAlertMessageCron());
-    sensor.setMinimumAllowedDistance(appSensor.getMinimumAllowedDistance());
-    sensor.setMaximumMeasuredDistance(appSensor.getMaximumMeasuredDistance());
+  public static void setSensor(SensorEntity sensorEntity, Sensor sensor) {
+    sensorEntity.setDeviceId(sensor.getId());
+    sensorEntity.setStatusArduinoCron(sensor.getStatusArduinoCron());
+    sensorEntity.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
+    sensorEntity.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
+    sensorEntity.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
+    sensorEntity.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
   }
 
   /**
-   * @param appSensor VO do sensor
+   * @param sensor VO do sensor
    * @return Entidade sensor
    */
-  public static SensorEntity getSensor(AppSensorVO appSensor) {
-    SensorEntity sensor = new SensorEntity();
-    setSensor(sensor, appSensor);
-    return sensor;
+  public static SensorEntity getSensor(Sensor sensor) {
+    SensorEntity sensorEntity = new SensorEntity();
+    setSensor(sensorEntity, sensor);
+    return sensorEntity;
   }
 
   /**
-   * @param appSensor VO do sensor
-   * @param sensor Entidade sensor
+   * @param sensor VO do sensor
+   * @param sensorEntity Entidade sensor
    */
-  public static void setSensor(AppSensorVO appSensor, SensorEntity sensor) {
-    appSensor.setId(sensor.getDeviceId());
-    appSensor.setStatusArduinoCron(sensor.getStatusArduinoCron());
-    appSensor.setSendStatusMessageCron(sensor.getSendStatusMessageCron());
-    appSensor.setSendAlertMessageCron(sensor.getSendAlertMessageCron());
-    appSensor.setMinimumAllowedDistance(sensor.getMinimumAllowedDistance());
-    appSensor.setMaximumMeasuredDistance(sensor.getMaximumMeasuredDistance());
+  public static void setSensor(Sensor sensor, SensorEntity sensorEntity) {
+    sensor.setId(sensorEntity.getDeviceId());
+    sensor.setStatusArduinoCron(sensorEntity.getStatusArduinoCron());
+    sensor.setSendStatusMessageCron(sensorEntity.getSendStatusMessageCron());
+    sensor.setSendAlertMessageCron(sensorEntity.getSendAlertMessageCron());
+    sensor.setMinimumAllowedDistance(sensorEntity.getMinimumAllowedDistance());
+    sensor.setMaximumMeasuredDistance(sensorEntity.getMaximumMeasuredDistance());
   }
 
   /**
-   * @param sensor Entidade sensor
+   * @param sensorEntity Entidade sensor
    * @return VO do sensor
    */
-  public static AppSensorVO getSensor(SensorEntity sensor) {
-    AppSensorVO appSensor = new AppSensorVO();
-    setSensor(appSensor, sensor);
-    return appSensor;
+  public static Sensor getSensor(SensorEntity sensorEntity) {
+    Sensor sensor = new Sensor();
+    setSensor(sensor, sensorEntity);
+    return sensor;
   }
 
 }

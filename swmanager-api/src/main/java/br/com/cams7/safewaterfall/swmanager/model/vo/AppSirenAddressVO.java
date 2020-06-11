@@ -7,17 +7,13 @@ import javax.validation.constraints.Size;
 import org.springframework.data.redis.core.RedisHash;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @ApiModel(description = "VO que representa o endereço da sirene.")
-@Getter
-@Setter
 @NoArgsConstructor
-@ToString
+@Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 @RedisHash("siren_address")
 public class AppSirenAddressVO {

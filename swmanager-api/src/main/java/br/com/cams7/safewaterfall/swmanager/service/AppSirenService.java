@@ -17,8 +17,6 @@ public interface AppSirenService {
 
   boolean existsById(String id);
 
-  // Iterable<AppSirenVO> findBySirenId(String sirenId);
-
   Iterable<AppSirenVO> findAll();
 
 }

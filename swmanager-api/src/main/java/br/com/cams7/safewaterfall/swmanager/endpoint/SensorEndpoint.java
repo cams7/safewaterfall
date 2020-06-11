@@ -4,7 +4,7 @@ import static br.com.cams7.safewaterfall.swmanager.endpoint.SensorEndpoint.SENSO
 import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.getSensor;
 import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.setSensor;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
+import br.com.cams7.safewaterfall.common.model.Sensor;
 import br.com.cams7.safewaterfall.swmanager.endpoint.common.BaseEndpoint;
 import br.com.cams7.safewaterfall.swmanager.model.SensorEntity;
 import br.com.cams7.safewaterfall.swmanager.service.SensorService;
@@ -28,8 +28,8 @@ import io.swagger.annotations.ApiParam;
  */
 @Api("Endpoint utilizado para executar as funcionalidades do sensor.")
 @RestController
-@RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
-public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
+@RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_VALUE)
+public class SensorEndpoint extends BaseEndpoint<Sensor> {
 
   public static final String SENSOR_PATH = "/sensor";
 
@@ -38,9 +38,9 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
 
   @ApiOperation("Salva ou atualiza os dados do sensor")
   @ResponseStatus(value = OK)
-  @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-  public void save(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
-    sensorService.save(sensor);
+  @PostMapping(consumes = APPLICATION_JSON_VALUE)
+  public SensorEntity save(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
+    return sensorService.save(sensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")
@@ -55,25 +55,25 @@ public class SensorEndpoint extends BaseEndpoint<AppSensorVO> {
   @ResponseStatus(value = OK)
   @GetMapping(path = "synchronize_sensor/{id}")
   public void synchronizeSensor(@ApiParam("ID do sensor") @PathVariable Long id) {
-    SensorEntity sensor = sensorService.findById(id);
-    final String SENSOR_URL = sensor.getSensorAddress();
+    SensorEntity sensorEntity = sensorService.findById(id);
+    final String SENSOR_URL = sensorEntity.getSensorAddress();
 
-    AppSensorVO appSensor = getSensor(sensor);
+    Sensor sensor = getSensor(sensorEntity);
 
-    changeValue(String.format("%s%s", SENSOR_URL, SENSOR_PATH), appSensor);
+    changeValue(String.format("%s%s", SENSOR_URL, SENSOR_PATH), sensor);
   }
 
   @ApiOperation("Carregar os dados do sensor pelo ID")
   @ResponseStatus(value = OK)
   @GetMapping(path = "load_sensor/{id}")
   public void loadSensor(@ApiParam("ID do sensor") @PathVariable Long id) {
-    SensorEntity sensor = sensorService.findById(id);
-    final String SENSOR_URL = sensor.getSensorAddress();
+    SensorEntity sensorEntity = sensorService.findById(id);
+    final String SENSOR_URL = sensorEntity.getSensorAddress();
 
-    AppSensorVO appSensor = getValue(String.format("%s/sensor", SENSOR_URL));
-    setSensor(sensor, appSensor);
+    Sensor sensor = getValue(String.format("%s/sensor", SENSOR_URL));
+    setSensor(sensorEntity, sensor);
 
-    sensorService.save(sensor);
+    sensorService.save(sensorEntity);
   }
 
 }
