@@ -2,7 +2,8 @@ package br.com.cams7.safewaterfall.swsensor.service;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.ArduinoEvent.MESSAGE;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType.DIGITAL;
-import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.SEND_MESSAGE_TRIGGER;
+import static br.com.cams7.safewaterfall.swsensor.model.Sensor.MessageStatus.SEND_ALERT;
+import static br.com.cams7.safewaterfall.swsensor.model.Sensor.MessageStatus.SEND_STATUS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,8 @@ import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoPin.ArduinoPinType;
 import br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART;
 import br.com.cams7.safewaterfall.common.error.AppException;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
-import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
-import br.com.cams7.safewaterfall.common.service.AppSchedulerService;
-import br.com.cams7.safewaterfall.common.service.AppSensorService;
+import br.com.cams7.safewaterfall.swsensor.cron.StatusMessageCron;
+import br.com.cams7.safewaterfall.swsensor.model.Sensor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,10 +30,10 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
   private String sensorId;
 
   @Autowired
-  private AppSchedulerService appSchedulerService;
+  private SensorService sensorService;
 
   @Autowired
-  private AppSensorService appSensorService;
+  private StatusMessageCron statusMessageCron;
 
   public StatusArduinoServiceImpl() {
     super();
@@ -45,16 +45,25 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
 
   protected void receiveMessage(ArduinoPinType pinType, byte pin, short pinValue) {
     log.info("receiveMessage -> pinType: {}, pin: {}, pinValue: {}", pinType, pin, pinValue);
-    AppSensorVO sensor = appSensorService.findById(sensorId);
+    Sensor sensor = sensorService.findById(sensorId);
     Short minimumAllowedDistance = sensor.getMinimumAllowedDistance();
     if (pinValue < minimumAllowedDistance) {
-      String sendAlertMessageCron = sensor.getSendAlertMessageCron();
-      appSchedulerService.reschedule(SEND_MESSAGE_TRIGGER, sendAlertMessageCron);
+      if (SEND_ALERT != sensor.getMessageStatus()) {
+        String sendAlertMessageCron = sensor.getSendAlertMessageCron();
+        log.info("Sending alert messages by cron: {}", sendAlertMessageCron);
+        statusMessageCron.reschedule(sendAlertMessageCron);
+        sensor.setMessageStatus(SEND_ALERT);
+        sensorService.save(sensor);
+      }
     } else {
-      String sendStatusMessageCron = sensor.getSendStatusMessageCron();
-      appSchedulerService.reschedule(SEND_MESSAGE_TRIGGER, sendStatusMessageCron);
+      if (SEND_STATUS != sensor.getMessageStatus()) {
+        String sendStatusMessageCron = sensor.getSendStatusMessageCron();
+        log.info("Sending status messages by cron: {}", sendStatusMessageCron);
+        statusMessageCron.reschedule(sendStatusMessageCron);
+        sensor.setMessageStatus(SEND_STATUS);
+        sensorService.save(sensor);
+      }
     }
-    log.info("Sensor -> {}", sensor);
   }
 
   protected void receiveWrite(ArduinoPinType pinType, byte pin, byte threadInterval, byte actionEvent) {
@@ -117,6 +126,12 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
 
     short distance = ((ArduinoUSART) arduino).getPinValue();
     return distance;
+  }
+
+  @Override
+  public void runTask() {
+    log.info("Loading distance from Arduino");
+    loadDistance();
   }
 
 }

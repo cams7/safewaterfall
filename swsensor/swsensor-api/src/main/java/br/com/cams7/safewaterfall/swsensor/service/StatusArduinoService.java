@@ -24,4 +24,6 @@ public interface StatusArduinoService extends ArduinoService {
    */
   short getDistance();
 
+  void runTask();
+
 }

@@ -1,1 +1,0 @@
-INSERT INTO tb_sensor (id_sensor, arduino_status_cron, env_status_cron, env_alerta_cron, distancia_min, distancia_max) VALUES('4764bc1a-c119-4b56-bc74-f1a538218cf9', '0/2 * * ? * * *', '0/5 * * ? * * *', '0/10 * * ? * * *', 100, 255);

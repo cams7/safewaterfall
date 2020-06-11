@@ -3,7 +3,7 @@
  */
 package br.com.cams7.safewaterfall.swsensor.service;
 
-import br.com.cams7.safewaterfall.swsensor.model.SensorEntity;
+import br.com.cams7.safewaterfall.swsensor.model.Sensor;
 
 /**
  * @author CAMs7
@@ -16,7 +16,7 @@ public interface SensorService {
    * 
    * @param sensor Sensor
    */
-  SensorEntity save(SensorEntity sensor);
+  Sensor save(Sensor sensor);
 
   /**
    * Buscar o sensor pelo ID
@@ -24,37 +24,6 @@ public interface SensorService {
    * @param id ID do sensor
    * @return Sensor
    */
-  SensorEntity findById(String id);
+  Sensor findById(String id);
 
-  /**
-   * Buscar a expressão pelo ID do sensor
-   * 
-   * @param id ID do sensor
-   * @return Expressão Cron para as consulta da distancia enviadas pelo arduino
-   */
-  String findStatusArduinoCronById(String id);
-
-  /**
-   * Buscar a expressão pelo ID do sensor
-   * 
-   * @param id ID do sensor
-   * @return Expressão Cron para envio do status do sensor
-   */
-  String findSendStatusMessageCronById(String id);
-
-  /**
-   * Buscar a expressão pelo ID do sensor
-   * 
-   * @param id ID do sensor
-   * @return Expressão Cron para envio de alertas quando quando uma distancia minima foi alcançada
-   */
-  String findSendAlertMessageCronById(String id);
-
-  /**
-   * Buscar a distancia minima pelo ID do sensor
-   * 
-   * @param id ID do sensor
-   * @return Distancia minima permitida
-   */
-  Short findMinimumAllowedDistanceById(String id);
 }

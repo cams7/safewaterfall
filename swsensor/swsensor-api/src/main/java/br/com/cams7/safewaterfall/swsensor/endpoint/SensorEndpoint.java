@@ -4,9 +4,8 @@
 package br.com.cams7.safewaterfall.swsensor.endpoint;
 
 import static br.com.cams7.safewaterfall.swsensor.endpoint.SensorEndpoint.SENSOR_PATH;
-import static br.com.cams7.safewaterfall.swsensor.scheduler.AppQuartzConfig.STATUS_ARDUINO_TRIGGER;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import br.com.cams7.safewaterfall.common.model.vo.AppSensorVO;
-import br.com.cams7.safewaterfall.common.service.AppSchedulerService;
-import br.com.cams7.safewaterfall.common.service.AppSensorService;
-import br.com.cams7.safewaterfall.swsensor.model.SensorEntity;
+import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
+import br.com.cams7.safewaterfall.swsensor.cron.StatusArduinoCron;
+import br.com.cams7.safewaterfall.swsensor.cron.StatusMessageCron;
+import br.com.cams7.safewaterfall.swsensor.model.Sensor;
 import br.com.cams7.safewaterfall.swsensor.service.SensorService;
 import br.com.cams7.safewaterfall.swsensor.service.StatusArduinoService;
 import io.swagger.annotations.Api;
@@ -32,7 +31,7 @@ import io.swagger.annotations.ApiParam;
  */
 @Api("Endpoint utilizado para executar as funcionalidades do sensor.")
 @RestController
-@RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(path = SENSOR_PATH, produces = APPLICATION_JSON_VALUE)
 public class SensorEndpoint {
 
   public static final String SENSOR_PATH = "/sensor";
@@ -47,10 +46,10 @@ public class SensorEndpoint {
   private SensorService sensorService;
 
   @Autowired
-  private AppSensorService appSensorService;
+  private StatusArduinoCron statusArduinoCron;
 
   @Autowired
-  private AppSchedulerService appSchedulerService;
+  private StatusMessageCron statusMessageCron;
 
   @ApiOperation("Carrega a distancia medida (em milimetros) pelo sensor na memoria")
   @GetMapping(path = "/load_distance")
@@ -68,21 +67,39 @@ public class SensorEndpoint {
   }
 
   @ApiOperation("Salva ou atualiza os dados do sensor")
-  @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+  @PostMapping(consumes = APPLICATION_JSON_VALUE)
   @ResponseStatus(value = OK)
-  public void save(@ApiParam("Sensor") @Valid @RequestBody AppSensorVO appSensor) {
-    SensorEntity sensor = sensorService.save(SensorEntity.getSensor(appSensor));
-    appSchedulerService.reschedule(STATUS_ARDUINO_TRIGGER, sensor.getStatusArduinoCron());
-    appSensorService.save(appSensor);
+  public Sensor save(@ApiParam("Sensor") @Valid @RequestBody Sensor sensor) {
+    String id = sensor.getId();
+    if (!sensorId.equals(id))
+      throw new AppResourceNotFoundException(String.format("O ID %d não corresponde ao ID do sensor", id));
+
+    Sensor currentSensor = sensorService.findById(sensorId);
+    if (!currentSensor.getStatusArduinoCron().equals(sensor.getStatusArduinoCron()))
+      statusArduinoCron.reschedule(sensor.getStatusArduinoCron());
+
+    switch (sensor.getMessageStatus()) {
+      case SEND_STATUS:
+        if (!currentSensor.getSendStatusMessageCron().equals(sensor.getSendStatusMessageCron()))
+          statusMessageCron.reschedule(sensor.getSendStatusMessageCron());
+        break;
+      case SEND_ALERT:
+        if (!currentSensor.getSendAlertMessageCron().equals(sensor.getSendAlertMessageCron()))
+          statusMessageCron.reschedule(sensor.getSendAlertMessageCron());
+        break;
+      default:
+        break;
+    }
+
+    return sensorService.save(sensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")
   @GetMapping
   @ResponseStatus(value = OK)
-  public AppSensorVO getSensor() {
-    SensorEntity sensor = sensorService.findById(sensorId);
-    AppSensorVO appSensor = SensorEntity.getSensor(sensor);
-    return appSensor;
+  public Sensor getSensor() {
+    Sensor sensor = sensorService.findById(sensorId);
+    return sensor;
   }
 
 }

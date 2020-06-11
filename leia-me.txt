@@ -486,4 +486,67 @@ docker start redis_swmanager
 docker start redis_swsensor11
 docker start redis_swsiren11
 
+-------------------------------------------- 09/06/20 --------------------------------------------
+
+cd "C:\My\Desenv\My\safewaterfall\box"
+vagrant up && vagrant ssh
+
+docker start redis_swmanager
+docker start redis_swsensor11
+docker start redis_swsiren11
+
+docker pull mongo:4.2.7-bionic
+
+#docker rm mongodb_swmanager -f || true && docker run -d --name mongodb_swmanager -p 27017:27017 --network=network200606 -e MONGO_INITDB_ROOT_USERNAME=safewaterfall -e MONGO_INITDB_ROOT_PASSWORD=abc123 -v /vagrant/mongodb_swmanager_db:/data/db -i -t mongo:4.2.7-bionic
+
+docker volume prune
+docker network create --driver bridge network200609
+
+docker rm mongodb_swmanager -f || true && docker run -d --name mongodb_swmanager -p 27017:27017 --network=network200609 -it mongo:4.2.7-bionic
+docker rm mongodb_swsensor11 -f || true && docker run -d --name mongodb_swsensor11 -p 27117:27017 --network=network200609 -it mongo:4.2.7-bionic
+docker rm mongodb_swsiren11 -f || true && docker run -d --name mongodb_swsiren11 -p 27118:27017 --network=network200609 -it mongo:4.2.7-bionic
+
+cd "C:\My\Desenv\My\safewaterfall\tests"
+git clone https://github.com/olivezuo/spring-boot-quartz-mongo.git
+mvn clean package -DskipTests -Denv=default -f "C:\My\Desenv\My\safewaterfall\tests\spring-boot-quartz-mongo\spring-quartz"
+java -jar "C:\My\Desenv\My\safewaterfall\tests\spring-boot-quartz-mongo\spring-quartz\target\spring-quartz-0.0.1-SNAPSHOT.jar"
+
+cd "C:\My\Desenv\My\safewaterfall\tests\spring2-quartz-mongodb"
+mvn clean package
+
+-------------------------------------------- 10/06/20 --------------------------------------------
+mkdir -p /home/vagrant/safewaterfall/postgresql_data
+mkdir -p /home/vagrant/safewaterfall/mongodb_data
+
+docker volume prune
+docker system prune
+
+docker network create --driver bridge safewaterfall
+
+docker rm mongodb_safewaterfall -f || true && docker run -d --name mongodb_safewaterfall -p 27017:27017 --network=safewaterfall -v /home/vagrant/safewaterfall/mongodb_data:/data/db -i -t mongo:4.2.7-bionic
+docker rm redis_safewaterfall -f || true && docker run -d --name redis_safewaterfall -p 6379:6379 --network=safewaterfall -i -t redis:alpine3.11
+
+docker run --name postgres_safewaterfall --network=safewaterfall -e "POSTGRES_PASSWORD=abc123" -p 5432:5432 -v /home/vagrant/safewaterfall/postgresql_data:/var/lib/postgresql/data -d postgres:13-alpine
+docker run --name pgadmin_safewaterfall --network=safewaterfall -p 180:80 -e "PGADMIN_DEFAULT_EMAIL=ceanma83@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=abc123" -d dpage/pgadmin4:4.22
+
+
+docker rm redis_swsiren11 -f || true && docker run -d --name redis_swsiren11 -p 6480:6379 -i -t redis:alpine3.11
+
+http://192.168.100.8:8180/swagger-ui.html
+
+-------------------------------------------- 11/06/20 --------------------------------------------
+
+cd "C:\My\Desenv\My\safewaterfall\box"
+vagrant up && vagrant ssh
+
+docker volume prune
+docker system prune
+
+docker network create --driver bridge safewaterfall
+docker rm mongodb_safewaterfall -f || true && docker run -d --name mongodb_safewaterfall -p 27017:27017 --network=safewaterfall -v /home/vagrant/safewaterfall/mongodb_data:/data/db -i -t mongo:4.2.7-bionic
+docker rm redis_safewaterfall -f || true && docker run -d --name redis_safewaterfall -p 6379:6379 --network=safewaterfall -i -t redis:alpine3.11
+
+
+
+
 
