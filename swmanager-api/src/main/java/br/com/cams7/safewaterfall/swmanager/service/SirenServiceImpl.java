@@ -31,4 +31,14 @@ public class SirenServiceImpl implements SirenService {
     return siren;
   }
 
+  @Cacheable(cacheNames = "siren_by_sensor", key = "#deviceId")
+  @Transactional(readOnly = true)
+  @Override
+  public SirenEntity findBySensorDeviceId(String deviceId) {
+    return repository.findBySensorDeviceId(deviceId).orElseThrow(() -> new AppResourceNotFoundException(String
+        .format(
+            "Não foi possivel encontrar a sirene já que o sensor cujo ID do dispositivo é %s não foi encontrado",
+            deviceId)));
+  }
+
 }

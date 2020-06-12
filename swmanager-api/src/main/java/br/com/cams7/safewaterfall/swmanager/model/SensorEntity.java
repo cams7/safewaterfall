@@ -33,7 +33,6 @@ import lombok.NoArgsConstructor;
  * @author CAMs7
  *
  */
-@SuppressWarnings("serial")
 @ApiModel(description = "Entidade que representa o sensor")
 @NoArgsConstructor
 @Data(staticConstructor = "of")
@@ -41,6 +40,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "TB_SENSOR")
 public class SensorEntity extends BaseEntity<Long> {
+
+  private static final long serialVersionUID = -6045751962349097160L;
 
   public static final String CACHE_NAME = "sensor";
 

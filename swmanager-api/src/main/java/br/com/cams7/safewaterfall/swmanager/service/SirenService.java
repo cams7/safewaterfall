@@ -26,4 +26,12 @@ public interface SirenService {
    */
   SirenEntity findById(Long id);
 
+  /**
+   * Buscar a sirene pelo ID do dispositivo
+   * 
+   * @param deviceId ID do dispositivo
+   * @return Sirene
+   */
+  SirenEntity findBySensorDeviceId(String deviceId);
+
 }

@@ -543,12 +543,39 @@ docker volume prune
 docker system prune
 
 docker network create --driver bridge safewaterfall
-docker rm mongodb_safewaterfall -f || true && docker run -d --name mongodb_safewaterfall -p 27017:27017 --network=safewaterfall -v /home/vagrant/safewaterfall/mongodb_data:/data/db -i -t mongo:4.2.7-bionic
 docker rm redis_safewaterfall -f || true && docker run -d --name redis_safewaterfall -p 6379:6379 --network=safewaterfall -i -t redis:alpine3.11
+docker rm mongodb_safewaterfall -f || true && docker run -d --name mongodb_safewaterfall -p 27017:27017 --network=safewaterfall -v /home/vagrant/safewaterfall/mongodb_data:/data/db -i -t mongo:4.2.7-bionic
+docker rm pgadmin_safewaterfall -f
+docker rm postgres_safewaterfall -f 
+docker run --name postgres_safewaterfall --network=safewaterfall -e "POSTGRES_PASSWORD=abc123" -p 5432:5432 -v /home/vagrant/safewaterfall/postgresql_data:/var/lib/postgresql/data -d postgres:13-alpine
+docker run --name pgadmin_safewaterfall --network=safewaterfall -p 180:80 -e "PGADMIN_DEFAULT_EMAIL=ceanma83@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=abc123" -d dpage/pgadmin4:4.22
+
+docker run -it --rm alpine:3.11.2 /bin/sh
+apk --update add postgresql-client && rm -rf /var/cache/apk/*
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP USER IF EXISTS safewaterfall"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE USER safewaterfall WITH ENCRYPTED PASSWORD 'abc123'"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swmanager TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swmanager" -c "SELECT CURRENT_DATABASE()"
+exit
 
 http://192.168.100.8:8080/swagger-ui.html
 http://192.168.100.8:8180/swagger-ui.html
 http://192.168.100.8:8280/swagger-ui.html
+
+
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+
+
 
 
 

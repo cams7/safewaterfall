@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
  * @author CAMs7
  *
  */
-@SuppressWarnings("serial")
 @ApiModel(description = "Entidade que representa o sirene")
 @NoArgsConstructor
 @Data(staticConstructor = "of")
@@ -34,6 +33,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "TB_SIRENE")
 public class SirenEntity extends BaseEntity<Long> {
+
+  private static final long serialVersionUID = 6746616734516043228L;
 
   public static final String CACHE_NAME = "siren";
 
@@ -57,6 +58,7 @@ public class SirenEntity extends BaseEntity<Long> {
   @Column(name = "ENDERECO_SIRENE", nullable = false)
   private String sirenAddress;
 
+  @ApiModelProperty(notes = "Sensores relacionados a sirene.", required = false, position = 4)
   @OneToMany(mappedBy = "siren")
   private List<SensorEntity> sensors;
 

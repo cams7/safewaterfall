@@ -17,12 +17,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @ApiModel(description = "Entidade que representa o sensor")
-@SuppressWarnings("serial")
 @Document
 @NoArgsConstructor
 @Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Sensor extends BaseEntity<String> {
+
+  private static final long serialVersionUID = 4133526640962026078L;
 
   public static final String CACHE_NAME = "sensor";
 

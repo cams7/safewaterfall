@@ -12,12 +12,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @ApiModel(description = "Entidade que representa a sirene")
-@SuppressWarnings("serial")
 @Document
 @NoArgsConstructor
 @Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Siren extends BaseEntity<String> {
+
+  private static final long serialVersionUID = 5515833074032211147L;
 
   public static final String CACHE_NAME = "siren";
 

@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.cams7.safewaterfall.common.model.Sensor;
 import br.com.cams7.safewaterfall.swmanager.endpoint.common.BaseEndpoint;
 import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
-import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenAddressVO;
 import br.com.cams7.safewaterfall.swmanager.model.vo.AppSirenVO;
-import br.com.cams7.safewaterfall.swmanager.service.AppSirenAddressService;
+import br.com.cams7.safewaterfall.swmanager.model.vo.AppSensorVO;
 import br.com.cams7.safewaterfall.swmanager.service.AppSirenService;
-import br.com.cams7.safewaterfall.swmanager.service.SensorService;
+import br.com.cams7.safewaterfall.swmanager.service.AppSensorService;
 import br.com.cams7.safewaterfall.swmanager.service.SirenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +37,7 @@ import io.swagger.annotations.ApiParam;
 @Api("Endpoint utilizado para executar as funcionalidades da sirene.")
 @RestController
 @RequestMapping(path = SIREN_PATH, produces = APPLICATION_JSON_VALUE)
-public class SirenEndpoint extends BaseEndpoint<AppSirenVO> {
+public class SirenEndpoint extends BaseEndpoint<AppSensorVO> {
 
   public static final String SIREN_PATH = "/siren";
 
@@ -46,13 +45,10 @@ public class SirenEndpoint extends BaseEndpoint<AppSirenVO> {
   private SirenService sirenService;
 
   @Autowired
-  private SensorService sensorService;
+  private AppSensorService appSensorService;
 
   @Autowired
   private AppSirenService appSirenService;
-
-  @Autowired
-  private AppSirenAddressService appSirenAddressService;
 
   @ApiOperation("Salva ou atualiza os dados da sirene")
   @ResponseStatus(value = OK)
@@ -72,56 +68,56 @@ public class SirenEndpoint extends BaseEndpoint<AppSirenVO> {
   @ApiOperation("Atualiza o estado da sirene")
   @PostMapping(path = "change_status", consumes = APPLICATION_JSON_VALUE)
   @ResponseStatus(value = OK)
-  public void changeStatus(@ApiParam("Sensor") @Valid @RequestBody Sensor appSensor) {
-    String sensorId = appSensor.getId();
-    short distance = appSensor.getDistance();
-    boolean active = distance < appSensor.getMinimumAllowedDistance();
-    boolean changeSirenStatus = false;
+  public void changeStatus(@ApiParam("Sensor") @Valid @RequestBody Sensor sensor) {
+    String sensorId = sensor.getId();
+    short distance = sensor.getDistance();
+    boolean active = distance < sensor.getMinimumAllowedDistance();
+    boolean changeSensorStatus = false;
 
     final String DEVICE_ID;
     final String SIREN_URL;
 
     boolean isNewSiren = false;
 
-    AppSirenVO appSiren = null;
-    if (appSirenService.existsById(sensorId))
-      appSiren = appSirenService.findById(sensorId);
+    AppSensorVO appSensor = null;
+    if (appSensorService.existsById(sensorId))
+      appSensor = appSensorService.findById(sensorId);
 
-    if (appSiren != null) {
-      DEVICE_ID = appSiren.getSirenId();
-      AppSirenAddressVO sirenAddress = appSirenAddressService.findById(DEVICE_ID);
-      SIREN_URL = sirenAddress.getAddress();
+    if (appSensor != null) {
+      DEVICE_ID = appSensor.getSirenId();
+      AppSirenVO appSiren = appSirenService.findById(DEVICE_ID);
+      SIREN_URL = appSiren.getAddress();
     } else {
-      SirenEntity siren = sensorService.findSirenByDeviceId(appSensor.getId());
-      DEVICE_ID = siren.getDeviceId();
-      SIREN_URL = siren.getSirenAddress();
-      appSiren = new AppSirenVO(sensorId, DEVICE_ID);
+      SirenEntity sirenEntity = sirenService.findBySensorDeviceId(sensor.getId());
+      DEVICE_ID = sirenEntity.getDeviceId();
+      SIREN_URL = sirenEntity.getSirenAddress();
+      appSensor = new AppSensorVO(sensorId, DEVICE_ID);
       isNewSiren = true;
     }
 
-    List<AppSirenVO> sirens = StreamSupport.stream(appSirenService.findAll().spliterator(), false).filter(
+    List<AppSensorVO> sensors = StreamSupport.stream(appSensorService.findAll().spliterator(), false).filter(
         s -> DEVICE_ID.equals(s.getSirenId())).collect(Collectors.toList());
-    changeSirenStatus = isNewSiren && sirens.stream().noneMatch(s -> !sensorId.equals(s.getId()));
+    changeSensorStatus = isNewSiren && sensors.stream().noneMatch(s -> !sensorId.equals(s.getId()));
 
-    if (!changeSirenStatus) {
-      boolean isAnotherActiveSensor = !active && sirens.stream().anyMatch(s -> s.isActive() && !sensorId.equals(s
+    if (!changeSensorStatus) {
+      boolean isAnotherActiveSensor = !active && sensors.stream().anyMatch(s -> s.isActive() && !sensorId.equals(s
           .getId()));
       if (!isAnotherActiveSensor)
-        changeSirenStatus = active != appSiren.isActive();
+        changeSensorStatus = active != appSensor.isActive();
     }
 
-    if (changeSirenStatus) {
-      appSiren.setActive(active);
+    if (changeSensorStatus) {
+      appSensor.setActive(active);
 
       changeValue(String.format("%s%s/change_status/%b", SIREN_URL, SIREN_PATH, active));
     }
 
-    if (isNewSiren || sirens.stream().anyMatch(s -> sensorId.equals(s.getId()) && active != s.isActive())) {
-      appSirenService.save(appSiren);
+    if (isNewSiren || sensors.stream().anyMatch(s -> sensorId.equals(s.getId()) && active != s.isActive())) {
+      appSensorService.save(appSensor);
       if (isNewSiren) {
-        AppSirenAddressVO sirenAddress = new AppSirenAddressVO(DEVICE_ID);
-        sirenAddress.setAddress(SIREN_URL);
-        appSirenAddressService.save(sirenAddress);
+        AppSirenVO appSiren = new AppSirenVO(DEVICE_ID);
+        appSiren.setAddress(SIREN_URL);
+        appSirenService.save(appSiren);
       }
     }
   }

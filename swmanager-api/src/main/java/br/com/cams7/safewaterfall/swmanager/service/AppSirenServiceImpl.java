@@ -29,19 +29,14 @@ public class AppSirenServiceImpl implements AppSirenService {
 
   @Override
   public AppSirenVO findById(String id) {
-    AppSirenVO siren = repository.findById(id).orElseThrow(() -> new AppResourceNotFoundException(String.format(
-        "Não foi encontrado nenhuma sirene pelo id %d", id)));
-    return siren;
+    AppSirenVO sirenAddress = repository.findById(id).orElseThrow(() -> new AppResourceNotFoundException(String
+        .format("Não foi encontrado nenhuma sirene pelo id %d", id)));
+    return sirenAddress;
   }
 
   @Override
   public boolean existsById(String id) {
     return repository.existsById(id);
-  }
-
-  @Override
-  public Iterable<AppSirenVO> findAll() {
-    return repository.findAll();
   }
 
 }

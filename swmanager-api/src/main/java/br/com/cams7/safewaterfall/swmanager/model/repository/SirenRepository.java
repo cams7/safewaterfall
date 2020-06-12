@@ -3,7 +3,9 @@
  */
 package br.com.cams7.safewaterfall.swmanager.model.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
 
@@ -12,6 +14,8 @@ import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
  *
  */
 @Repository
-public interface SirenRepository extends CrudRepository<SirenEntity, Long> {
+public interface SirenRepository extends JpaRepository<SirenEntity, Long> {
 
+  @Query("SELECT sir FROM SirenEntity sir INNER JOIN sir.sensors sen WHERE sen.deviceId = ?1")
+  Optional<SirenEntity> findBySensorDeviceId(String deviceId);
 }
