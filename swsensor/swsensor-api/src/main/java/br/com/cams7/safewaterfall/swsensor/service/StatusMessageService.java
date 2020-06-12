@@ -51,7 +51,7 @@ public class StatusMessageService {
 
     try {
       restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
-      sensorService.save(sensor);
+      sensorService.update(sensor);
     } catch (ResourceAccessException e) {
       throw new AppException(e);
     }

@@ -12,12 +12,20 @@ import br.com.cams7.safewaterfall.swsiren.model.Siren;
 public interface SirenService {
 
   /**
-   * Salva ou atualiza os dados da sirene
+   * Salva os dados da sirene
    * 
    * @param siren Sirene
-   * @return
+   * @return Sirene
    */
-  Siren save(Siren siren);
+  Siren create(Siren siren);
+
+  /**
+   * Atualiza os dados da sirene
+   * 
+   * @param siren Sirene
+   * @return Sirene
+   */
+  Siren update(Siren siren);
 
   /**
    * Buscar a sirene pelo ID

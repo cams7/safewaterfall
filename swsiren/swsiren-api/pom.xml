@@ -19,7 +19,7 @@
 		<java.version>1.8</java.version>
 		<swagger2.version>2.9.2</swagger2.version>
 		
-		<server.port>8280</server.port>
+		<server.port>8190</server.port>
 		<MANAGER_URL>http://192.168.100.23:8080</MANAGER_URL>
 		<SERIAL_PORT>COM6</SERIAL_PORT>
 		<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>

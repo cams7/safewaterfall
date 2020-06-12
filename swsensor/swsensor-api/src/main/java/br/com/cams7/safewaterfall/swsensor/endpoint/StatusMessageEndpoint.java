@@ -59,7 +59,7 @@ public class StatusMessageEndpoint {
         break;
     }
 
-    sensorService.save(sensor);
+    sensorService.update(sensor);
   }
 
   @ApiOperation("Pausa o escalonador")

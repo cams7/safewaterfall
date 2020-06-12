@@ -563,7 +563,7 @@ exit
 
 http://192.168.100.8:8080/swagger-ui.html
 http://192.168.100.8:8180/swagger-ui.html
-http://192.168.100.8:8280/swagger-ui.html
+http://192.168.100.8:8190/swagger-ui.html
 
 
 mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
@@ -575,9 +575,20 @@ mvn -Pdev -DskipTests flyway:migrate -Dflyway.configFile=dev.flyway.properties
 cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
 mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
 
+docker start redis_safewaterfall
+docker start mongodb_safewaterfall
+docker start pgadmin_safewaterfall
+docker start postgres_safewaterfall
 
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
 
-
-
-
+mvn -Pdev -DskipTests "-DSIREN_ID=ff644f56-f026-4d03-b17f-c9abce53ed2c" "-Dserver.port=8290" "-DSERIAL_PORT=COM6" "-DREDIS_DATABASE=6" "-DMONGODB_DBNAME=swsiren2" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren2.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren2.jar"
+mvn -Pdev -DskipTests "-DSENSOR_ID=b6446cf3-db19-4b16-a540-20b1829c1964" "-Dserver.port=8280" "-DSERIAL_PORT=COM4" "-DREDIS_DATABASE=3" "-DMONGODB_DBNAME=swsensor21" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+mvn -Pdev -DskipTests "-DSENSOR_ID=180129a3-96a6-4561-9392-9190f4c2c220" "-Dserver.port=8281" "-DSERIAL_PORT=COM10" "-DREDIS_DATABASE=4" "-DMONGODB_DBNAME=swsensor22" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor22.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor22.jar"
+mvn -Pdev -DskipTests "-DSENSOR_ID=4adc65c9-00cf-456b-9c58-1e46a6a36f81" "-Dserver.port=8282" "-DSERIAL_PORT=COM12" "-DREDIS_DATABASE=5" "-DMONGODB_DBNAME=swsensor23" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor23.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor23.jar"
 

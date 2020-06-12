@@ -4,6 +4,7 @@
 package br.com.cams7.safewaterfall.swsensor.endpoint;
 
 import static br.com.cams7.safewaterfall.swsensor.endpoint.SensorEndpoint.SENSOR_PATH;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -66,16 +68,29 @@ public class SensorEndpoint {
     return distance;
   }
 
-  @ApiOperation("Salva ou atualiza os dados do sensor")
+  @ApiOperation("Cadastra os dados do sensor")
   @PostMapping(consumes = APPLICATION_JSON_VALUE)
+  @ResponseStatus(value = CREATED)
+  public Sensor create(@ApiParam("Sensor") @Valid @RequestBody Sensor sensor) {
+    save(sensor, false);
+    return sensorService.create(sensor);
+  }
+
+  @ApiOperation("Atualiza os dados do sensor")
+  @PutMapping(consumes = APPLICATION_JSON_VALUE)
   @ResponseStatus(value = OK)
-  public Sensor save(@ApiParam("Sensor") @Valid @RequestBody Sensor sensor) {
+  public Sensor update(@ApiParam("Sensor") @Valid @RequestBody Sensor sensor) {
+    save(sensor, true);
+    return sensorService.update(sensor);
+  }
+
+  private void save(Sensor sensor, boolean sensorRegistred) {
     String id = sensor.getId();
     if (!sensorId.equals(id))
       throw new AppResourceNotFoundException(String.format("O ID %d não corresponde ao ID do sensor", id));
 
     Sensor currentSensor = null;
-    if (sensorService.existsById(sensorId))
+    if (sensorRegistred || sensorService.existsById(sensorId))
       currentSensor = sensorService.findById(sensorId);
 
     if (currentSensor == null || !currentSensor.getStatusArduinoCron().equals(sensor.getStatusArduinoCron()))
@@ -95,8 +110,6 @@ public class SensorEndpoint {
       default:
         break;
     }
-
-    return sensorService.save(sensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")

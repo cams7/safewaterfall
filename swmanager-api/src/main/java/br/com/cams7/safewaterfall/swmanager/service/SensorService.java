@@ -12,11 +12,27 @@ import br.com.cams7.safewaterfall.swmanager.model.SensorEntity;
 public interface SensorService {
 
   /**
-   * Salva ou atualiza os dados do sensor
+   * Cadastra um novo sensor
    * 
    * @param sensor Sensor
+   * @return Sensor
    */
-  SensorEntity save(SensorEntity sensor);
+  SensorEntity create(SensorEntity sensor);
+
+  /**
+   * Atualiza os dados do sensor
+   * 
+   * @param sensor Sensor
+   * @return Sensor
+   */
+  SensorEntity update(SensorEntity sensor);
+
+  /**
+   * Exclui os dados do sensor pelo ID
+   * 
+   * @param id ID do sensor
+   */
+  void delete(Long id);
 
   /**
    * Buscar o sensor pelo ID

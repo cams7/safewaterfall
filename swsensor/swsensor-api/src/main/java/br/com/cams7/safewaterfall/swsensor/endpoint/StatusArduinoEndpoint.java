@@ -49,7 +49,7 @@ public class StatusArduinoEndpoint {
     statusArduinoCron.reschedule(cron.getCronExpression());
     Sensor sensor = sensorService.findById(sensorId);
     sensor.setStatusArduinoCron(cron.getCronExpression());
-    sensorService.save(sensor);
+    sensorService.update(sensor);
   }
 
   @ApiOperation("Pausa o escalonador")

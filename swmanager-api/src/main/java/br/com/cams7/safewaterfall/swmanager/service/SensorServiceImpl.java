@@ -3,14 +3,15 @@
  */
 package br.com.cams7.safewaterfall.swmanager.service;
 
+import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.CACHE_NAME;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
 import br.com.cams7.safewaterfall.swmanager.model.SensorEntity;
-import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
 import br.com.cams7.safewaterfall.swmanager.model.repository.SensorRepository;
 
 /**
@@ -24,13 +25,25 @@ public class SensorServiceImpl implements SensorService {
   @Autowired
   private SensorRepository repository;
 
-  @CacheEvict(cacheNames = SensorEntity.CACHE_NAME, key = "#sensor.getId()")
+  @CacheEvict(cacheNames = CACHE_NAME, allEntries = true)
   @Override
-  public SensorEntity save(SensorEntity sensor) {
+  public SensorEntity create(SensorEntity sensor) {
     return repository.save(sensor);
   }
 
-  @Cacheable(cacheNames = SirenEntity.CACHE_NAME, key = "#id")
+  @CachePut(cacheNames = CACHE_NAME, key = "#sensor.getId()")
+  @Override
+  public SensorEntity update(SensorEntity sensor) {
+    return repository.save(sensor);
+  }
+
+  @CacheEvict(cacheNames = CACHE_NAME, key = "#id")
+  @Override
+  public void delete(Long id) {
+    repository.deleteById(id);
+  }
+
+  @Cacheable(cacheNames = CACHE_NAME, key = "#id")
   @Transactional(readOnly = true)
   @Override
   public SensorEntity findById(Long id) {

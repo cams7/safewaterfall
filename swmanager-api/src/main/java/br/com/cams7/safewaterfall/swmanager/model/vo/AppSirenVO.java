@@ -31,6 +31,9 @@ public class AppSirenVO implements Serializable {
   @Size(min = 19, max = 100)
   private String address;
 
+  @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 3)
+  private boolean active;
+
   public AppSirenVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {
     this();
     this.id = id;

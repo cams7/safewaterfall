@@ -37,7 +37,7 @@ public class AppSensorVO implements Serializable {
   @Pattern(regexp = UUID_V4_REGEX)
   private String sirenId;
 
-  @ApiModelProperty(notes = "Sirene esta ativa", example = "true", required = true, position = 3)
+  @ApiModelProperty(notes = "Sensor esta ativo", example = "true", required = true, position = 3)
   private boolean active;
 
   public AppSensorVO(@NotBlank @Pattern(regexp = UUID_V4_REGEX) String id) {

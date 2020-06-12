@@ -5,6 +5,7 @@ package br.com.cams7.safewaterfall.swsiren.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
@@ -21,9 +22,15 @@ public class SirenServiceImpl implements SirenService {
   @Autowired
   private SirenRepository repository;
 
-  @CacheEvict(cacheNames = Siren.CACHE_NAME, key = "#siren.getId()")
+  @CacheEvict(cacheNames = Siren.CACHE_NAME, allEntries = true)
   @Override
-  public Siren save(Siren siren) {
+  public Siren create(Siren siren) {
+    return repository.save(siren);
+  }
+
+  @CachePut(cacheNames = Siren.CACHE_NAME, key = "#siren.getId()")
+  @Override
+  public Siren update(Siren siren) {
     return repository.save(siren);
   }
 

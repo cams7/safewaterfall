@@ -5,6 +5,7 @@ package br.com.cams7.safewaterfall.swsensor.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import br.com.cams7.safewaterfall.common.error.AppResourceNotFoundException;
@@ -21,9 +22,15 @@ public class SensorServiceImpl implements SensorService {
   @Autowired
   private SensorRepository repository;
 
-  @CacheEvict(cacheNames = Sensor.CACHE_NAME, key = "#sensor.getId()")
+  @CacheEvict(cacheNames = Sensor.CACHE_NAME, allEntries = true)
   @Override
-  public Sensor save(Sensor sensor) {
+  public Sensor create(Sensor sensor) {
+    return repository.save(sensor);
+  }
+
+  @CachePut(cacheNames = Sensor.CACHE_NAME, key = "#sensor.getId()")
+  @Override
+  public Sensor update(Sensor sensor) {
     return repository.save(sensor);
   }
 

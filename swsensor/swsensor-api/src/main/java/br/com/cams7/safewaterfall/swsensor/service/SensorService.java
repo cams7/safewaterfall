@@ -12,11 +12,20 @@ import br.com.cams7.safewaterfall.common.model.Sensor;
 public interface SensorService {
 
   /**
+   * cadastra os dados do sensor
+   * 
+   * @param sensor Sensor
+   * @return Sensor
+   */
+  Sensor create(Sensor sensor);
+
+  /**
    * Salva ou atualiza os dados do sensor
    * 
    * @param sensor Sensor
+   * @return Sensor
    */
-  Sensor save(Sensor sensor);
+  Sensor update(Sensor sensor);
 
   /**
    * Buscar o sensor pelo ID

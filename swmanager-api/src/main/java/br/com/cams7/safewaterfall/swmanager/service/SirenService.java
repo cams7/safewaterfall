@@ -12,11 +12,27 @@ import br.com.cams7.safewaterfall.swmanager.model.SirenEntity;
 public interface SirenService {
 
   /**
-   * Salva ou atualiza os dados da sirene
+   * Cadastra uma nova sirene
    * 
    * @param siren Sirene
+   * @return Sirene
    */
-  SirenEntity save(SirenEntity siren);
+  SirenEntity create(SirenEntity siren);
+
+  /**
+   * Atualiza os dados da sirene
+   * 
+   * @param siren Sirene
+   * @return Sirene
+   */
+  SirenEntity update(SirenEntity siren);
+
+  /**
+   * Exclui os dados da sirene pelo ID
+   * 
+   * @param id ID do sirene
+   */
+  void delete(Long id);
 
   /**
    * Buscar a sirene pelo ID

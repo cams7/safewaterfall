@@ -48,7 +48,7 @@ public abstract class BaseEndpoint<VO> {
     HttpEntity<VO> requestEntity = new HttpEntity<>(body, requestHeaders);
 
     try {
-      restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
+      restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Void.class);
     } catch (ResourceAccessException e) {
       throw new AppException(e);
     }

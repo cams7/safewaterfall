@@ -3,6 +3,7 @@ package br.com.cams7.safewaterfall.swmanager.endpoint;
 import static br.com.cams7.safewaterfall.swmanager.endpoint.SensorEndpoint.SENSOR_PATH;
 import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.getSensor;
 import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.setSensor;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,11 +38,18 @@ public class SensorEndpoint extends BaseEndpoint<Sensor> {
   @Autowired
   private SensorService sensorService;
 
-  @ApiOperation("Salva ou atualiza os dados do sensor")
-  @ResponseStatus(value = OK)
+  @ApiOperation("Cadastra os dados do sensor")
+  @ResponseStatus(value = CREATED)
   @PostMapping(consumes = APPLICATION_JSON_VALUE)
-  public SensorEntity save(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
-    return sensorService.save(sensor);
+  public SensorEntity create(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
+    return sensorService.create(sensor);
+  }
+
+  @ApiOperation("Atualiza os dados do sensor")
+  @ResponseStatus(value = OK)
+  @PutMapping(consumes = APPLICATION_JSON_VALUE)
+  public SensorEntity update(@ApiParam("Sensor") @Valid @RequestBody SensorEntity sensor) {
+    return sensorService.update(sensor);
   }
 
   @ApiOperation("Buscar o sensor pelo ID")
@@ -73,7 +82,7 @@ public class SensorEndpoint extends BaseEndpoint<Sensor> {
     Sensor sensor = getValue(String.format("%s/sensor", SENSOR_URL));
     setSensor(sensorEntity, sensor);
 
-    sensorService.save(sensorEntity);
+    sensorService.update(sensorEntity);
   }
 
 }

@@ -53,7 +53,7 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
         log.info("Sending alert messages by cron: {}", sendAlertMessageCron);
         statusMessageCron.reschedule(sendAlertMessageCron);
         sensor.setMessageStatus(SEND_ALERT);
-        sensorService.save(sensor);
+        sensorService.update(sensor);
       }
     } else {
       if (SEND_STATUS != sensor.getMessageStatus()) {
@@ -61,7 +61,7 @@ public class StatusArduinoServiceImpl extends ArduinoServiceImpl implements Stat
         log.info("Sending status messages by cron: {}", sendStatusMessageCron);
         statusMessageCron.reschedule(sendStatusMessageCron);
         sensor.setMessageStatus(SEND_STATUS);
-        sensorService.save(sensor);
+        sensorService.update(sensor);
       }
     }
   }
