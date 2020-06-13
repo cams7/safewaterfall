@@ -20,7 +20,7 @@
 		<swagger2.version>2.9.2</swagger2.version>
 		
 		<server.port>8180</server.port>
-		<MANAGER_URL>http://192.168.100.23:8080</MANAGER_URL>
+		<MANAGER_URL>http://192.168.100.8:8080</MANAGER_URL>
 		<SERIAL_PORT>COM4</SERIAL_PORT>
 		<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 		<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
@@ -214,8 +214,7 @@
 				</property>
 			</activation>
 			<properties>
-				<spring.profiles.active>dev</spring.profiles.active>
-				<MANAGER_URL>http://192.168.100.8:8080</MANAGER_URL>
+				<spring.profiles.active>dev</spring.profiles.active>				
 			</properties>
 		</profile>
 		<profile>
