@@ -20,14 +20,14 @@
 		<swagger2.version>2.9.2</swagger2.version>
 		
 		<server.port>8190</server.port>
-		<MANAGER_URL>http://192.168.100.8:8080</MANAGER_URL>
-		<SERIAL_PORT>COM6</SERIAL_PORT>
+		<MANAGER_URL>http://localhost:8180</MANAGER_URL>
+		<SERIAL_PORT>COM12</SERIAL_PORT>
 		<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 		<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 		<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
 		<REDIS_HOST>192.168.100.8</REDIS_HOST>
 		<REDIS_PORT>6379</REDIS_PORT>
-		<REDIS_DATABASE>2</REDIS_DATABASE>
+		<REDIS_DATABASE>11</REDIS_DATABASE>
 		<MONGODB_URI>mongodb://192.168.100.8:27017</MONGODB_URI>
 		<MONGODB_DBNAME>swsiren</MONGODB_DBNAME>
 		<SIREN_ID>0134c0a8-d6ad-4107-94b4-fee84f7ced17</SIREN_ID>	
@@ -67,9 +67,13 @@
         </dependency>
         <dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+				
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
@@ -87,7 +91,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -97,6 +101,11 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>

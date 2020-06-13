@@ -3,12 +3,17 @@
  */
 package br.com.cams7.safewaterfall.swmanager.model;
 
+import static br.com.cams7.safewaterfall.swmanager.model.SirenEntity.WITH_SENSORS;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -30,11 +35,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
+//@formatter:off
+@NamedEntityGraphs({
+  @NamedEntityGraph(name = WITH_SENSORS, attributeNodes = {
+      @NamedAttributeNode("sensors")
+  })
+})
+//@formatter:on
 @Entity
 @Table(name = "TB_SIRENE")
 public class SirenEntity extends BaseEntity<Long> {
 
   private static final long serialVersionUID = 6746616734516043228L;
+
+  public static final String WITH_SENSORS = "Siren.withSensors";
 
   public static final String CACHE_NAME = "siren";
 
@@ -59,7 +73,7 @@ public class SirenEntity extends BaseEntity<Long> {
   private String sirenAddress;
 
   @ApiModelProperty(notes = "Sensores relacionados a sirene.", required = false, position = 4)
-  @OneToMany(mappedBy = "siren")
+  @OneToMany(mappedBy = "siren", fetch = LAZY)
   private List<SensorEntity> sensors;
 
   public SirenEntity(Long id) {

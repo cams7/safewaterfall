@@ -592,3 +592,58 @@ java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor22.jar"
 mvn -Pdev -DskipTests "-DSENSOR_ID=4adc65c9-00cf-456b-9c58-1e46a6a36f81" "-Dserver.port=8282" "-DSERIAL_PORT=COM12" "-DREDIS_DATABASE=5" "-DMONGODB_DBNAME=swsensor23" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor23.jar"
 java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor23.jar"
 
+-------------------------------------------- 11/06/20 --------------------------------------------
+
+cd "C:\My\Desenv\My\safewaterfall\box"
+vagrant up && vagrant ssh
+
+docker start redis_safewaterfall
+docker start mongodb_safewaterfall
+docker start pgadmin_safewaterfall
+docker start postgres_safewaterfall
+
+docker volume prune
+docker system prune
+
+docker run -it --rm alpine:3.11.2 /bin/sh
+apk --update add postgresql-client && rm -rf /var/cache/apk/*
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP USER IF EXISTS safewaterfall"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE USER safewaterfall WITH ENCRYPTED PASSWORD 'abc123'"
+
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "DROP DATABASE IF EXISTS swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "CREATE DATABASE swmanager"
+psql "postgresql://postgres:abc123@192.168.100.8:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE swmanager TO safewaterfall"
+psql "postgresql://safewaterfall:abc123@192.168.100.8:5432/swmanager" -c "SELECT CURRENT_DATABASE()"
+exit
+
+mvn -DskipTests clean install -f "C:/My/Desenv/My/safewaterfall/common/swarduino"
+mvn -DskipTests clean install -f "C:/My/Desenv/My/safewaterfall/common/swcommon"
+
+cd "C:/My/Desenv/My/safewaterfall/swmanager-api"
+mvn -Ptest -DskipTests flyway:migrate -Dflyway.configFile=test.flyway.properties
+
+mvn -Ptest -DskipTests "-Dserver.port=8080" "-DREDIS_DATABASE=0" clean package -f "C:/My/Desenv/My/safewaterfall/swmanager-api" && cp "C:/My/Desenv/My/safewaterfall/swmanager-api/target/swmanager-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swmanager.jar"
+
+mvn -Ptest -DskipTests "-DSIREN_ID=49f801ad-9ced-43f6-b6cd-e9f101e0db5d" "-Dserver.port=8090" "-DSERIAL_PORT=COM4" "-DREDIS_DATABASE=1" "-DMONGODB_DBNAME=swsiren1" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren1.jar"
+mvn -Ptest -DskipTests "-DSENSOR_ID=29e13a0d-9a63-4291-86ea-411f3fb253ad" "-Dserver.port=8080" "-DSERIAL_PORT=COM6" "-DREDIS_DATABASE=2" "-DMONGODB_DBNAME=swsensor11" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+mvn -Ptest -DskipTests "-DSENSOR_ID=574ef77c-ccf0-408a-8398-75763af87177" "-Dserver.port=8081" "-DSERIAL_PORT=COM10" "-DREDIS_DATABASE=3" "-DMONGODB_DBNAME=swsensor12" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor12.jar"
+
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsiren1.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor11.jar"
+java -jar "C:/My/Desenv/My/safewaterfall/tests/swsensor12.jar"
+
+mvn -Ptest -DskipTests "-DSIREN_ID=ff644f56-f026-4d03-b17f-c9abce53ed2c" "-Dserver.port=8090" "-DSERIAL_PORT=COM5" "-DREDIS_DATABASE=4" "-DMONGODB_DBNAME=swsiren2" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api" && cp "C:/My/Desenv/My/safewaterfall/swsiren/swsiren-api/target/swsiren-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsiren2.jar"
+mvn -Ptest -DskipTests "-DSENSOR_ID=b6446cf3-db19-4b16-a540-20b1829c1964" "-Dserver.port=8080" "-DSERIAL_PORT=COM2" "-DREDIS_DATABASE=5" "-DMONGODB_DBNAME=swsensor21" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor21.jar"
+mvn -Ptest -DskipTests "-DSENSOR_ID=180129a3-96a6-4561-9392-9190f4c2c220" "-Dserver.port=8081" "-DSERIAL_PORT=COM7" "-DREDIS_DATABASE=6" "-DMONGODB_DBNAME=swsensor22" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor22.jar"
+mvn -Ptest -DskipTests "-DSENSOR_ID=4adc65c9-00cf-456b-9c58-1e46a6a36f81" "-Dserver.port=8082" "-DSERIAL_PORT=COM9" "-DREDIS_DATABASE=7" "-DMONGODB_DBNAME=swsensor23" "-DMANAGER_URL=http://192.168.100.23:8080" clean package -f "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api" && cp "C:/My/Desenv/My/safewaterfall/swsensor/swsensor-api/target/swsensor-0.1.0-SNAPSHOT.jar" "C:/My/Desenv/My/safewaterfall/tests/swsensor23.jar"
+
+http://192.168.100.23:8080/swagger-ui.html
+
+http://192.168.100.8:8090/swagger-ui.html
+http://192.168.100.13:8080/swagger-ui.html
+http://192.168.100.13:8081/swagger-ui.html
+http://192.168.100.13:8082/swagger-ui.html
+
+http://192.168.100.13:8090/swagger-ui.html
+http://192.168.100.8:8080/swagger-ui.html
+http://192.168.100.8:8081/swagger-ui.html

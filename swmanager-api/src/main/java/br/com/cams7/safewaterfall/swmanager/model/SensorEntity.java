@@ -5,6 +5,7 @@ package br.com.cams7.safewaterfall.swmanager.model;
 
 import static br.com.cams7.safewaterfall.arduino.model.vo.Arduino.PIN_VALUE_MIN;
 import static br.com.cams7.safewaterfall.arduino.model.vo.ArduinoUSART.DIGITAL_PIN_VALUE_MAX;
+import static br.com.cams7.safewaterfall.swmanager.model.SensorEntity.WITH_SIREN;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Column;
@@ -13,6 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -37,11 +41,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data(staticConstructor = "of")
 @EqualsAndHashCode(of = "id", callSuper = false)
+//@formatter:off
+@NamedEntityGraphs({
+  @NamedEntityGraph(name = WITH_SIREN, attributeNodes = {
+      @NamedAttributeNode("siren")
+  })
+})
+//@formatter:on
 @Entity
 @Table(name = "TB_SENSOR")
 public class SensorEntity extends BaseEntity<Long> {
 
   private static final long serialVersionUID = -6045751962349097160L;
+
+  public static final String WITH_SIREN = "Sensor.withSiren";
 
   public static final String CACHE_NAME = "sensor";
 

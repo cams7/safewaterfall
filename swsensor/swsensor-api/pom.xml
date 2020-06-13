@@ -19,15 +19,15 @@
 		<java.version>1.8</java.version>
 		<swagger2.version>2.9.2</swagger2.version>
 		
-		<server.port>8180</server.port>
-		<MANAGER_URL>http://192.168.100.8:8080</MANAGER_URL>
-		<SERIAL_PORT>COM4</SERIAL_PORT>
+		<server.port>8181</server.port>
+		<MANAGER_URL>http://localhost:8180</MANAGER_URL>
+		<SERIAL_PORT>COM14</SERIAL_PORT>
 		<SERIAL_BAUD_RATE>9600</SERIAL_BAUD_RATE>
 		<SERIAL_THREAD_TIME>500</SERIAL_THREAD_TIME>
 		<HTTP_TIMEOUT>5000</HTTP_TIMEOUT>
 		<REDIS_HOST>192.168.100.8</REDIS_HOST>
 		<REDIS_PORT>6379</REDIS_PORT>
-		<REDIS_DATABASE>1</REDIS_DATABASE>
+		<REDIS_DATABASE>12</REDIS_DATABASE>
 		<MONGODB_URI>mongodb://192.168.100.8:27017</MONGODB_URI>
 		<MONGODB_DBNAME>swsensor</MONGODB_DBNAME>
 		<SENSOR_ID>9659c296-bc10-434f-9e57-a4c3784e79e8</SENSOR_ID>	
@@ -69,11 +69,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-quartz</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+				
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
@@ -97,7 +101,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -107,6 +111,11 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
